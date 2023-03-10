@@ -1,4 +1,4 @@
-_CritiCine_ Development Report
+_CatCine_ Development Report
 
 Welcome to the documentation pages of the _CritiCine_!
 
@@ -26,7 +26,7 @@ Please contact us!
 
 Thank you!
 
-*team members names*
+*Manuel Silva, Maria Laranjeira, Pedro Fonseca*
 
 ---
 
