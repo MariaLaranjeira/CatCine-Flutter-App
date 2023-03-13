@@ -3,30 +3,26 @@
 
 ### Vision Statement
 
-Start by defining a clear and concise vision for your app, to help members of the team, contributors, and users into focusing their often disparate views into a concise, visual, and short textual form. It provides a "high concept" of the product for marketers, developers, and managers.
-
-A product vision describes the essential of the product and sets the direction to where a product is headed, and what the product will deliver in the future. 
-
-**We favor a catchy and concise statement, ideally one sentence.**
-
-We suggest you use the product vision template described in the following link:
-* [How To Create A Convincing Product Vision To Guide Your Team, by uxstudioteam.com](https://uxstudioteam.com/ux-blog/product-vision/)
-
-To learn more about how to write a good product vision, please see also:
-* [Product Management: Product Vision, by ProductPlan](https://www.productplan.com/glossary/product-vision/)
-* [Vision, by scrumbook.org](http://scrumbook.org/value-stream/vision.html)
-* [How to write a vision, by dummies.com](https://www.dummies.com/business/marketing/branding/how-to-write-vision-and-mission-statements-for-your-brand/)
-* [20 Inspiring Vision Statement Examples (2019 Updated), by lifehack.org](https://www.lifehack.org/articles/work/20-sample-vision-statement-for-the-new-startup.html)
-
+Our vision is to provide the best social network for all cinephiles, with an unique user defined category system that incites community discussion, and allows for the truest ranking showcase and most detailed film sorting.
 
 ### Main Features
-Indicate an  initial/tentative list of high-level features - high-level capabilities or desired services of the system that are necessary to deliver benefits to the users (cf. RUP).
- - Feature 1 - Short description
- - Feature 2 - Short description
-...
+
+ -**User defined categories:** Users can create specific categories to assign to movies or shows. They are free to name them however they like, as well as to write a description further explaining the theme it defines and choosing a cover image. They can add to it as many shows or films as they wish and so can other users. Because of this, the category creators are also category administrators. Administrators can alter the category's description and image and most importantly, remove any added film or show they find unfitting.
+
+-**Category Likes:** Users can leave a like on the categories they enjoyed by pressing the heart button. The like count is displayed on each category for every user to see.
+
+-**Upvote/Downvote system:** Users can Upvote or Downvote each film inside a category. The films/shows are then displayed in descending orther according to the upvote/downvote ratio. The total Upvote and Downvote count is displayed alongside the category's total like count.
+
+-**Explore Page:** Users can search for any film or TV show by typing its name on the Explore Page search bar.
+
+-**Watch History:** Users can mark films or shows they have already watched as "Watched".
+
+-**Watchlist:** After selecting a film or show, users can add it to their Watchlist if it hasn't been marked as watched yet. Watchlists appear in users profiles.
+
+-**Ratings:** After selecting a film or show, users can give it a 1-10 rating out of 5 stars (users can give half a star).
+
+-**Reviews:** After rating a film, users can write a review to elaborate on their rating.
 
 ### Assumptions and dependencies
-Indicate an  initial/tentative list of assumptions and dependencies 
 
-- Student timetable from sigarra
-- 
+- Rapid API's MDbList
