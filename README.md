@@ -24,10 +24,10 @@ Please contact us!
 
 Thank you!
 
-<p> *Manuel Silva* </p>
-<p> *Maria Laranjeira* </p>
-<p> *Pedro Fonseca* </p>
-<p> *Gabriela Neto* </p>
+*Manuel Silva*
+*Maria Laranjeira*
+*Pedro Fonseca*
+*Gabriela Neto*
 
 ---
 
