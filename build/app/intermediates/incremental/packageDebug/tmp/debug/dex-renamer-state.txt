@@ -1,4 +1,0 @@
-#Mon Mar 13 03:55:24 WET 2023
-base.0=/Users/marialeolaranja/AndroidStudioProjects/catcine_es/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
-renamed.0=classes.dex
-path.0=classes.dex
