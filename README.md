@@ -24,9 +24,9 @@ Please contact us!
 
 Thank you!
 
-*Manuel Silva*\n
-*Maria Laranjeira*
-*Pedro Fonseca*
+*Manuel Silva*\
+*Maria Laranjeira*\
+*Pedro Fonseca*\
 *Gabriela Neto*
 
 ---
