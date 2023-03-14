@@ -32,9 +32,9 @@ In this section you should start by briefly describing the overall components of
 
 - ### CatCine Server Machine
 
-  - ** CatCine GUI:**
+  - **CatCine GUI:**
 
-  - ** CatCine Logic:**
+  - **CatCine Logic:**
 
 - ### Rapid API Machine
 
