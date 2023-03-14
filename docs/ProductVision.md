@@ -7,7 +7,7 @@ Our vision is to provide the best social network for all cinephiles, with an uni
 
 ### Main Features
 
- -**User defined categories:** Users can create specific categories to assign to movies or shows. They are free to name them however they like, as well as to write a description further explaining the theme it defines and choosing a cover image. They can add to it as many shows or films as they wish and so can other users. Because of this, the category creators are also category administrators. Administrators can alter the category's description and image and most importantly, remove any added film or show they find unfitting.
+ -**User defined categories:** Users can create specific categories to assign to film or shows. They are free to name them however they like, as well as to write a description further explaining the theme it defines and choosing a cover image. They can add to it as many shows or films as they wish and so can other users. Because of this, the category creators are also category administrators. Administrators can alter the category's description and image and most importantly, remove any added film or show they find unfitting.
 
 -**Category Likes:** Users can leave a like on the categories they enjoyed by pressing the heart button. The like count is displayed on each category for every user to see.
 
