@@ -19,7 +19,7 @@
 **Rate:** Class that defines a User Rating given to a determined Film or Show.
 - time: At what time the Film/Show was rated
 
-**Review:** Class that defines a User Review.
+**Review:** Class that defines a User Review given to a determined Film or Show.
 
 **Category:** Class that defines a Category.
 - name: The Category's name
