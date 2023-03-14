@@ -11,7 +11,7 @@ In this section you should start by briefly describing the overall components of
 ## Logical architecture
 
 <p align="center">
-    <img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png">
+    <img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png" width = 100% height = 100%>
 </p>
 
 - ### CatCine GUI
