@@ -16,17 +16,17 @@
 - picture: Film's/Show's url for their cover image
 - description: Film's/Show's summary
 
-**Rate:** Class defines a User Rating given to a determined Film or Show.
+**Rate:** Class that defines a User Rating given to a determined Film or Show.
 - time: At what time the Film/Show was rated
 
-**Review:** Class defines a User Review.
+**Review:** Class that defines a User Review.
 
-**Category:** Class defines a Category.
+**Category:** Class that defines a Category.
 - name: The Category's name
 - image: url for a Category's cover image
 - description: Category's description
 
-**User:** class defines an User
+**User:** Class that defines an User
 - catname: User's CatCine username
 - email: User's email used for login
 - password: User's account password
