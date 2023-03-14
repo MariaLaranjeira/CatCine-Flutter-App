@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "998547830911",
+    "firebase_url": "https://catcine-thebest-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "catcine-thebest",
+    "storage_bucket": "catcine-thebest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:998547830911:android:3baf2a72addd809b07a74a",
+        "android_client_info": {
+          "package_name": "com.example.catcine_es"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "998547830911-625olanln9h63dn9trkgo9j0nf3bfk8t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBwuLT_1zY0xcLvzDNhpzuIhI-Vrh-qyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "998547830911-625olanln9h63dn9trkgo9j0nf3bfk8t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
