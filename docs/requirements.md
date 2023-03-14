@@ -8,6 +8,7 @@
 </p>
 
 
+## Classes:
 **Media:** Class that defines each Film or TV Show.
 - imdb_id: the Film's/Show's corresponding Imdb ID, as the name suggests
 - name: Film's/Show's title
@@ -31,6 +32,7 @@
 - email: User's email used for login
 - password: User's account password
 
+## Associations:
 **Association class between User and Category**: An user can leave a like on a category
 
 <p></p>
