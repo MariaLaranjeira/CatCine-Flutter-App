@@ -43,4 +43,7 @@
 <p></p>
 
 **Association class between User and Category**: An user can leave a like on a category
+
+<p></p>
+
 **Association class between User, Category and Media**: An user can leave an upvote or downvote in a Film/Show inside a category
