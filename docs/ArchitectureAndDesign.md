@@ -9,16 +9,19 @@ To document the architecture requires describing the decomposition of the system
 In this section you should start by briefly describing the overall components of the project and their interrelations. You should also describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
 
 ### Logical architecture
-The purpose of this subsection is to document the high-level logical structure of the code (Logical View), using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
-
-It can be beneficial to present the system both in a horizontal or vertical decomposition:
-* horizontal decomposition may define layers and implementation concepts, such as the user interface, business logic and concepts; 
-* vertical decomposition can define a hierarchy of subsystems that cover all layers of implementation.
-
-Example of _UML package diagram_ showing a _logical view_ of the Eletronic Ticketing System (to be accompanied by a short description of each package):
-
 ![image](https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png)
 
+- ### CatCine GUI
+    This package contains the code that defines the graphical user interface (GUI)of the CatCine app, which enables users to interact with the application visually.
+    
+- ### CatCine Logic
+    This package contains the backend logic of the app. It is responsible for the manipulation and management of user data.
+    
+- ### CatCine Database Scheme
+    This package contains the code that defines the structure of the database where some of the data necessary for the application is stored.
+   
+- ### MDbList's API
+    External API responsible for supplying information about movies.
 
 ### Physical architecture
 The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams (Deployment View) or component diagrams (Implementation View), separate or integrated, showing the physical structure of the system.
