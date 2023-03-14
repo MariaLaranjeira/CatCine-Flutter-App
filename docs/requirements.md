@@ -16,7 +16,7 @@
 - description: Film's/Show's summary
 
 **Rate:** Class defines a User Rating given to a determined Film or Show.
--time: At what time the Film/Show was rated
+- time: At what time the Film/Show was rated
 
 **Review:** Class defines a User Review.
 
