@@ -1,7 +1,4 @@
 ## Elevator Pitch
-Draft a small text to help you quickly introduce and describe your product in a short time and a few words (~800 characters), a technique usually known as elevator pitch.
 
-Take a look at the following links to learn some techniques:
-* [Crafting an Elevator Pitch](https://www.mindtools.com/pages/article/elevator-pitch.htm)
-* [The Best Elevator Pitch Examples, Templates, and Tactics - A Guide to Writing an Unforgettable Elevator Speech, by strategypeak.com](https://strategypeak.com/elevator-pitch-examples/)
-* [Top 7 Killer Elevator Pitch Examples, by toggl.com](https://blog.toggl.com/elevator-pitch-examples/)
+Our application aims to create a more human approach to film/show discussion and sorting. Thanks to our core feature, User defined Categories, anyone can create their Category, meaning films/shows can be sorted according to the utmost specific themes, to which any user can contribute to with their very own piece of cinematographic knowledge. Therefore, categories are community spaces, in which anyone can take part, by adding films/shows or by evaluating the existing ones. The latter is achieved with an Upvote/Downvote system, which allows for the media to be displayed according to quality/relevance inside the category's context. Films and Shows can also be rated and reviewed by users, individually and outside a category. As a whole, this set of features allows for the most unique yet precise form of media display.
+

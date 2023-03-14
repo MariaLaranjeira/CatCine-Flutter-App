@@ -11,11 +11,11 @@ In this section you should start by briefly describing the overall components of
 ## Logical architecture
 
 <p align="center">
-    <img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png">
+    <img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png" width = 90% height = 90%>
 </p>
 
 - ### CatCine GUI
-    This package contains the code that defines the graphical user interface (GUI)of the CatCine app, which enables users to interact with the application visually.
+    This package contains the code that defines the graphical user interface (GUI) of the CatCine app, which enables users to interact with the application visually.
     
 - ### CatCine Logic
     This package contains the backend logic of the app. It is responsible for the manipulation and management of user data.
@@ -29,22 +29,17 @@ In this section you should start by briefly describing the overall components of
 ## Physical architecture
     
 <p align="center">
-    <img src = "https://user-images.githubusercontent.com/114760605/224854041-1d8e17e8-61a1-4e3a-af3c-aab2d8088ff9.png">
+    <img src = "https://user-images.githubusercontent.com/114760605/224854041-1d8e17e8-61a1-4e3a-af3c-aab2d8088ff9.png" width = 90% height = 90%>
 </p>
 
 - ### User mobile Phone
+    The electronic device on which the application will be executed or used.
 
 - ### CatCine Server Machine
-
-  - **CatCine GUI:**
-
-  - **CatCine Logic:**
+    A computer system that runs the backend for the CatCine application. It acts as an intermediary between the user's mobile device and the Rapid API Machine, receiving user requests and providing the expected services by communicating with the Rapid API Machine, and then responding to the user's requests. It also hosts the CatCine database, which stores and manages data related to the CatCine application, such as movie ratings, watchlists and watched movies.
 
 - ### Rapid API Machine
-
-  - **MDbList:**
-
-
+    It is responsible for managing API requests and responses for the CatCine application. It may host APIs that provide data to implement the features of our app, such as movie data.
 
 ## Vertical prototype
 To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system.
