@@ -9,7 +9,8 @@ To document the architecture requires describing the decomposition of the system
 In this section you should start by briefly describing the overall components of the project and their interrelations. You should also describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
 
 ### Logical architecture
-![image](https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png)
+
+<img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png">
 
 - ### CatCine GUI
     This package contains the code that defines the graphical user interface (GUI)of the CatCine app, which enables users to interact with the application visually.
@@ -24,13 +25,21 @@ In this section you should start by briefly describing the overall components of
     External API responsible for supplying information about movies.
 
 ### Physical architecture
-The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams (Deployment View) or component diagrams (Implementation View), separate or integrated, showing the physical structure of the system.
 
-It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for uni4all are, for example, frameworks for mobile applications (such as Flutter).
+<img src = "https://user-images.githubusercontent.com/114760605/224854041-1d8e17e8-61a1-4e3a-af3c-aab2d8088ff9.png">
 
-Example of _UML deployment diagram_ showing a _deployment view_ of the Eletronic Ticketing System (please notice that, instead of software components, one should represent their physical/executable manifestations for deployment, called artifacts in UML; the diagram should be accompanied by a short description of each node and artifact):
+- ### User mobile Phone
 
-![image](https://user-images.githubusercontent.com/114760605/224854041-1d8e17e8-61a1-4e3a-af3c-aab2d8088ff9.png)
+- ###CatCine Server Machine
+
+  - **CatCine GUI:**
+
+  - **CatCine Logic:**
+
+- ###Rapid API Machine
+
+  - **MDbList:**
+
 
 
 ### Vertical prototype
