@@ -11,6 +11,7 @@ In this section you should start by briefly describing the overall components of
 ### Logical architecture
 
 <img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png">
+<p align="center">
 
 - ### CatCine GUI
     This package contains the code that defines the graphical user interface (GUI)of the CatCine app, which enables users to interact with the application visually.
@@ -27,6 +28,7 @@ In this section you should start by briefly describing the overall components of
 ### Physical architecture
 
 <img src = "https://user-images.githubusercontent.com/114760605/224854041-1d8e17e8-61a1-4e3a-af3c-aab2d8088ff9.png">
+<p align="center">
 
 - ### User mobile Phone
 
