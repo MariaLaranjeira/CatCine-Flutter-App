@@ -30,13 +30,13 @@ In this section you should start by briefly describing the overall components of
 
 - ### User mobile Phone
 
-- ###CatCine Server Machine
+- ### CatCine Server Machine
 
-  - **CatCine GUI:**
+  - ** CatCine GUI:**
 
-  - **CatCine Logic:**
+  - ** CatCine Logic:**
 
-- ###Rapid API Machine
+- ### Rapid API Machine
 
   - **MDbList:**
 
