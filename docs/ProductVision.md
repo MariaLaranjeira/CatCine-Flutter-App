@@ -11,7 +11,7 @@ Our vision is to provide the best social network for all cinephiles, with an uni
 
 -**Category Likes:** Users can leave a like on the categories they enjoyed by pressing the heart button. The like count is displayed on each category for every user to see.
 
--**Upvote/Downvote system:** Users can Upvote or Downvote each film inside a category. The films/shows are then displayed in descending orther according to the upvote/downvote ratio. The total Upvote and Downvote count is displayed alongside the category's total like count.
+-**Upvote/Downvote system:** Users can Upvote or Downvote each film inside a category. The films/shows are then displayed in descending order according to the upvote/downvote ratio. The total Upvote and Downvote count is displayed alongside the category's total like count.
 
 -**Explore Page:** Users can search for any film or TV show by typing its name on the Explore Page search bar.
 
