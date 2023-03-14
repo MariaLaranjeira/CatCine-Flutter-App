@@ -11,7 +11,7 @@ In this section you should start by briefly describing the overall components of
 ## Logical architecture
 
 <p align="center">
-    <img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png" width = 80% height = 80%>
+    <img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png" width = 90% height = 90%>
 </p>
 
 - ### CatCine GUI
@@ -29,7 +29,7 @@ In this section you should start by briefly describing the overall components of
 ## Physical architecture
     
 <p align="center">
-    <img src = "https://user-images.githubusercontent.com/114760605/224854041-1d8e17e8-61a1-4e3a-af3c-aab2d8088ff9.png" width = 80% height = 80%>
+    <img src = "https://user-images.githubusercontent.com/114760605/224854041-1d8e17e8-61a1-4e3a-af3c-aab2d8088ff9.png" width = 90% height = 90%>
 </p>
 
 - ### User mobile Phone
