@@ -8,7 +8,7 @@ To document the architecture requires describing the decomposition of the system
 
 In this section you should start by briefly describing the overall components of the project and their interrelations. You should also describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
 
-### Logical architecture
+-### Logical architecture
 
 <p align="center">
     <img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png">
@@ -26,7 +26,7 @@ In this section you should start by briefly describing the overall components of
 - ### MDbList's API
     External API responsible for supplying information about movies.
 
-### Physical architecture
+-### Physical architecture
     
 <p align="center">
     <img src = "https://user-images.githubusercontent.com/114760605/224854041-1d8e17e8-61a1-4e3a-af3c-aab2d8088ff9.png">
