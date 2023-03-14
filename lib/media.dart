@@ -25,10 +25,11 @@ class Media {
     this.description});
 
   factory Media.fromJson(Map<String,dynamic> json){
-      return Media.api(
+    int year = json['year'] ?? 0;
+    return Media.api(
           imdbId: json['id'] as String,
           mediaName: json['title'] as String,
-          mediaDate: json['year'] as int,
+          mediaDate: year,
           //mediaTime:
           //coverUrl:
           //description:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'api.dart';
 import 'media.dart';
 
 void main() {
@@ -26,17 +27,17 @@ class ExploreFilm extends StatefulWidget{
 }
 
 class _ExploreFilmState extends State<ExploreFilm>{
+  Api client = Api();
 
-  static List<Media> mediaList= [
-    Media("id","test1",3,3,"url","desc"),
-    Media("id","test2",3,3,"url","desc"),
-  ]; // é para aqui que temos de por os filmes que formos buscar à db
+  List<Media> mediaList = [];
+  List<Media> displayList=[];
 
-  List<Media> displayList = List.from(mediaList);
-  void updateList(String value){
-    //função que filtra a lista de filmes/shows
+  void updateList(String title) async{
+    mediaList = await client.makeMedia(title);
+    displayList=List.from(mediaList);
+
     setState(() {
-      displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(value.toLowerCase())).toList();
+      displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
     });
   }
 
@@ -64,7 +65,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
                     height:20.0,
                   ),
                   TextField(
-                    onChanged: (value) => updateList(value),
+                    onChanged: (title) => updateList(title),
                     style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       filled: true,
