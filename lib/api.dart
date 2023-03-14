@@ -8,7 +8,6 @@ class Api {
 
   Future<String> getInfo(String title) async {
     final client = http.Client();
-    //final title = "The Good Place"; // Replace with your desired query string
 
     final request = http.Request('GET',
         Uri.parse('https://mdblist.p.rapidapi.com/?s=$title'))
