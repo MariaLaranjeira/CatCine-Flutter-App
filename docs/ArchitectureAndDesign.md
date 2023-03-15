@@ -42,9 +42,6 @@ In this section you should start by briefly describing the overall components of
     It is responsible for managing API requests and responses for the CatCine application. It may host APIs that provide data to implement the features of our app, such as movie data.
 
 ## Vertical prototype
-To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system.
 
-In this subsection please describe which feature you have implemented, and how, together with a snapshot of the user interface, if applicable.
-
-At this phase, instead of a complete user story, you can simply implement a feature that demonstrates thay you can use the technology, for example, show a screen with the app credits (name and authors).
+So far we have implemented a basic Explore Page UI and the API, which successfully fetches the films/shows information and already displays their name in the app according to the User's search. We have also set up the firebase database which is ready to be used in our code.
 
