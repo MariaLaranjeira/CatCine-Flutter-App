@@ -39,5 +39,7 @@ To ensure reliability, we used the Client-Server pattern, which separates the cl
 
 ## Vertical prototype
 
-So far we have implemented a basic Explore Page UI and the API, which successfully fetches the films/shows information and already displays their name in the app according to the User's search. We have also set up the firebase database which is ready to be used in our code.
+So far we have implemented:
+- A basic Explore Page UI and the API, which successfully fetches the films/shows information and already displays their name in the app according to the User's search.
+- We have also set up the firebase database which is ready to be used in our code.
 
