@@ -1,12 +1,9 @@
 
 # Architecture and Design
-The architecture of a software system encompasses the set of key decisions about its overall organization. 
 
-A well written architecture document is brief but reduces the amount of time it takes new programmers to a project to understand the code to feel able to make modifications and enhancements.
-
-To document the architecture requires describing the decomposition of the system in their parts (high-level components) and the key behaviors and collaborations between them. 
-
-In this section you should start by briefly describing the overall components of the project and their interrelations. You should also describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
+The main components of the project are the client, the server, and the API. The client is the mobile application that runs on the user's electronic device, which is responsible for presenting data to the user, processing user inputs, and sending requests to the server for data. The server component of the project is responsible for processing requests from the client, retrieving data from the API, and sending responses back to the client. 
+To ensure scalability and reliability, we used the Client-Server pattern, which separates the client and server components and enables them to communicate over a network. 
+In this section we'll describe the logical and physical architectures of our project.
 
 ## Logical architecture
 
