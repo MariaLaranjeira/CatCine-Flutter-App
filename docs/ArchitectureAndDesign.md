@@ -2,7 +2,7 @@
 # Architecture and Design
 
 The main components of the project are the client, the server, and the API. The client is the mobile application that runs on the user's electronic device, which is responsible for presenting data to the user, processing user inputs, and sending requests to the server for data. The server component of the project is responsible for processing requests from the client, retrieving data from the API, and sending responses back to the client. 
-To ensure scalability and reliability, we used the Client-Server pattern, which separates the client and server components and enables them to communicate over a network. In this section, we will delve deeper into the logical and physical architectures of our project.
+To ensure reliability, we used the Client-Server pattern, which separates the client and server components and enables them to communicate over a network. In this section, we will delve deeper into the logical and physical architectures of our project.
 
 ## Logical architecture
 
