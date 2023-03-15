@@ -32,7 +32,7 @@
 - email: User's email used for login
 - password: User's account password
 
-## Associations:
+## Association Classes:
 **Association class between User and Category**: An user can leave a like on a category
 
 <p></p>
