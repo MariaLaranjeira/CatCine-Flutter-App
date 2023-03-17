@@ -6,7 +6,7 @@
 
 > ## Iteration 0
 >
-> ### *Plans:
+> ### * Plans:
 >
 >   > ### Development Board
 >   >
