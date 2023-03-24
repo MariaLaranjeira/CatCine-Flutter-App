@@ -1,15 +1,15 @@
 
 
 class Media {
-  String? imdbId;
+  String? id;
   String? mediaName;
   int mediaDate;
-  int mediaTime; // para séries como é que isto fica?
+  int mediaTime;
   String? coverUrl;
   String? description;
 
   Media(
-      this.imdbId,
+      this.id,
       this.mediaName,
       this.mediaDate,
       this.mediaTime,
@@ -17,7 +17,7 @@ class Media {
       this.description);
 
   Media.api({
-    this.imdbId,
+    this.id,
     this.mediaName,
     this.mediaDate=0,
     this.mediaTime=0,
@@ -27,7 +27,7 @@ class Media {
   factory Media.fromJson(Map<String,dynamic> json){
     int year = json['year'] ?? 0;
     return Media.api(
-          imdbId: json['id'] as String,
+          id: json['id'] as String,
           mediaName: json['title'] as String,
           mediaDate: year,
           //mediaTime:

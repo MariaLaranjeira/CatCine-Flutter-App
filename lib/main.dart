@@ -38,7 +38,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
   Api client = Api();
 
   List<Media> mediaList = [];
-  List<Media> displayList=[];
+  List<Media> displayList = [];
 
   void updateList(String title) async{
     mediaList = await client.makeMedia(title);
@@ -66,7 +66,8 @@ class _ExploreFilmState extends State<ExploreFilm>{
                   Text(
                       "Explore",
                       style: TextStyle(
-                          color:Colors.white, fontSize: 30.0
+                          color:Colors.white,
+                          fontSize: 30.0,
                       ),
                   ),
                   SizedBox(
