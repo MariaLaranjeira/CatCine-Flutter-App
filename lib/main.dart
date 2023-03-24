@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'Pages/login.dart';
 import 'api.dart';
 import 'media.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home:ExploreFilm()
+      home:LoginView()
     );
   }
 }
@@ -39,11 +40,11 @@ class _ExploreFilmState extends State<ExploreFilm>{
   Api client = Api();
 
   List<Media> mediaList = [];
-  List<Media> displayList=[];
+  List<Media> displayList = [];
 
   void updateList(String title) async{
     mediaList = await client.makeMedia(title);
-    displayList=List.from(mediaList);
+    displayList = List.from(mediaList);
 
     setState(() {
       displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
@@ -67,7 +68,8 @@ class _ExploreFilmState extends State<ExploreFilm>{
                   const Text(
                       "Explore",
                       style: TextStyle(
-                          color:Colors.white, fontSize: 30.0
+                          color:Colors.white,
+                          fontSize: 30.0,
                       ),
                   ),
                   const SizedBox(

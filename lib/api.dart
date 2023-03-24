@@ -23,6 +23,7 @@ class Api {
     return response.body; // Return the response body as a string
   }
 
+
   Future<List<Media>> makeMedia(String title) async{
     String info = await getInfo(title);
     Map <String, dynamic> json = jsonDecode(info);

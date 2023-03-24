@@ -1,12 +1,8 @@
 
 # Architecture and Design
-The architecture of a software system encompasses the set of key decisions about its overall organization. 
 
-A well written architecture document is brief but reduces the amount of time it takes new programmers to a project to understand the code to feel able to make modifications and enhancements.
-
-To document the architecture requires describing the decomposition of the system in their parts (high-level components) and the key behaviors and collaborations between them. 
-
-In this section you should start by briefly describing the overall components of the project and their interrelations. You should also describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
+The main components of the project are the client, the server, and the API. The client is the mobile application that runs on the user's electronic device, which is responsible for presenting data to the user, processing user inputs, and sending requests to the server for data. The server component of the project is responsible for processing requests from the client, retrieving data from the API, and sending responses back to the client. 
+To ensure reliability, we used the Client-Server pattern, which separates the client and server components and enables them to communicate over a network. In this section, we will delve deeper into the logical and physical architectures of our project.
 
 ## Logical architecture
 
@@ -42,9 +38,8 @@ In this section you should start by briefly describing the overall components of
     It is responsible for managing API requests and responses for the CatCine application. It may host APIs that provide data to implement the features of our app, such as movie data.
 
 ## Vertical prototype
-To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system.
 
-In this subsection please describe which feature you have implemented, and how, together with a snapshot of the user interface, if applicable.
-
-At this phase, instead of a complete user story, you can simply implement a feature that demonstrates thay you can use the technology, for example, show a screen with the app credits (name and authors).
+So far we have implemented:
+- A basic Explore Page UI and the API, which successfully fetches the films/shows information and already displays their name in the app according to the User's search.
+- We have also set up the firebase database which is ready to be used in our code.
 

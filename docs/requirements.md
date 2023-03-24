@@ -1,7 +1,7 @@
 
-## Requirements
+# Requirements
 
-### Domain model
+## Domain model:
 
  <p align="center" justify="center">
   <img src="https://user-images.githubusercontent.com/92693155/224860308-f52eeb1a-e21e-439b-8f7d-f167da0bb6c0.jpeg">
@@ -32,7 +32,7 @@
 - email: User's email used for login
 - password: User's account password
 
-## Associations:
+## Association Classes:
 **Association class between User and Category**: An user can leave a like on a category
 
 <p></p>
