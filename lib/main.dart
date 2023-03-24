@@ -42,7 +42,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
 
   void updateList(String title) async{
     mediaList = await client.makeMedia(title);
-    displayList=List.from(mediaList);
+    displayList = List.from(mediaList);
 
     setState(() {
       displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
