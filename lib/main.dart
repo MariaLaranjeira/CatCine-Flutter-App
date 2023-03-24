@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'Pages/login.dart';
 import 'api.dart';
 import 'media.dart';
 
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home:ExploreFilm()
+      home:LoginView()
     );
   }
 }
