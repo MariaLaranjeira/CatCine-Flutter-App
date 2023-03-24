@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'Pages/login.dart';
-import 'api.dart';
-import 'media.dart';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   runApp(const MyApp());
 }
 
@@ -23,93 +17,39 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home:LoginView()
+    return const MaterialApp(
+      home:HomePage()
     );
   }
 }
 
-class ExploreFilm extends StatefulWidget{
-  const ExploreFilm({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<ExploreFilm> createState() => _ExploreFilmState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _ExploreFilmState extends State<ExploreFilm>{
-  Api client = Api();
+class _HomePageState extends State<HomePage> {
 
-  List<Media> mediaList = [];
-  List<Media> displayList = [];
-
-  void updateList(String title) async{
-    mediaList = await client.makeMedia(title);
-    displayList = List.from(mediaList);
-
-    setState(() {
-      displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
-    });
+  Future<FirebaseApp> _initializeFirebase() async {
+    FirebaseApp firebaseApp = await Firebase.initializeApp();
+    return firebaseApp;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xff393d5a),
-        appBar: AppBar(
-          backgroundColor: const Color(0xff393d5a), // not sure o que é isto
-          elevation: 0.0,
-        ),
-        body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:[
-                  const Text(
-                      "Explore",
-                      style: TextStyle(
-                          color:Colors.white,
-                          fontSize: 30.0,
-                      ),
-                  ),
-                  const SizedBox(
-                    height:20.0,
-                  ),
-                  TextField(
-                    onChanged: (title) => updateList(title),
-                    style: const TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: const Color(0xffcccede),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: "Search ...",
-                      prefixIcon: const Icon(Icons.search),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Expanded(
-
-                      child: ListView.builder(
-                          itemCount: displayList.length,
-                          itemBuilder: (context, index) => ListTile(
-                            contentPadding: const EdgeInsets.all(8.0),
-                            title: Text(
-                                displayList[index].mediaName!,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                ),
-                            ),
-                          ),
-                      ),
-                  ),
-                ],
-            ),
-        ),
+      body: FutureBuilder(
+        future: _initializeFirebase(),
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.done) {
+            return const LoginScreen();
+          }
+          return const Center(child: CircularProgressIndicator(),);
+        },
+      ),
     );
   }
 }
+
