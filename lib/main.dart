@@ -4,6 +4,7 @@ import 'api.dart';
 import 'media.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 
@@ -52,41 +53,41 @@ class _ExploreFilmState extends State<ExploreFilm>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xff393d5a),
+        backgroundColor: const Color(0xff393d5a),
         appBar: AppBar(
-          backgroundColor: Color(0xff393d5a), // not sure o que é isto
+          backgroundColor: const Color(0xff393d5a), // not sure o que é isto
           elevation: 0.0,
         ),
         body: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children:[
-                  Text(
+                  const Text(
                       "Explore",
                       style: TextStyle(
                           color:Colors.white, fontSize: 30.0
                       ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height:20.0,
                   ),
                   TextField(
                     onChanged: (title) => updateList(title),
-                    style: TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Color(0xffcccede),
+                      fillColor: const Color(0xffcccede),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Search ...",
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: const Icon(Icons.search),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20.0,
                   ),
                   Expanded(
@@ -94,10 +95,10 @@ class _ExploreFilmState extends State<ExploreFilm>{
                       child: ListView.builder(
                           itemCount: displayList.length,
                           itemBuilder: (context, index) => ListTile(
-                            contentPadding: EdgeInsets.all(8.0),
+                            contentPadding: const EdgeInsets.all(8.0),
                             title: Text(
                                 displayList[index].mediaName!,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white,
                                 ),
                             ),
