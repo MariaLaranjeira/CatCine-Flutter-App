@@ -40,4 +40,14 @@ class Media {
       );
   }
 
+  toJson(){
+    return {
+      "Id": id,
+      "Name": mediaName,
+      "Date": mediaDate,
+      "Duration": mediaTime,
+      "Score": score,
+    };
+  }
+
 }

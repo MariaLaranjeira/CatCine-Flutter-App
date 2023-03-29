@@ -107,7 +107,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ExploreFilm()));
                     }
                     else {
-
                     }
                   },
                   child: const Text("Sign in" , style: TextStyle(color: Colors.white, fontSize: 18.0)),
