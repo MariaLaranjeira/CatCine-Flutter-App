@@ -13,18 +13,18 @@ class _RegisterScreenState extends State<RegisterScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff393d5a),
+      backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
-        backgroundColor: Color(0xff393d5a), // not sure o que é isto
+        backgroundColor: const Color(0xff393d5a), // not sure o que é isto
         elevation: 0.0,
       ),
       body: Padding (
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Create Account",
                 style:
                 TextStyle(
@@ -33,13 +33,13 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 44.0,
               ),
               TextField(
                 decoration: InputDecoration(
                   filled:true,
-                  fillColor: Color(0xFFFFFFFF),
+                  fillColor: const Color(0xFFFFFFFF),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
@@ -47,14 +47,14 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   hintText: "Enter your catname",
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 26.0,
               ),
               TextField(
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   filled:true,
-                  fillColor: Color(0xFFFFFFFF),
+                  fillColor: const Color(0xFFFFFFFF),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
@@ -62,14 +62,14 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   hintText: "Enter your email",
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 26.0,
               ),
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
                   filled:true,
-                  fillColor: Color(0xFFFFFFFF),
+                  fillColor: const Color(0xFFFFFFFF),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
@@ -77,14 +77,14 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   hintText: "Enter your password",
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 26.0,
               ),
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
                   filled:true,
-                  fillColor: Color(0xFFFFFFFF),
+                  fillColor: const Color(0xFFFFFFFF),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
@@ -92,17 +92,17 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   hintText: "Confirm your password",
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 34.0,
               ),
-              Container(
+              SizedBox(
                 width:double.infinity,
                 child: RawMaterialButton(
-                  fillColor: Color(0xFFEC6B76),
+                  fillColor: const Color(0xFFEC6B76),
                   elevation: 0.0,
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
                   onPressed: () {},
-                  child: Text("Register" , style: TextStyle(color: Colors.white, fontSize: 18.0)),
+                  child: const Text("Register" , style: TextStyle(color: Colors.white, fontSize: 18.0)),
                 ),
               ),
             ],
