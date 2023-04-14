@@ -126,6 +126,32 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   child: const Text("Register" , style: TextStyle(color: Colors.white, fontSize: 18.0)),
                 ),
               ),
+              const SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("I'm already a user!",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  GestureDetector(
+                      onTap: widget.showLoginPage,
+                      child: const Text(
+                          "Login Now",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15
+                        ),
+                      )
+                  )
+                ],
+              )
             ],
           )
       ),

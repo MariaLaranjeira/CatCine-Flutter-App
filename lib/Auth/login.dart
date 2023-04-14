@@ -117,6 +117,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: const Text("Sign in" , style: TextStyle(color: Colors.white, fontSize: 18.0)),
                 ),
               ),
+              const SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("I'm a new user!",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  GestureDetector(
+                    onTap: widget.showRegisterPage,
+                    child: const Text(
+                        "Register Now",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15
+                      ),
+                    )
+                  )
+                ],
+              )
             ],
           )
       ),
