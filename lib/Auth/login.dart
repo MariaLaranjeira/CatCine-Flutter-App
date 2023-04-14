@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a), // not sure o que é isto
+        backgroundColor: const Color(0xff393d5a),
         elevation: 0.0,
       ),
       body: Padding (

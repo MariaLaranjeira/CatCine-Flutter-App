@@ -10,6 +10,7 @@ import 'Auth/login.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'Auth/register.dart';
+import 'Pages/explore.dart';
 import 'Pages/initial.dart';
 import 'firebase_options.dart';
 
@@ -108,7 +109,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return const MaterialApp(
-        home: MainPage()
+        home: InitialScreen()
     );
 
   }

@@ -29,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a), // not sure o que é isto
+        backgroundColor: const Color(0xff393d5a),
         elevation: 0.0,
       ),
       body: Padding (

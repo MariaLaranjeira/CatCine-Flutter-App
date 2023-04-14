@@ -1,8 +1,6 @@
 import 'package:catcine_es/Auth/authmain.dart';
 import 'package:flutter/material.dart';
 
-
-
 class InitialScreen extends StatefulWidget {
   const InitialScreen({Key? key}) : super(key: key);
 
@@ -31,7 +29,7 @@ class _InitialScreenState extends State<InitialScreen> {
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a), // not sure o que é isto
+        backgroundColor: const Color(0xff393d5a),
         elevation: 0.0,
       ),
       body: Padding (
@@ -61,7 +59,7 @@ class _InitialScreenState extends State<InitialScreen> {
                 ),
               ),
 
-              const SizedBox( height: 34.0),
+              const SizedBox(height: 34.0),
               SizedBox(
                 width:double.infinity,
                 child: RawMaterialButton(
