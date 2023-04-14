@@ -1,4 +1,4 @@
-import 'package:catcine_es/Auth/initial.dart';
+import 'package:catcine_es/Auth/authinitial.dart';
 import 'package:catcine_es/Auth/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
@@ -9,6 +9,10 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'Auth/login.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'Auth/register.dart';
+import 'Pages/initial.dart';
+import 'firebase_options.dart';
+
 
 
 Future<void> main() async {

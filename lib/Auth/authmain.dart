@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 
 
 class AuthMainPage extends StatefulWidget {
-  const AuthMainPage({Key? key}) : super(key: key);
+
+  final bool pageSelector;
+  const AuthMainPage({Key? key, required this.pageSelector}) : super(key: key);
 
   @override
   State<AuthMainPage> createState() => _AuthMainPageState();
@@ -12,7 +14,7 @@ class AuthMainPage extends StatefulWidget {
 
 class _AuthMainPageState extends State<AuthMainPage> {
 
-  bool showLoginPage = true;
+  late bool showLoginPage = widget.pageSelector;
 
   void toggleScreens() {
     setState(() {

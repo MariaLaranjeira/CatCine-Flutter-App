@@ -4,6 +4,8 @@ import 'package:catcine_es/Pages/explore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../Pages/initial.dart';
+
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class MainPage extends StatelessWidget {
           if (snapshot.hasData) {
             return const ExploreFilm();
           } else {
-            return const AuthMainPage();
+            return const InitialScreen();
           }
         },
       ),

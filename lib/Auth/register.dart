@@ -39,17 +39,25 @@ class _RegisterScreenState extends State<RegisterScreen>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Create Account",
+                "Create",
                 style:
                 TextStyle(
                   color: Colors.white,
                   fontSize: 25.0,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(
-                height: 44.0,
+              const Text(
+                "Account",
+                style:
+                TextStyle(
+                  color: Colors.white,
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              const SizedBox(height: 44.0),
+
               TextField(
                 decoration: InputDecoration(
                   filled:true,
@@ -58,12 +66,12 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Enter your catname",
+                  hintText: " Enter your catname",
                 ),
               ),
-              const SizedBox(
-                height: 26.0,
-              ),
+
+              const SizedBox(height: 26.0),
+
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -74,12 +82,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Enter your email",
+                  hintText: " Enter your email",
                 ),
               ),
-              const SizedBox(
-                height: 26.0,
-              ),
+              SizedBox(height: 26.0),
+
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -90,12 +97,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Enter your password",
+                  hintText: " Enter your password",
                 ),
               ),
-              const SizedBox(
-                height: 26.0,
-              ),
+              SizedBox(height: 26.0),
+
               TextField(
                 controller: confirmPasswordController,
                 obscureText: true,
@@ -106,24 +112,32 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Confirm your password",
+                  hintText: " Confirm your password",
                 ),
               ),
-              const SizedBox(
-                height: 34.0,
-              ),
+              const SizedBox(height: 34.0),
+
               SizedBox(
                 width:double.infinity,
                 child: RawMaterialButton(
                   fillColor: const Color(0xFFEC6B76),
                   elevation: 0.0,
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
                   onPressed: () {
-                    if (confirmPasswordController.text.trim() == passwordController.text.trim()) {
+                    if (passwordController.text.trim() == confirmPasswordController.text.trim()) {
                       signUp();
                     }
                   },
-                  child: const Text("Register" , style: TextStyle(color: Colors.white, fontSize: 18.0)),
+                  child: const Text(
+                      "Register" ,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
