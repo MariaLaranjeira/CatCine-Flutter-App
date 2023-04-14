@@ -3,6 +3,7 @@ import 'package:catcine_es/Pages/explore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -51,17 +52,25 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Welcome Back",
+                "Welcome",
                 style:
                 TextStyle(
                   color: Colors.white,
                   fontSize: 25.0,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(
-                height: 44.0,
+              const Text(
+                "Back",
+                style:
+                TextStyle(
+                  color: Colors.white,
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              const SizedBox(height: 44.0),
+
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -72,12 +81,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Enter your email",
+                  hintText: " Enter your email",
                 ),
               ),
-              const SizedBox(
-                height: 26.0,
-              ),
+              const SizedBox( height: 26.0),
+
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -88,16 +96,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Enter your password",
+                  hintText: " Enter your password",
                 ),
               ),
-              const SizedBox(
-                height: 26.0,
-              ),
+              const SizedBox( height: 26.0),
+
               SizedBox(
                 width:double.infinity,
                 child: RawMaterialButton(
                   fillColor: const Color(0xFFEC6B76),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
                   elevation: 0.0,
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   onPressed: () async {
@@ -110,7 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     }
                   },
-                  child: const Text("Sign in" , style: TextStyle(color: Colors.white, fontSize: 18.0)),
+                  child: const Text(
+                      "Sign in" ,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],

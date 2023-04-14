@@ -25,17 +25,25 @@ class _RegisterScreenState extends State<RegisterScreen>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Create Account",
+                "Create",
                 style:
                 TextStyle(
                   color: Colors.white,
                   fontSize: 25.0,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(
-                height: 44.0,
+              Text(
+                "Account",
+                style:
+                TextStyle(
+                  color: Colors.white,
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              SizedBox(height: 44.0),
+
               TextField(
                 decoration: InputDecoration(
                   filled:true,
@@ -44,12 +52,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Enter your catname",
+                  hintText: " Enter your catname",
                 ),
               ),
-              SizedBox(
-                height: 26.0,
-              ),
+              SizedBox(height: 26.0),
+
               TextField(
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
@@ -59,12 +66,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Enter your email",
+                  hintText: " Enter your email",
                 ),
               ),
-              SizedBox(
-                height: 26.0,
-              ),
+              SizedBox(height: 26.0),
+
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
@@ -74,12 +80,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Enter your password",
+                  hintText: " Enter your password",
                 ),
               ),
-              SizedBox(
-                height: 26.0,
-              ),
+              SizedBox(height: 26.0),
+
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
@@ -89,20 +94,28 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: "Confirm your password",
+                  hintText: " Confirm your password",
                 ),
               ),
-              SizedBox(
-                height: 34.0,
-              ),
+              SizedBox(height: 34.0),
+
               Container(
                 width:double.infinity,
                 child: RawMaterialButton(
                   fillColor: Color(0xFFEC6B76),
                   elevation: 0.0,
                   padding: EdgeInsets.symmetric(vertical: 20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
                   onPressed: () {},
-                  child: Text("Register" , style: TextStyle(color: Colors.white, fontSize: 18.0)),
+                  child: Text(
+                      "Register" ,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],
