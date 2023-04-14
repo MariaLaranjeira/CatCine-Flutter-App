@@ -1,3 +1,8 @@
 # This is a generated file; do not edit or check into version control.
-firebase_core=/Users/marialeolaranja/.pub-cache/hosted/pub.dev/firebase_core-2.7.1/
-firebase_core_web=/Users/marialeolaranja/.pub-cache/hosted/pub.dev/firebase_core_web-2.2.2/
+cloud_firestore=/home/pedropf/.pub-cache/hosted/pub.dev/cloud_firestore-4.5.1/
+cloud_firestore_web=/home/pedropf/.pub-cache/hosted/pub.dev/cloud_firestore_web-3.4.1/
+connectivity_plus=/home/pedropf/.pub-cache/hosted/pub.dev/connectivity_plus-3.0.4/
+firebase_auth=/home/pedropf/.pub-cache/hosted/pub.dev/firebase_auth-4.4.1/
+firebase_auth_web=/home/pedropf/.pub-cache/hosted/pub.dev/firebase_auth_web-5.3.1/
+firebase_core=/home/pedropf/.pub-cache/hosted/pub.dev/firebase_core-2.9.0/
+firebase_core_web=/home/pedropf/.pub-cache/hosted/pub.dev/firebase_core_web-2.3.0/
