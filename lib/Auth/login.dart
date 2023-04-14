@@ -29,7 +29,106 @@ class _LoginScreenState extends State<LoginScreen> {
       user = userCredential.user;
     } on FirebaseAuthException catch (exception) {
       if (exception.code == "user-not-found") {
-        print("User not found for this email");
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                alignment: Alignment.topCenter,
+                shape: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none,
+                ),
+                backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                content:
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      "This User Does Not Exist",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20
+                      ),
+                    ),
+                  ],
+                )
+              );
+          }
+        );
+      }
+      if (exception.code == "wrong-password") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Wrong Password!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
+      if (exception.code == "invalid-email") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Invalid Email!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
       }
     }
 

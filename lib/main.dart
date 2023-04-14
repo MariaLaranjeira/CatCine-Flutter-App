@@ -1,17 +1,10 @@
 import 'package:catcine_es/Auth/authinitial.dart';
-import 'package:catcine_es/Auth/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-
-import 'Auth/login.dart';
-
 import 'package:firebase_core/firebase_core.dart';
-import 'Auth/register.dart';
-import 'Pages/initial.dart';
-import 'firebase_options.dart';
 
 
 
@@ -86,8 +79,8 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: MediaQuery.of(context).size.height/(2.1),

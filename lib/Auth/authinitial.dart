@@ -1,5 +1,3 @@
-import 'package:catcine_es/Auth/authmain.dart';
-import 'package:catcine_es/Auth/login.dart';
 import 'package:catcine_es/Pages/explore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
