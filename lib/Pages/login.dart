@@ -13,8 +13,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   static Future<User?> loginUsingEmailPassword(
-      {required String email,
+     {required String email,
       required String password,
       required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -35,9 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
@@ -111,7 +111,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   elevation: 0.0,
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   onPressed: () async {
-                    User? user = await loginUsingEmailPassword(email: emailController.text, password: passwordController.text, context: context);
+                    User? user = await loginUsingEmailPassword(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                        context: context
+                    );
                     print(user);
                     if (user != null) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ExploreFilm()));

@@ -10,16 +10,29 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen>{
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  Future signUp() async {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim()
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      backgroundColor: Color(0xff393d5a),
+      backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
-        backgroundColor: Color(0xff393d5a), // not sure o que é isto
+        backgroundColor: const Color(0xff393d5a), // not sure o que é isto
         elevation: 0.0,
       ),
       body: Padding (
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
               TextField(
                 decoration: InputDecoration(
                   filled:true,
-                  fillColor: Color(0xFFFFFFFF),
+                  fillColor: const Color(0xFFFFFFFF),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
@@ -58,10 +71,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
               SizedBox(height: 26.0),
 
               TextField(
+                controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   filled:true,
-                  fillColor: Color(0xFFFFFFFF),
+                  fillColor: const Color(0xFFFFFFFF),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
@@ -72,10 +86,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
               SizedBox(height: 26.0),
 
               TextField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   filled:true,
-                  fillColor: Color(0xFFFFFFFF),
+                  fillColor: const Color(0xFFFFFFFF),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
@@ -86,10 +101,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
               SizedBox(height: 26.0),
 
               TextField(
+                controller: confirmPasswordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   filled:true,
-                  fillColor: Color(0xFFFFFFFF),
+                  fillColor: const Color(0xFFFFFFFF),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
@@ -102,7 +118,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
               Container(
                 width:double.infinity,
                 child: RawMaterialButton(
-                  fillColor: Color(0xFFEC6B76),
+                  fillColor: const Color(0xFFEC6B76),
                   elevation: 0.0,
                   padding: EdgeInsets.symmetric(vertical: 20.0),
                   shape: RoundedRectangleBorder(
