@@ -15,14 +15,14 @@ class _InitialScreenState extends State<InitialScreen> {
   void _signIn() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const AuthMainPage(pageSelector: false)
+      MaterialPageRoute(builder: (context) => const AuthMainPage(pageSelector: true)
       ));
   }
 
   void _register() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const AuthMainPage(pageSelector: true)
+      MaterialPageRoute(builder: (context) => const AuthMainPage(pageSelector: false)
     ));
   }
 
