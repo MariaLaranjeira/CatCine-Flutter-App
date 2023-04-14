@@ -1,11 +1,12 @@
-import 'package:catcine_es/Pages/register.dart';
+import 'package:catcine_es/Auth/initial.dart';
+import 'package:catcine_es/Auth/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
-import 'Pages/login.dart';
+import 'Auth/login.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 
@@ -94,6 +95,7 @@ class _HomePageState extends State<HomePage> {
                     child: LoadingIndicator(indicatorType:  // To use an actual loading Page?
                     Indicator.ballClipRotateMultiple),
                   )
+
                 ],
               ),
             )
@@ -102,7 +104,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return const MaterialApp(
-        home: RegisterScreen()
+        home: MainPage()
     );
 
   }

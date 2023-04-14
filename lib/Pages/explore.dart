@@ -1,3 +1,5 @@
+import 'package:catcine_es/Auth/authmain.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../api.dart';
@@ -39,6 +41,24 @@ class _ExploreFilmState extends State<ExploreFilm>{
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children:[
+            SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: RawMaterialButton(
+                child: const Text(
+                  "Log out temporary",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0)
+                ),
+                  onPressed: () async {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const AuthMainPage())
+                    );
+                  }),
+            ),
             const Text(
               "Explore",
               style: TextStyle(

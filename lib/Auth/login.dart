@@ -1,10 +1,10 @@
-
 import 'package:catcine_es/Pages/explore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  final VoidCallback showRegisterPage;
+  const LoginScreen({Key? key, required this.showRegisterPage}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
