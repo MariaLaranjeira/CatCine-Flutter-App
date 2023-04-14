@@ -1,3 +1,4 @@
+import 'package:catcine_es/Pages/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -101,7 +102,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return const MaterialApp(
-        home: LoginScreen()
+        home: RegisterScreen()
     );
 
   }

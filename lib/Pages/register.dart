@@ -10,8 +10,21 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen>{
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  Future signUp() async {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim()
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
@@ -51,6 +64,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                 height: 26.0,
               ),
               TextField(
+                controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   filled:true,
@@ -66,6 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                 height: 26.0,
               ),
               TextField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   filled:true,
@@ -81,6 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                 height: 26.0,
               ),
               TextField(
+                controller: confirmPasswordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   filled:true,
@@ -101,7 +117,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   fillColor: const Color(0xFFEC6B76),
                   elevation: 0.0,
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  onPressed: () {},
+                  onPressed: () {
+                    if (confirmPasswordController.text.trim() == passwordController.text.trim()) {
+                      signUp();
+                    }
+                  },
                   child: const Text("Register" , style: TextStyle(color: Colors.white, fontSize: 18.0)),
                 ),
               ),
