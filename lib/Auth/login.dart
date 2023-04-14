@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:catcine_es/Pages/explore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,17 +18,52 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  static Future<User?> loginUsingEmailPassword(
-     {required String email,
-      required String password,
-      required BuildContext context}) async {
+  Future loginUsingEmailPassword() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
-
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
       user = userCredential.user;
+      if (user != null) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => const ExploreFilm()));
+
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: Colors.green,
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.check,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Success!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
     } on FirebaseAuthException catch (exception) {
       if (exception.code == "user-not-found") {
         showDialog(context: context,
@@ -131,8 +168,6 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     }
-
-    return user;
   }
 
   @override
@@ -141,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a), // not sure o que é isto
+        backgroundColor: const Color(0xff393d5a),
         elevation: 0.0,
       ),
       body: Padding (
@@ -210,18 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   elevation: 0.0,
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   onPressed: () async {
-                    User? user = await loginUsingEmailPassword(
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
-                        context: context
-                    );
-                    print(user);
-                    if (user != null) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ExploreFilm()));
-                    }
-                    else {
-
-                    }
+                    loginUsingEmailPassword();
                   },
                   child: const Text(
                       "Sign in" ,

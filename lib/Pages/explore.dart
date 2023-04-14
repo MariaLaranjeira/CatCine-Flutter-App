@@ -29,12 +29,46 @@ class _ExploreFilmState extends State<ExploreFilm>{
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a), // not sure o que é isto
+        backgroundColor: const Color(0xff393d5a),
         elevation: 0.0,
       ),
+
+      bottomNavigationBar: BottomAppBar(
+        color: const Color(0xCACBCBD2),
+        child: IconTheme(
+          data: const IconThemeData(color: Color(0xCB6D706B)),
+            child:Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.home),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.person),
+                  onPressed: () {},
+                ),
+                IconButton(
+                 icon: Image.asset('images/catIcon.png'),
+                  onPressed: () {},
+                ),
+                IconButton(
+                 icon: const Icon(Icons.search),
+                 onPressed: () {},
+                ),
+                IconButton(
+                 icon: const Icon(Icons.category),
+                 onPressed: () {},
+                ),
+              ],
+            ),
+        ),
+      ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -87,7 +121,6 @@ class _ExploreFilmState extends State<ExploreFilm>{
               height: 20.0,
             ),
             Expanded(
-
               child: ListView.builder(
                 itemCount: displayList.length,
                 itemBuilder: (context, index) => ListTile(
