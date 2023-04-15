@@ -10,7 +10,7 @@ class Api {
     final client = http.Client();
 
     final request = http.Request('GET',
-        Uri.parse('https://mdblist.p.rapidapi.com/?s=$title'))
+        Uri.parse('https://mdblist.p.rapidapi.com/?s=$title%27'))
       ..headers.addAll({
         'X-RapidAPI-Key': '322517c2fcmsh5a7bb5bc63667bap1e25ddjsn621dc7f6ef99',
         'X-RapidAPI-Host': 'mdblist.p.rapidapi.com'
