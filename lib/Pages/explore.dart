@@ -89,7 +89,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context) => const AuthMainPage(pageSelector: false,))
+                            builder: (context) => const AuthMainPage(pageSelector: true,))
                     );
                   }),
             ),
