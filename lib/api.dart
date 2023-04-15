@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 import 'media.dart';
@@ -32,7 +33,32 @@ class Api {
     return allMedia;
   }
 
+  final _db = FirebaseFirestore.instance;
 
+  createMedia (Media media){
+    _db.collection("media").add(media.toJson());
+  }
+  
+  
+  Future <bool> doesMediaExist (String mediaName) async {
+    DocumentSnapshot<Map<String, dynamic>> media = await FirebaseFirestore.instance.collection("media").doc(mediaName).get();
+    if (media.exists){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+  storeMedia(String title) {
+    List<Media> allMedia = makeMedia(title) as List<Media>;
+
+    for (int i=0; i < allMedia.length; i++){
+      if (/*cond para ainda não estar na db*/){
+        createMedia(allMedia[i]);
+      }
+    }
+  }
 
 }
 

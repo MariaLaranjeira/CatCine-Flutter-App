@@ -5,6 +5,7 @@ class Media {
   String? mediaName;
   int mediaDate;
   int mediaTime;
+  double score;
   String? coverUrl;
   String? description;
 
@@ -13,6 +14,7 @@ class Media {
       this.mediaName,
       this.mediaDate,
       this.mediaTime,
+      this.score,
       this.coverUrl,
       this.description);
 
@@ -21,6 +23,7 @@ class Media {
     this.mediaName,
     this.mediaDate=0,
     this.mediaTime=0,
+    this.score = 0.0,
     this.coverUrl,
     this.description});
 
@@ -30,10 +33,21 @@ class Media {
           id: json['id'] as String,
           mediaName: json['title'] as String,
           mediaDate: year,
+          score: json['score_average'],
           //mediaTime:
           //coverUrl:
           //description:
       );
+  }
+
+  toJson(){
+    return {
+      "Id": id,
+      "Name": mediaName,
+      "Date": mediaDate,
+      "Duration": mediaTime,
+      "Score": score,
+    };
   }
 
 }
