@@ -14,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -172,38 +171,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
+
       appBar: AppBar(
         backgroundColor: const Color(0xff393d5a),
         elevation: 0.0,
       ),
-      body: Padding (
+
+      body: Stack(
+        children: [
+        Positioned(
+        left: 0,
+        child: Image.asset(
+          'images/WelcomeBack.png',
+          width: 380,
+          height: 400,
+          fit: BoxFit.cover,
+        ),
+      ),
+      Padding (
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Welcome",
-                style:
-                TextStyle(
-                  color: Colors.white,
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Text(
-                "Back",
-                style:
-                TextStyle(
-                  color: Colors.white,
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 44.0),
+              const SizedBox(height: 200),
 
               TextField(
                 controller: emailController,
@@ -251,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       "Sign in" ,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -285,6 +278,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           )
       ),
+      ],
+    ),
     );
   }
 }

@@ -28,17 +28,21 @@ class _InitialScreenState extends State<InitialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
-      appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a),
-        elevation: 0.0,
-      ),
       body: Padding (
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset('images/Initial.png'),
+              const SizedBox(height: 60.0),
+              Expanded(
+                flex: 1,
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Image.asset('images/Initial.png'),
+                ),
+              ),
+
               SizedBox(
                 width:double.infinity,
                 child: RawMaterialButton(
@@ -53,13 +57,13 @@ class _InitialScreenState extends State<InitialScreen> {
                       "Sign in" ,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
+              const SizedBox(height: 25.0),
 
-              const SizedBox(height: 34.0),
               SizedBox(
                 width:double.infinity,
                 child: RawMaterialButton(
@@ -74,7 +78,7 @@ class _InitialScreenState extends State<InitialScreen> {
                     "Register" ,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.bold),
                   ),
                 ),
