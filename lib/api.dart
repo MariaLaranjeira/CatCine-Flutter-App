@@ -20,7 +20,7 @@ class Api {
     final streamedResponse = await client.send(request);
     final response = await http.Response.fromStream(streamedResponse);
 
-    return response.body; // Return the response body as a string
+    return response.body;
   }
 
 
@@ -31,6 +31,8 @@ class Api {
     List <Media> allMedia = body.map((dynamic item) => Media.fromJson(item)).toList();
     return allMedia;
   }
+
+
 
 }
 
