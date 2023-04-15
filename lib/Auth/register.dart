@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:catcine_es/Auth/authinitial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +18,197 @@ class _RegisterScreenState extends State<RegisterScreen>{
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  Future signUp(String email, String password) async {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password
-    );
+  bool passwordConfirmed() {
+    return (passwordController.text.trim() == confirmPasswordController.text.trim());
+  }
+
+  Future signUp() async {
+    try {
+      if (passwordConfirmed()) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim()
+        );
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => const MainPage()
+            )
+        );
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: Colors.green,
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.check,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Success!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
+      else {
+        throw const FormatException("passwords-not-matching");
+      }
+    } on FirebaseAuthException catch (exception) {
+      if (exception.code == "email-already-in-use") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "This Email is already in use",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
+      if (exception.code == "weak-password") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Weak Password!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
+      if (exception.code == "invalid-email") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Invalid Email!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
+    } on FormatException catch (exception) {
+      if(exception.message == "passwords-not-matching") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Passwords Not Matching!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
+    }
   }
 
   @override
@@ -120,14 +308,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                     onPressed: () {
-                      if (passwordController.text.trim() == confirmPasswordController.text.trim()) {
-                        signUp(emailController.text.trim(), passwordController.text.trim());
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) => const MainPage()
-                            )
-                        );
-                      }
+                      signUp();
                     },
                     child: const Text(
                         "Register" ,
