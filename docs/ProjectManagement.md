@@ -26,7 +26,7 @@
 >
 >   > ### Development Board
 >   >
->   >![board_2](https://user-images.githubusercontent.com/92693155/232316414-02a1bbd3-e0e4-4c8b-a4de-8620c98b735c.png)
+>   >![board_2](https://user-images.githubusercontent.com/92693155/232319908-206b1303-4095-437d-a6bb-81b77bece9d8.png)
 >
 > ### * Retrospectives: 
 >
