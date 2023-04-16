@@ -25,40 +25,54 @@ class Api {
   }
 
 
-  Future<List<Media>> makeMedia(String title) async{
+  Future<List<Media>> makeMedia(String title) async {
     String info = await getInfo(title);
     Map <String, dynamic> json = jsonDecode(info);
     List <dynamic> body = json['search'];
-    List <Media> allMedia = body.map((dynamic item) => Media.fromJson(item)).toList();
+    List <Media> allMedia = body.map((dynamic item) => Media.fromJson(item))
+        .toList();
     return allMedia;
   }
 
-  final _db = FirebaseFirestore.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference mediaDB = FirebaseFirestore.instance.collection('media');
 
-  createMedia (Media media){
-    _db.collection("media").add(media.toJson());
-  }
-  
-  
-  Future <bool> doesMediaExist (String mediaName) async {
-    DocumentSnapshot<Map<String, dynamic>> media = await FirebaseFirestore.instance.collection("media").doc(mediaName).get();
-    if (media.exists){
-      return true;
-    } else {
-      return false;
-    }
+  Future <void> addMedia(Media media) {
+    return mediaDB
+        .add({
+      'id': media.id,
+      'title': media.mediaName,
+      'year': media.mediaDate
+    })
+        .then((value) => print("Media added"))
+        .catchError((error) => print("Failed to add media: $error"));
   }
 
 
-  storeMedia(String title) {
-    List<Media> allMedia = makeMedia(title) as List<Media>;
+/* In progress
+  bool doesMediaExist(String id) {
+    bool res = false;
+    mediaDB
+        .doc(id)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        res = true;
+      }
+    });
+    return res;
+  }
+*/
 
-    for (int i=0; i < allMedia.length; i++){
-      if (/*cond para ainda não estar na db*/){
-        createMedia(allMedia[i]);
+  //Stores Media if not found in the db already
+  storeMedia(String title) async {
+    List<Media> allMedia = await makeMedia(title);
+    for (int i = 0; i < allMedia.length; i++) {
+      if (!doesMediaExist(allMedia[i].id!)) {
+        addMedia(allMedia[i]);
       }
     }
   }
-
 }
+
 

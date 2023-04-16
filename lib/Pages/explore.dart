@@ -20,6 +20,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
 
   void updateList(String title) async{
     mediaList = await client.makeMedia(title);
+    client.storeMedia(title);
     displayList = List.from(mediaList);
 
     setState(() {
