@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Pages/initial.dart';
+import 'media.dart';
 
-
+List<Media> allLocalMedia = [];
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

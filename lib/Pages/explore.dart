@@ -1,4 +1,5 @@
 import 'package:catcine_es/Auth/authmain.dart';
+import 'package:catcine_es/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,14 +14,14 @@ class ExploreFilm extends StatefulWidget{
 }
 
 class _ExploreFilmState extends State<ExploreFilm>{
-  Api client = Api();
 
   List<Media> mediaList = [];
   List<Media> displayList = [];
 
   void updateList(String title) async{
-    mediaList = await client.makeMedia(title);
-    client.storeMedia(title);
+    mediaList = await Media.searchTitle(title);
+    API.storeMedia(title);
+    allLocalMedia = mediaList;
     displayList = List.from(mediaList);
 
     setState(() {

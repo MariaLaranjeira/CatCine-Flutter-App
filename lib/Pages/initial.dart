@@ -1,5 +1,7 @@
 import 'package:catcine_es/Auth/authmain.dart';
+import 'package:catcine_es/main.dart';
 import 'package:flutter/material.dart';
+import 'package:catcine_es/api.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({Key? key}) : super(key: key);
@@ -22,6 +24,16 @@ class _InitialScreenState extends State<InitialScreen> {
       context,
       MaterialPageRoute(builder: (context) => const AuthMainPage(pageSelector: false)
     ));
+  }
+
+  Future<void> initList() async{
+    allLocalMedia = await API.loadMedia();
+  }
+
+  @override
+  void initState(){
+    initList();
+    super.initState();
   }
 
   @override

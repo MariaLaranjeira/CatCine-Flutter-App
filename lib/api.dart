@@ -1,13 +1,14 @@
 import 'dart:convert';
+import 'package:catcine_es/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 import 'media.dart';
 
 
-class Api {
+class API {
 
-  Future<String> getInfo(String title) async {
+  static Future<String> getInfo(String title) async {
     final client = http.Client();
 
     final request = http.Request('GET',
@@ -25,7 +26,7 @@ class Api {
   }
 
 
-  Future<List<Media>> makeMedia(String title) async {
+  static Future<List<Media>> makeMedia(String title) async {
     String info = await getInfo(title);
     Map <String, dynamic> json = jsonDecode(info);
     List <dynamic> body = json['search'];
@@ -34,43 +35,59 @@ class Api {
     return allMedia;
   }
 
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  CollectionReference mediaDB = FirebaseFirestore.instance.collection('media');
+  //FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static CollectionReference mediaDB = FirebaseFirestore.instance.collection('media');
 
-  Future <void> addMedia(Media media) {
-    return mediaDB
-        .add({
+  static addMedia(Media media) async {
+
+    var ref = mediaDB.doc(media.id);
+    ref.set({
       'id': media.id,
       'title': media.mediaName,
-      'year': media.mediaDate
-    })
-        .then((value) => print("Media added"))
-        .catchError((error) => print("Failed to add media: $error"));
-  }
-
-
-/* In progress
-  bool doesMediaExist(String id) {
-    bool res = false;
-    mediaDB
-        .doc(id)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        res = true;
-      }
+      'year': media.releaseDate,
+      //'score': media.score
     });
-    return res;
   }
-*/
+
+
+  static Future<bool> doesMediaExist(String id) async {
+    var ref = await mediaDB.doc(id).get();
+    return ref.exists;
+  }
 
   //Stores Media if not found in the db already
-  storeMedia(String title) async {
+  static storeMedia(String title) async {
     List<Media> allMedia = await makeMedia(title);
     for (int i = 0; i < allMedia.length; i++) {
-      if (!doesMediaExist(allMedia[i].id!)) {
+      if (!await doesMediaExist(allMedia[i].id!)) {
         addMedia(allMedia[i]);
       }
+    }
+  }
+  // maybe think about mergin these two in the future? storeMedia <-> updateRemoteList
+  static updateRemoteList() async {
+    for (int i = 0; i<allLocalMedia.length; i++){
+      if (!await doesMediaExist(allLocalMedia[i].id!)) {
+        addMedia(allLocalMedia[i]);
+      }
+    }
+  }
+
+  static loadMedia() async {
+    QuerySnapshot collection = await mediaDB.get();
+    List<Media> allDBMedia = [];
+    final documents = collection.docs;
+    for (int i = 0; i < documents.length; i++) {
+      Media media = Media.api(
+          id: documents[i].get('id'),
+          mediaName: documents[i].get('title'),
+          releaseDate: documents[i].get('year'),
+          watchProviders: []
+          //score: documents[i].get('score')
+      );
+      allDBMedia.add(media);
+      print ("Just added some media from the db! Purrr. Foi esta oh:");
+      print (media.mediaName);
     }
   }
 }
