@@ -33,7 +33,7 @@ class Media {
           id: json['id'] as String,
           mediaName: json['title'] as String,
           mediaDate: year,
-          score: json['score_average'],
+          //score: json['score_average'],
           //mediaTime:
           //coverUrl:
           //description:
@@ -45,8 +45,8 @@ class Media {
       "Id": id,
       "Name": mediaName,
       "Date": mediaDate,
-      "Duration": mediaTime,
-      "Score": score,
+      //"Duration": mediaTime,
+      //"Score": score,
     };
   }
 

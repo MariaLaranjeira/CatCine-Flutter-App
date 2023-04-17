@@ -11,9 +11,9 @@ class Api {
     final client = http.Client();
 
     final request = http.Request('GET',
-        Uri.parse('https://mdblist.p.rapidapi.com/?s=$title'))
+        Uri.parse('https://mdblist.p.rapidapi.com/?s=$title&27'))
       ..headers.addAll({
-        'X-RapidAPI-Key': 'd681c42be1msha8325a6eba62bd0p10fe15jsn10d36805b704',
+        'X-RapidAPI-Key': '322517c2fcmsh5a7bb5bc63667bap1e25ddjsn621dc7f6ef99',
         'X-RapidAPI-Host': 'mdblist.p.rapidapi.com'
       });
 
@@ -21,44 +21,51 @@ class Api {
     final streamedResponse = await client.send(request);
     final response = await http.Response.fromStream(streamedResponse);
 
-    return response.body; // Return the response body as a string
+    return response.body;
   }
 
 
-  Future<List<Media>> makeMedia(String title) async{
+  Future<List<Media>> makeMedia(String title) async {
     String info = await getInfo(title);
     Map <String, dynamic> json = jsonDecode(info);
     List <dynamic> body = json['search'];
-    List <Media> allMedia = body.map((dynamic item) => Media.fromJson(item)).toList();
+    List <Media> allMedia = body.map((dynamic item) => Media.fromJson(item))
+        .toList();
     return allMedia;
   }
 
-  final _db = FirebaseFirestore.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference mediaDB = FirebaseFirestore.instance.collection('media');
 
-  createMedia (Media media){
-    _db.collection("media").add(media.toJson());
+  Future<void> addMedia(Media media) async {
+
+    var ref = mediaDB.doc(media.id);
+    ref.set({
+      'id': media.id,
+      'title': media.mediaName,
+      'year': media.mediaDate
+    })
+
+        .then((value) => print("Media added"))
+        .catchError((error) => print("Failed to add media: $error"));
   }
-  
-  
-  Future <bool> doesMediaExist (String mediaName) async {
-    DocumentSnapshot<Map<String, dynamic>> media = await FirebaseFirestore.instance.collection("media").doc(mediaName).get();
-    if (media.exists){
-      return true;
-    } else {
-      return false;
-    }
+
+
+  Future<bool> doesMediaExist(String id) async {
+    var doc = await mediaDB.doc(id).get();
+    return doc.exists;
   }
 
 
-  storeMedia(String title) {
-    List<Media> allMedia = makeMedia(title) as List<Media>;
-
-    for (int i=0; i < allMedia.length; i++){
-      if (/*cond para ainda não estar na db*/){
-        createMedia(allMedia[i]);
+  //Stores Media if not found in the db already
+  storeMedia(String title) async {
+    List<Media> allMedia = await makeMedia(title);
+    for (int i = 0; i < allMedia.length; i++) {
+      if (! await doesMediaExist(allMedia[i].id!)) {
+        addMedia(allMedia[i]);
       }
     }
   }
-
 }
+
 
