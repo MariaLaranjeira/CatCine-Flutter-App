@@ -5,17 +5,17 @@ import 'package:catcine_es/main.dart';
 class Media {
   String? id;
   String? mediaName;
-  int releaseDate;
-  int runtime;
-  int score;
+  int? releaseDate;
+  int? runtime;
+  int? score;
   String? coverUrl;
   String? description;
   String? imdbId;
-  String? traktId;
-  String? tmdbId;
-  bool movie;
+  int? traktId;
+  int? tmdbId;
+  bool? movie;
   List<String> watchProviders = [];
-  int ageRating;
+  int? ageRating;
   String? trailerUrl;
   String? backdropUrl;
 
@@ -41,33 +41,42 @@ class Media {
   Media.api({
     this.id,
     this.mediaName,
-    this.releaseDate=0,
-    this.runtime=0,
-    this.score = 0,
+    this.releaseDate,
+    this.runtime,
+    this.score,
     this.coverUrl,
     this.description,
     this.imdbId,
     this.traktId,
     this.tmdbId,
-    this.movie = false,
+    this.movie,
     required this.watchProviders,
-    this.ageRating = 0,
+    this.ageRating,
     this.trailerUrl,
     this.backdropUrl
   });
 
   factory Media.fromJson(Map<String,dynamic> json){
-    int year = json['year'] ?? 0;
-    int score = json['score_average'] ?? 0;
+    bool type = false;
+    if (json['type'] == 'movie'){
+      type = true;
+    }
     return Media.api(
           id: json['id'] as String,
           mediaName: json['title'] as String,
-          releaseDate: year,
-          watchProviders: []
-          //score: score,
-          //mediaTime:
-          //coverUrl:
-          //description:
+          releaseDate: json['year'],
+          watchProviders: [],
+          //score: json['score'],
+          runtime: json['runtime'],
+          coverUrl: json['poster'] as String,
+          description: json['description'] as String,
+          imdbId: json['imdbid'] as String,
+          traktId: json['traktid'],
+          tmdbId: json['tmdbid'],
+          movie: type,
+          ageRating: json['age_rating'],
+          trailerUrl: json['trailer'] as String,
+          backdropUrl: json['backdrop'] as String
       );
   }
 

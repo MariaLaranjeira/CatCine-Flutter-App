@@ -33,6 +33,7 @@ class _InitialScreenState extends State<InitialScreen> {
   @override
   void initState(){
     initList();
+    API.searchById();
     super.initState();
   }
 

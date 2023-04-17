@@ -26,7 +26,6 @@ class API {
     return response.body;
   }
 
-
   static Future<List<Media>> makeMedia(String title) async {
     String info = await getInfo(title);
     Map <String, dynamic> json = jsonDecode(info);
@@ -66,7 +65,7 @@ class API {
     }
   }
 
-  // maybe think about mergin these two in the future? storeMedia <-> updateRemoteList
+  // maybe think about merging these two in the future? storeMedia <-> updateRemoteList
   static updateRemoteList() async {
     for (int i = 0; i < allLocalMedia.length; i++) {
       if (!await doesMediaExist(allLocalMedia[i].id!)) {
@@ -109,6 +108,16 @@ class API {
     }
 
     return allDBMedia;
+  }
+
+  static searchById() async{
+
+    final query = await mediaDB.get();
+
+    for (var doc in query.docs) {
+      getInfo(doc.id);
+
+    }
   }
 }
 
