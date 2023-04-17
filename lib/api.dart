@@ -35,17 +35,54 @@ class API {
     return allMedia;
   }
 
+  static Future<Map<String, dynamic>> fullInfo(String id, String searchType) async {
+    String info = await getInfo(id, searchType);
+    Map <String, dynamic> json = jsonDecode(info);
+    return json;
+  }
+
   //FirebaseFirestore firestore = FirebaseFirestore.instance;
   static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
       'media');
 
   static addMedia(Media media) async {
+    String type = 'show';
+    if (media.movie) {
+      type = 'movie';
+    }
+
     var ref = mediaDB.doc(media.id);
+
     ref.set({
       'id': media.id,
       'title': media.mediaName,
       'year': media.releaseDate,
-      //'score': media.score
+    });
+  }
+
+  static updateMedia(Media media) async {
+    String type = 'show';
+    if (media.movie) {
+      type = 'movie';
+    }
+
+    var ref = mediaDB.doc(media.id);
+
+    await ref.set({
+      'id': media.id,
+      'title': media.mediaName,
+      'year': media.releaseDate,
+      'runtime': media.runtime,
+      'poster': media.coverUrl,
+      'description': media.description,
+      'imdbid': media.imdbId,
+      'traktid': media.traktId,
+      'tmdbid': media.tmdbId,
+      'type': type,
+      'age_rating': media.ageRating,
+      'trailer': media.trailerUrl,
+      'backdrop': media.backdropUrl,
+      'score': media.score
     });
   }
 
@@ -55,27 +92,45 @@ class API {
     return ref.exists;
   }
 
+  static Future<bool> isMediaInfoComplete(String id) async {
+    final doc = mediaDB.doc(id);
+
+    if(await doc.get().then((value) {
+      try {
+        var hello = value.get('poster');
+        return true;
+      } on StateError {
+        return false;
+      }
+    })) {
+      return true;
+    }
+    return false;
+  }
+
   //Stores Media if not found in the db already
   static storeMedia(String title) async {
     List<Media> allMedia = await makeMedia(title);
-    for (int i = 0; i < allMedia.length; i++) {
-      if (!await doesMediaExist(allMedia[i].id!)) {
-        addMedia(allMedia[i]);
+    for (var media in allMedia) {
+      if (!await doesMediaExist(media.id)) {
+        addMedia(media);
       }
     }
   }
 
   // maybe think about merging these two in the future? storeMedia <-> updateRemoteList
   static updateRemoteList() async {
-    for (int i = 0; i < allLocalMedia.length; i++) {
-      if (!await doesMediaExist(allLocalMedia[i].id!)) {
-        addMedia(allLocalMedia[i]);
+
+    for (var media in allLocalMedia.values) {
+      if (!await isMediaInfoComplete(media.id)) {
+        await mediaSpecificUpdate(media);
+        updateMedia(media);
       }
     }
   }
 
-  static Future<List<Media>> loadMedia() async {
-    List<Media> allDBMedia = [];
+  static Future<Map<String ,Media>> loadMedia() async {
+    Map<String, Media> allDBMedia = {};
 
     List<String> _userKey = [];
     final query = await mediaDB.get();
@@ -92,16 +147,15 @@ class API {
         if (documentSnapshot.exists) {
           var data = documentSnapshot.data();
           var res = data as Map<String, dynamic>;
-          int year = res['year'] ?? 0;
           Media media = Media.api(
               id: res['id'],
-              mediaName: res['title'],
-              releaseDate: year,
+              mediaName: res['title'] ?? "",
+              releaseDate: res['year'] ?? 0,
               watchProviders: []
             //score: documents[i].get('score')
           );
 
-          allDBMedia.add(media);
+          allDBMedia[media.id] = media;
           print ("Just added some media from the db! Purrr. Foi esta oh:");
           print (media.mediaName);
         }
@@ -116,6 +170,21 @@ class API {
 
     for (var doc in query.docs) {
 
+    }
+  }
+
+  static mediaSpecificUpdate(Media media) async {
+    for (var key in allLocalMedia.keys) {
+      if (allLocalMedia[key] == media) {
+        Map<String, dynamic> infoMap;
+        if (allLocalMedia[key]!.id[1] == 't') {
+          infoMap = await API.fullInfo(allLocalMedia[key]!.id, 'i');
+        } else {
+          infoMap = await API.fullInfo(allLocalMedia[key]!.id.substring(2), 't');
+        }
+        allLocalMedia[key]!.updateInfo(infoMap);
+        break;
+      }
     }
   }
 }

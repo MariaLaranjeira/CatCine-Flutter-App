@@ -1,5 +1,6 @@
 import 'package:catcine_es/Auth/authmain.dart';
 import 'package:catcine_es/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -26,8 +27,11 @@ class _ExploreFilmState extends State<ExploreFilm>{
       return;
     }
     mediaList = await Media.searchTitle(title);
-    API.storeMedia(title);
+    await API.storeMedia(title);
+    API.updateRemoteList();
     displayList = mediaList;
+
+    print(FirebaseFirestore.instance.collection('media').)
 
     setState(() {
       displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();

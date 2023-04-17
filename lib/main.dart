@@ -8,7 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'Pages/initial.dart';
 import 'media.dart';
 
-List<Media> allLocalMedia = [];
+Map<String, Media> allLocalMedia = {};
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

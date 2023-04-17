@@ -3,7 +3,7 @@ import 'package:catcine_es/main.dart';
 
 
 class Media {
-  String? id;
+  String id;
   String? mediaName;
   int? releaseDate;
   int? runtime;
@@ -13,7 +13,7 @@ class Media {
   String? imdbId;
   int? traktId;
   int? tmdbId;
-  bool? movie;
+  bool movie;
   List<String> watchProviders = [];
   int? ageRating;
   String? trailerUrl;
@@ -39,7 +39,7 @@ class Media {
       );
 
   Media.api({
-    this.id,
+    this.id = '',
     this.mediaName,
     this.releaseDate,
     this.runtime,
@@ -49,7 +49,7 @@ class Media {
     this.imdbId,
     this.traktId,
     this.tmdbId,
-    this.movie,
+    this.movie = false,
     required this.watchProviders,
     this.ageRating,
     this.trailerUrl,
@@ -62,11 +62,11 @@ class Media {
       type = true;
     }
     return Media.api(
-        id: json['id'] as String?,
+        id: json['id'] as String,
         mediaName: json['title'] as String?,
         releaseDate: json['year'],
         watchProviders: [],
-        //score: score,
+        score: json['score_average'] ?? 0,
         runtime: json['runtime'],
         coverUrl: json['poster'] as String?,
         description: json['description'] as String?,
@@ -78,7 +78,6 @@ class Media {
         trailerUrl: json['trailer'] as String?,
         backdropUrl: json['backdrop'] as String?
     );
-
   }
 
   toJson(){
@@ -91,27 +90,48 @@ class Media {
     };
   }
 
+  updateInfo(Map<String, dynamic> fullInfo) {
+    bool _movie = false;
+    if (fullInfo['type'] == 'movie') _movie == true;
+    List<dynamic> watchProviders_ = fullInfo['watch_providers'] ?? [];
+    description = fullInfo['description'] as String?;
+    runtime = fullInfo['runtime'] ?? 0;
+    imdbId = fullInfo['imdbid'] as String?;
+    traktId = fullInfo['traktid'] ?? 0;
+    tmdbId = fullInfo['tmdbid'] ?? 0;
+    movie = _movie;
+    ageRating = fullInfo['age_rating'] ?? 0;
+    trailerUrl = fullInfo['trailer'] as String?;
+    backdropUrl = fullInfo['backdrop'] as String?;
+    coverUrl = fullInfo['poster'] as String?;
+    for (Map<String, dynamic> provider in watchProviders_) {
+      for (final i in provider.keys) {
+          watchProviders.add(i ?? '');
+      }
+    }
+  }
+
   static Future<List<Media>> searchTitle(String title) async {
     List<Media> tempMedia = [];
-    for (int i = 0; i < allLocalMedia.length; i++){
-      if (allLocalMedia[i].mediaName!.toLowerCase().contains(title.toLowerCase()) ||
-          allLocalMedia[i].mediaName!.toUpperCase().contains(title.toUpperCase())){
-        tempMedia.add(allLocalMedia[i]);
+    for (var media in allLocalMedia.values){
+      if (allLocalMedia.isEmpty) break;
+      if (media.mediaName!.toLowerCase().contains(title.toLowerCase()) ||
+          media.mediaName!.toUpperCase().contains(title.toUpperCase())){
+        tempMedia.add(media);
       }
     }
     if (tempMedia.length < 10){
       tempMedia = await API.makeMedia(title);
       updateLocalList(tempMedia);
-      API.updateRemoteList();
     }
     return tempMedia;
   }
 
-  static updateLocalList(List<Media> media){
+  static updateLocalList(List<Media> mediaList){
 
-    for (int i=0; i < media.length; i++){
-      if (!allLocalMedia.contains(media[i])){
-        allLocalMedia.add(media[i]);
+    for (var media in mediaList){
+      if (!allLocalMedia.values.contains(media)){
+        allLocalMedia[media.id] = media;
       }
     }
   }
