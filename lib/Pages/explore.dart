@@ -21,7 +21,6 @@ class _ExploreFilmState extends State<ExploreFilm>{
   void updateList(String title) async{
     mediaList = await Media.searchTitle(title);
     API.storeMedia(title);
-    allLocalMedia = mediaList;
     displayList = List.from(mediaList);
 
     setState(() {
