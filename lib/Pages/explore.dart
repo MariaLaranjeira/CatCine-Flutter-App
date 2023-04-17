@@ -19,9 +19,15 @@ class _ExploreFilmState extends State<ExploreFilm>{
   List<Media> displayList = [];
 
   void updateList(String title) async{
+    if (title.isEmpty) {
+      setState(() {
+        displayList = [];
+      });
+      return;
+    }
     mediaList = await Media.searchTitle(title);
     API.storeMedia(title);
-    displayList = List.from(mediaList);
+    displayList = mediaList;
 
     setState(() {
       displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
@@ -122,14 +128,16 @@ class _ExploreFilmState extends State<ExploreFilm>{
               height: 20.0,
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: displayList.length,
-                itemBuilder: (context, index) => ListTile(
-                  contentPadding: const EdgeInsets.all(8.0),
-                  title: Text(
-                    displayList[index].mediaName!,
-                    style: const TextStyle(
-                      color: Colors.white,
+              child: DraggableScrollableActuator(
+                child: ListView.builder(
+                  itemCount: displayList.length,
+                  itemBuilder: (context, index) => ListTile(
+                    contentPadding: const EdgeInsets.all(8.0),
+                    title: Text(
+                      displayList[index].mediaName!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

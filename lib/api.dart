@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:catcine_es/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'media.dart';
@@ -13,7 +12,7 @@ class API {
     final client = http.Client();
 
     final request = http.Request('GET',
-        Uri.parse('https://mdblist.p.rapidapi.com/?s=$title&27'))
+        Uri.parse('https://mdblist.p.rapidapi.com/?s=$title'))
       ..headers.addAll({
         'X-RapidAPI-Key': '322517c2fcmsh5a7bb5bc63667bap1e25ddjsn621dc7f6ef99',
         'X-RapidAPI-Host': 'mdblist.p.rapidapi.com'
@@ -29,8 +28,8 @@ class API {
   static Future<List<Media>> makeMedia(String title) async {
     String info = await getInfo(title);
     Map <String, dynamic> json = jsonDecode(info);
-    List <dynamic> body = json['search'];
-    List <Media> allMedia = body.map((dynamic item) => Media.fromJson(item))
+    List<dynamic> body = json['search'] ?? [];
+    List<Media> allMedia = body.map((dynamic item) => Media.fromJson(item))
         .toList();
     return allMedia;
   }
@@ -92,10 +91,11 @@ class API {
         if (documentSnapshot.exists) {
           var data = documentSnapshot.data();
           var res = data as Map<String, dynamic>;
+          int year = res['year'] ?? 0;
           Media media = Media.api(
               id: res['id'],
               mediaName: res['title'],
-              releaseDate: res['year'],
+              releaseDate: year,
               watchProviders: []
             //score: documents[i].get('score')
           );
@@ -106,7 +106,6 @@ class API {
         }
       });
     }
-
     return allDBMedia;
   }
 
@@ -115,7 +114,6 @@ class API {
     final query = await mediaDB.get();
 
     for (var doc in query.docs) {
-      getInfo(doc.id);
 
     }
   }

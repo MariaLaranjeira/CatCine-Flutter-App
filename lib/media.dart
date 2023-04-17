@@ -62,22 +62,23 @@ class Media {
       type = true;
     }
     return Media.api(
-          id: json['id'] as String,
-          mediaName: json['title'] as String,
-          releaseDate: json['year'],
-          watchProviders: [],
-          //score: json['score'],
-          runtime: json['runtime'],
-          coverUrl: json['poster'] as String,
-          description: json['description'] as String,
-          imdbId: json['imdbid'] as String,
-          traktId: json['traktid'],
-          tmdbId: json['tmdbid'],
-          movie: type,
-          ageRating: json['age_rating'],
-          trailerUrl: json['trailer'] as String,
-          backdropUrl: json['backdrop'] as String
-      );
+        id: json['id'] as String?,
+        mediaName: json['title'] as String?,
+        releaseDate: json['year'],
+        watchProviders: [],
+        //score: score,
+        runtime: json['runtime'],
+        coverUrl: json['poster'] as String?,
+        description: json['description'] as String?,
+        imdbId: json['imdbid'] as String?,
+        traktId: json['traktid'],
+        tmdbId: json['tmdbid'],
+        movie: type,
+        ageRating: json['age_rating'],
+        trailerUrl: json['trailer'] as String?,
+        backdropUrl: json['backdrop'] as String?
+    );
+
   }
 
   toJson(){
@@ -93,7 +94,8 @@ class Media {
   static Future<List<Media>> searchTitle(String title) async {
     List<Media> tempMedia = [];
     for (int i = 0; i < allLocalMedia.length; i++){
-      if (allLocalMedia[i].mediaName!.contains(title)){
+      if (allLocalMedia[i].mediaName!.toLowerCase().contains(title.toLowerCase()) ||
+          allLocalMedia[i].mediaName!.toUpperCase().contains(title.toUpperCase())){
         tempMedia.add(allLocalMedia[i]);
       }
     }
