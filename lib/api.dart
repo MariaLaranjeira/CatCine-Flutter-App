@@ -8,11 +8,11 @@ import 'media.dart';
 
 class API {
 
-  static Future<String> getInfo(String title) async {
+  static Future<String> getInfo(String title,String searchType) async {
     final client = http.Client();
 
     final request = http.Request('GET',
-        Uri.parse('https://mdblist.p.rapidapi.com/?s=$title'))
+        Uri.parse('https://mdblist.p.rapidapi.com/?$searchType=$title'))
       ..headers.addAll({
         'X-RapidAPI-Key': '322517c2fcmsh5a7bb5bc63667bap1e25ddjsn621dc7f6ef99',
         'X-RapidAPI-Host': 'mdblist.p.rapidapi.com'
@@ -25,8 +25,9 @@ class API {
     return response.body;
   }
 
+
   static Future<List<Media>> makeMedia(String title) async {
-    String info = await getInfo(title);
+    String info = await getInfo(title,'s');
     Map <String, dynamic> json = jsonDecode(info);
     List<dynamic> body = json['search'] ?? [];
     List<Media> allMedia = body.map((dynamic item) => Media.fromJson(item))
