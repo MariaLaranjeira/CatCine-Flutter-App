@@ -15,6 +15,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -175,12 +177,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-
-
       ),
       body: Stack(
         children: [
@@ -203,6 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 250),
 
               TextField(
+                key: const Key("emailKey"),
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
@@ -218,6 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox( height: 26.0),
 
               TextField(
+                key: const Key("passwordKey"),
                 controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
@@ -233,6 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox( height: 26.0),
 
               SizedBox(
+                key: const Key("loginButton"),
                 width:double.infinity,
                 child: RawMaterialButton(
                   fillColor: const Color(0xFFEC6B76),
