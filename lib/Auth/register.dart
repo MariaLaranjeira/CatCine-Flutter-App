@@ -220,7 +220,18 @@ class _RegisterScreenState extends State<RegisterScreen>{
         backgroundColor: const Color(0xff393d5a),
         elevation: 0.0,
       ),
-      body: Padding (
+      body: Stack(
+        children: [
+          Positioned(
+            left: 0,
+            child: Image.asset(
+              'images/CreateAccount.png',
+              width: 380,
+              height: 400,
+              fit: BoxFit.cover,
+            ),
+          ),
+       Padding (
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -228,25 +239,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Create",
-                  style:
-                  TextStyle(
-                    color: Colors.white,
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Text(
-                  "Account",
-                  style:
-                  TextStyle(
-                    color: Colors.white,
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 44.0),
+                const SizedBox(height: 200),
 
                 TextField(
                   decoration: InputDecoration(
@@ -259,7 +252,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Enter your catname",
                   ),
                 ),
-
                 const SizedBox(height: 26.0),
 
                 TextField(
@@ -290,7 +282,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Enter your password",
                   ),
                 ),
-
                 const SizedBox(height: 26.0),
 
                 TextField(
@@ -312,7 +303,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   width:double.infinity,
                   child: RawMaterialButton(
                     fillColor: const Color(0xFFEC6B76),
-                    elevation: 0.0,
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
@@ -334,7 +324,8 @@ class _RegisterScreenState extends State<RegisterScreen>{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("I'm already a user!",
+                    const Text(
+                      "Already have an account?",
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -345,7 +336,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     GestureDetector(
                         onTap: widget.showLoginPage,
                         child: const Text(
-                            "Login Now",
+                          "Sign In",
                           style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.bold,
@@ -359,6 +350,8 @@ class _RegisterScreenState extends State<RegisterScreen>{
             ),
           )
       ),
+    ],
+    ),
     );
   }
 }
