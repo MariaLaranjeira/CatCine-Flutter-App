@@ -31,8 +31,6 @@ class _ExploreFilmState extends State<ExploreFilm>{
     API.updateRemoteList();
     displayList = mediaList;
 
-    print(FirebaseFirestore.instance.collection('media').)
-
     setState(() {
       displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
     });
