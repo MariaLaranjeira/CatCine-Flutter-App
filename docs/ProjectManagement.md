@@ -20,6 +20,25 @@
 <br>
 
 
+> ## Iteration 1
+>
+> ### * Plans:
+>
+>   > ### Development Board
+>   >
+>   >![board_2](https://user-images.githubusercontent.com/92693155/232319908-206b1303-4095-437d-a6bb-81b77bece9d8.png)
+>
+> ### * Retrospectives: 
+>
+>  > In this iteration we have started working with everything related to the authentication of users. A basic Front-End was made and the login Back-End was developed. Because of conflicts with other projects, we didn't commit as much as we wished in this iteration. We concluded it's best for us if we divide and conquer.  <br>
+>
+
+<br>
+
+
+
+
+
 
 
 
