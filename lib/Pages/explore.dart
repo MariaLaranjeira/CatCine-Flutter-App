@@ -18,7 +18,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
   List<Media> mediaList = [];
   List<Media> displayList = [];
 
-  Future<void> initList() async{
+  Future<void> initList() async {
     allLocalMedia = await API.loadMedia();
   }
 
