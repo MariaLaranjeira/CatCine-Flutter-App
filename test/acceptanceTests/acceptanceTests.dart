@@ -17,6 +17,6 @@ Future<void> main() {
     ..stepDefinitions = [ClickSignInButton(), CheckAllBoxes(), FillEmailPassBoxes(), ClickToSignIn()]
     ..customStepParameterDefinitions = []
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test/app.dart";
+    ..targetAppPath = "test/acceptanceTests/runAcceptanceTests.dart";
   return GherkinRunner().execute(config);
 }
