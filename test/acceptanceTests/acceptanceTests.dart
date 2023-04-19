@@ -8,7 +8,7 @@ import 'steps/signedIn.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/overlap_schedules.feature")]
+    ..features = [Glob(r"test/acceptanceTests/features/signIn.feature")]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
@@ -17,6 +17,6 @@ Future<void> main() {
     ..stepDefinitions = [ClickSignInButton(), CheckAllBoxes(), FillEmailPassBoxes(), ClickToSignIn()]
     ..customStepParameterDefinitions = []
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = "test_driver/app.dart";
+    ..targetAppPath = "test/app.dart";
   return GherkinRunner().execute(config);
 }
