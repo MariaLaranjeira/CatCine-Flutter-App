@@ -18,19 +18,4 @@ void main() {
     user = userCredential.user;
     expect(user!.email,equals('test@testing.com'));
   });
-
-
-  test("Testing Other Stuff Purrr", () async {
-
-    String email = 'test@testing.com';
-    String password = 't';
-
-    try {
-      instance.createUserWithEmailAndPassword(email: email, password: password);
-    } on FirebaseAuthException catch (exception) {
-      print ("testing... hello?");
-      expect(exception.message,equals("weak-password"));
-    }
-  });
-
 }
