@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'Pages/initial.dart';
+import 'Auth/authinitial.dart';
 
 
 
@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
     if (_connectionStatus != ConnectivityResult.none
         && _connectionStatus != ConnectivityResult.bluetooth
         && _connectionStatus != ConnectivityResult.other) {
-      return const InitialScreen();
+      return const MainPage();
     } else {
       return const CircularProgressIndicator();
     }
