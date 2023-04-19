@@ -14,7 +14,7 @@ class Media {
   int? traktId;
   int? tmdbId;
   bool movie;
-  List<String> watchProviders = [];
+  //List<String> watchProviders = [];
   int? ageRating;
   String? trailerUrl;
   String? backdropUrl;
@@ -32,7 +32,7 @@ class Media {
       this.traktId,
       this.tmdbId,
       this.movie,
-      this.watchProviders,
+      //this.watchProviders,
       this.ageRating,
       this.trailerUrl,
       this.backdropUrl
@@ -50,7 +50,7 @@ class Media {
     this.traktId,
     this.tmdbId,
     this.movie = false,
-    required this.watchProviders,
+    //required this.watchProviders,
     this.ageRating,
     this.trailerUrl,
     this.backdropUrl
@@ -65,7 +65,7 @@ class Media {
         id: json['id'] as String,
         mediaName: json['title'] as String?,
         releaseDate: json['year'],
-        watchProviders: [],
+        //watchProviders: [],
         score: json['score_average'] ?? 0,
         runtime: json['runtime'],
         coverUrl: json['poster'] as String?,
@@ -104,11 +104,14 @@ class Media {
     trailerUrl = fullInfo['trailer'] as String?;
     backdropUrl = fullInfo['backdrop'] as String?;
     coverUrl = fullInfo['poster'] as String?;
+    /*
     for (Map<String, dynamic> provider in watchProviders_) {
       for (final i in provider.keys) {
           watchProviders.add(i ?? '');
       }
     }
+    */
+
   }
 
   static Future<List<Media>> searchTitle(String title) async {
