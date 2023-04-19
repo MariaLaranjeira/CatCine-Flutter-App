@@ -28,8 +28,9 @@ class _ExploreFilmState extends State<ExploreFilm>{
     }
     mediaList = await Media.searchTitle(title);
     await API.storeMedia(title);
-    API.updateRemoteList();
+    await API.updateRemoteList();
     displayList = mediaList;
+
 
     setState(() {
       displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
