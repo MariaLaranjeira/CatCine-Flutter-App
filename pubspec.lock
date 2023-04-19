@@ -277,10 +277,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_auth
-      sha256: "8c97619ed2633148c41c344a59461f23c73bf8aa477ae48296703f06d9621fb0"
+      sha256: e5254a39daab8c5bc76b17f5a161c11a7a97a3718cd314f460e2b4366c850c7d
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.2"
+    version: "4.4.1"
   firebase_auth_mocks:
     dependency: "direct main"
     description:
