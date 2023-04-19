@@ -136,7 +136,6 @@ class API {
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data();
         var aux = data as Map<String, dynamic>;
-        print(aux);
         res = aux.containsKey('poster');
       }
     });
@@ -209,8 +208,6 @@ class API {
           );
 
           allDBMedia[media.id] = media;
-          print ("Just added some media from the db! Purrr. Foi esta oh:");
-          print (media.mediaName);
         }
       });
     }

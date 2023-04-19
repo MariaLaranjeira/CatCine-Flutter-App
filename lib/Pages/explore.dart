@@ -27,8 +27,8 @@ class _ExploreFilmState extends State<ExploreFilm>{
       return;
     }
     mediaList = await Media.searchTitle(title);
-    await API.storeMedia(title);
-    await API.updateRemoteList();
+    API.storeMedia(title);
+    API.updateRemoteList();
     displayList = mediaList;
 
     //print(FirebaseFirestore.instance.collection('media').)
