@@ -19,7 +19,6 @@ class API {
         'X-RapidAPI-Host': 'mdblist.p.rapidapi.com'
       });
 
-
     final streamedResponse = await client.send(request);
     final response = await http.Response.fromStream(streamedResponse);
 

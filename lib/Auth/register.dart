@@ -22,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
     return (passwordController.text.trim() == confirmPasswordController.text.trim());
   }
 
-  Future signUp() async {
+  Future<void> signUp() async {
     try {
       if (passwordConfirmed()) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(

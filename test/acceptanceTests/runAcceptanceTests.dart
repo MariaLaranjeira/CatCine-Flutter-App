@@ -4,5 +4,5 @@ import 'package:catcine_es/main.dart' as app;
 
 Future<void> main() async {
   enableFlutterDriverExtension();
-  runApp(const app.MyApp());
+  runApp(app.MyApp());
 }
