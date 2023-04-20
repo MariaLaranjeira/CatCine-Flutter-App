@@ -257,6 +257,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
 
                 TextField(
                   controller: emailController,
+                  autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     filled:true,
@@ -272,6 +273,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
 
                 TextField(
                   controller: passwordController,
+                  autocorrect: false,
                   obscureText: true,
                   decoration: InputDecoration(
                     filled:true,
@@ -287,6 +289,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
 
                 TextField(
                   controller: confirmPasswordController,
+                  autocorrect: false,
                   obscureText: true,
                   decoration: InputDecoration(
                     filled:true,

@@ -193,99 +193,103 @@ class _LoginScreenState extends State<LoginScreen> {
             fit: BoxFit.cover,
           ),
         ),
-          Padding (
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 250),
+          SingleChildScrollView(
+            child: Padding (
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 250),
 
-              TextField(
-                key: const Key("emailKey"),
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  filled:true,
-                  fillColor: const Color(0xFFFFFFFF),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintText: " Enter your email",
-                ),
-              ),
-              const SizedBox( height: 26.0),
+                    TextField(
+                      key: const Key("emailKey"),
+                      controller: emailController,
+                      autocorrect: false,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        filled:true,
+                        fillColor: const Color(0xFFFFFFFF),
+                        border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none,
+                      ),
+                        hintText: " Enter your email",
+                      ),
+                    ),
+                  const SizedBox( height: 26.0),
 
-              TextField(
-                key: const Key("passwordKey"),
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  filled:true,
-                  fillColor: const Color(0xFFFFFFFF),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintText: " Enter your password",
-                ),
-              ),
-              const SizedBox( height: 26.0),
-
-              SizedBox(
-                key: const Key("loginButton"),
-                width:double.infinity,
-                child: RawMaterialButton(
-                  fillColor: const Color(0xFFEC6B76),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  elevation: 0.0,
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  onPressed: () async {
-                    loginUsingEmailPassword();
-                  },
-                  child: const Text(
-                      "Sign in" ,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("I'm a new user!",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15
+                  TextField(
+                    key: const Key("passwordKey"),
+                    controller: passwordController,
+                    autocorrect: false,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      filled:true,
+                      fillColor: const Color(0xFFFFFFFF),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: " Enter your password",
                     ),
                   ),
-                  const SizedBox(width: 5),
-                  GestureDetector(
-                    onTap: widget.showRegisterPage,
-                    child: const Text(
-                        "Register Now",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15
+                  const SizedBox( height: 26.0),
+
+                  SizedBox(
+                    key: const Key("loginButton"),
+                    width:double.infinity,
+                    child: RawMaterialButton(
+                      fillColor: const Color(0xFFEC6B76),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
                       ),
-                    )
+                      elevation: 0.0,
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      onPressed: () async {
+                        loginUsingEmailPassword();
+                      },
+                      child: const Text(
+                        "Sign in" ,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("I'm a new user!",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      GestureDetector(
+                        onTap: widget.showRegisterPage,
+                        child: const Text(
+                          "Register Now",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15
+                          ),
+                        )
+                      )
+                    ],
                   )
                 ],
               )
-            ],
-          )
+            ),
+          ),
+        ],
       ),
-      ],
-    ),
     );
   }
 }
