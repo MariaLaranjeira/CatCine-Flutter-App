@@ -46,6 +46,20 @@ class _ExploreFilmState extends State<ExploreFilm>{
     });
   }
 
+  ImageProvider getPosterURL(Media media) {
+    if (media.coverUrl != null) {
+      return NetworkImage(media.coverUrl!);
+    }
+    return const AssetImage('images/catIcon.png');
+  }
+
+  String getTrimmedName(Media media) {
+    if (media.mediaName!.length > 15) {
+      return '${media.mediaName!.substring(0, 15)}...';
+    }
+    return media.mediaName!;
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -148,16 +162,58 @@ class _ExploreFilmState extends State<ExploreFilm>{
                     contentPadding: const EdgeInsets.all(8.0),
                     title: Row(
                       children: [
-                        Image(
-                          image: NetworkImage(displayList[index * 2].coverUrl!),
-                          width: (MediaQuery.of(context).size.width/11) * 4.35,
-                          semanticLabel: "${displayList[index * 2].mediaName!}...",
+                        Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(16.0),
+                              child: SizedBox(
+                                width: (MediaQuery.of(context).size.width/11) * 4.35,
+                                height: 250,
+                                child: Image(
+                                  fit: BoxFit.fill,
+                                  isAntiAlias: true,
+                                  image: getPosterURL(displayList[index * 2]),
+                                  semanticLabel: "${displayList[index * 2].mediaName!}...",
+                                  loadingBuilder: (context, child, progress) {
+                                    return progress == null ? child : const LinearProgressIndicator();
+                                  },
+                                ),
+                              ),
+                            ),
+                            Text(
+                              getTrimmedName(displayList[index * 2]),
+                              style: const TextStyle(
+                                color: Colors.white
+                              ),
+                            )
+                          ]
                         ),
                         SizedBox(width: MediaQuery.of(context).size.width/11,),
-                        Image(
-                          image: NetworkImage(displayList[index * 2 + 1].coverUrl!),
-                          width: (MediaQuery.of(context).size.width/11) * 4.35,
-                          semanticLabel: "${displayList[index * 2 + 1].mediaName!}...",
+                        Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(16.0),
+                                child: SizedBox(
+                                  width: (MediaQuery.of(context).size.width/11) * 4.35,
+                                  height: 250,
+                                  child: Image(
+                                    isAntiAlias: true,
+                                    image: getPosterURL(displayList[index * 2 + 1]),
+                                    fit: BoxFit.fill,
+                                    semanticLabel: "${displayList[index * 2 + 1].mediaName!}...",
+                                    loadingBuilder: (context, child, progress) {
+                                      return progress == null ? child : const LinearProgressIndicator();
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                getTrimmedName(displayList[index * 2 + 1]),
+                                style: const TextStyle(
+                                    color: Colors.white
+                                ),
+                              )
+                            ]
                         ),
                       ]
                     ),
