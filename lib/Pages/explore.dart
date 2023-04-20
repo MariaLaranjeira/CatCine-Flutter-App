@@ -148,17 +148,17 @@ class _ExploreFilmState extends State<ExploreFilm>{
                     contentPadding: const EdgeInsets.all(8.0),
                     title: Row(
                       children: [
-                        Text(
-                          displayList[index * 2].mediaName!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
+                        Image(
+                          image: NetworkImage(displayList[index * 2].coverUrl!),
+                          width: (MediaQuery.of(context).size.width/11) * 4.35,
+                          semanticLabel: "${displayList[index * 2].mediaName!}...",
                         ),
-                        Text(displayList[index * 2 + 1].mediaName!,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                        )
+                        SizedBox(width: MediaQuery.of(context).size.width/11,),
+                        Image(
+                          image: NetworkImage(displayList[index * 2 + 1].coverUrl!),
+                          width: (MediaQuery.of(context).size.width/11) * 4.35,
+                          semanticLabel: "${displayList[index * 2 + 1].mediaName!}...",
+                        ),
                       ]
                     ),
                   ),
