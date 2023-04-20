@@ -92,33 +92,39 @@ class _ExploreFilmState extends State<ExploreFilm>{
           crossAxisAlignment: CrossAxisAlignment.start,
           children:[
             const SizedBox(height: 50,),
-            SizedBox(
-              height: 50,
-              width: double.infinity,
-              child: RawMaterialButton(
-                child: const Text(
-                  "Log out temporary",
+
+            Row(
+              children: const [
+                SizedBox(width: 18,),
+                Text(
+                  "Explore",
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0)
+                    color:Colors.white,
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                  onPressed: () async {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const InitialScreen())
-                    );
-                  }),
+              ]
             ),
-            const Text(
-              "Explore",
-              style: TextStyle(
-                color:Colors.white,
-                fontSize: 30.0,
-              ),
-            ),
+
             const SizedBox(
               height:20.0,
+            ),
+            Row(
+              children: const [
+                SizedBox(width: 18),
+                Text(
+                  "Let's find your favourite movies, TV shows\nand more ...",
+                  style: TextStyle(
+                    color: Color.fromARGB(215, 255, 255, 255),
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.normal
+                  ),
+                ),
+              ]
+            ),
+            const SizedBox(
+              height:30.0,
             ),
             TextField(
               onChanged: (title) => updateList(title),
@@ -137,18 +143,47 @@ class _ExploreFilmState extends State<ExploreFilm>{
             Expanded(
               child: DraggableScrollableActuator(
                 child: ListView.builder(
-                  itemCount: displayList.length,
+                  itemCount: displayList.length ~/ 2,
                   itemBuilder: (context, index) => ListTile(
                     contentPadding: const EdgeInsets.all(8.0),
-                    title: Text(
-                      displayList[index].mediaName!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
+                    title: Row(
+                      children: [
+                        Text(
+                          displayList[index * 2].mediaName!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(displayList[index * 2 + 1].mediaName!,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                        )
+                      ]
                     ),
                   ),
                 ),
               ),
+            ),
+
+            SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: RawMaterialButton(
+
+                  child: const Text(
+                      "Log out temporary",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24.0)
+                  ),
+                  onPressed: () async {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const InitialScreen())
+                    );
+                  }),
             ),
           ],
         ),
