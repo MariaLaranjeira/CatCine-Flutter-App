@@ -5,6 +5,8 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  group('Authentication logic testing', () {
+
   final instance = MockFirebaseAuth();
 
   test("Testing User Creation and Authentication", () async {
@@ -17,5 +19,6 @@ void main() {
     var userCredential = await instance.signInWithEmailAndPassword(email: email, password: password);
     user = userCredential.user;
     expect(user!.email,equals('test@testing.com'));
+  });
   });
 }
