@@ -14,12 +14,7 @@ Future<void> main() {
       TestRunSummaryReporter(),
       JsonReporter(path: './test_report.json')
     ]
-    ..stepDefinitions = [
-      ClickSignInButton(),
-      CheckAllBoxes(),
-      FillEmailPassBoxes(),
-      ClickToSignIn()
-    ]
+    ..stepDefinitions = [ CheckSignInButton(), ClickSignInButton(), CheckAllBoxes(), FillEmailPassBoxes(), ClickToSignIn()]
     ..customStepParameterDefinitions = []
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test/acceptanceTests/runAcceptanceTests.dart";

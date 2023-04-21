@@ -46,6 +46,7 @@ class _InitialScreenState extends State<InitialScreen> {
               ),
 
               SizedBox(
+                key: const Key('Sign In'),
                 width:double.infinity,
                 child: RawMaterialButton(
                   key: const Key("signInButton"),
@@ -57,7 +58,7 @@ class _InitialScreenState extends State<InitialScreen> {
                   ),
                   onPressed: _signIn,
                   child: const Text(
-                      "Sign in" ,
+                      "Sign In" ,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 20.0,

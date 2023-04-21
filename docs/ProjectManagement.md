@@ -10,7 +10,7 @@
 >
 >   > ### Development Board
 >   >
->   >![board_1](https://user-images.githubusercontent.com/114760605/225951074-92295b50-21a7-4be9-9789-a7fb0249cdf9.PNG)
+>   >![board_0](https://user-images.githubusercontent.com/114760605/225951074-92295b50-21a7-4be9-9789-a7fb0249cdf9.PNG)
 >
 > ### * Retrospectives: 
 >
@@ -26,7 +26,7 @@
 >
 >   > ### Development Board
 >   >
->   >![board_2](https://user-images.githubusercontent.com/92693155/232319908-206b1303-4095-437d-a6bb-81b77bece9d8.png)
+>   >![board_1](https://user-images.githubusercontent.com/92693155/232319908-206b1303-4095-437d-a6bb-81b77bece9d8.png)
 >
 > ### * Retrospectives: 
 >
@@ -34,6 +34,22 @@
 >
 
 <br>
+
+> ## Iteration 2
+>
+> ### * Plans:
+>
+>   > ### Development Board
+>   >
+>   >![board2](https://user-images.githubusercontent.com/92693155/233209430-d5917889-e89c-4970-aca9-cab15ec700b6.png)
+>
+> ### * Retrospectives: 
+>
+>  > This iteration felt increasingly challenging. Given the complexity of our API Searches and the fact that currently only three of us are actively working in the project, this iteration felt very demanding. Despite that, we feel like we organized ourselves in a more efficient manner compared to previous iterations, having done a lot of work. We made quite some progress in understanding and developing firebase media storage and API usages. We also succeeded in making our app's authentication screens more functional and asthetically pleasing.  <br>
+>
+
+<br>
+
 
 
 
