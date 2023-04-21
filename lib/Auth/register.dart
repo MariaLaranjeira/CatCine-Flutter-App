@@ -215,9 +215,10 @@ class _RegisterScreenState extends State<RegisterScreen>{
   Widget build(BuildContext context) {
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a),
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
       body: Stack(
@@ -227,7 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
             child: Image.asset(
               'images/CreateAccount.png',
               width: 380,
-              height: 400,
+              height: 480,
               fit: BoxFit.cover,
             ),
           ),
@@ -239,7 +240,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 200),
+                const SizedBox(height: 230),
 
                 TextField(
                   decoration: InputDecoration(

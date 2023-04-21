@@ -3,6 +3,7 @@
 import 'package:catcine_es/Pages/explore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -172,31 +173,34 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
 
       appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a),
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
-      ),
 
+
+      ),
       body: Stack(
         children: [
         Positioned(
-        left: 0,
-        child: Image.asset(
-          'images/WelcomeBack.png',
-          width: 380,
-          height: 400,
-          fit: BoxFit.cover,
+          top: 0,
+          left: 0,
+          child: Image.asset(
+            'images/WelcomeBack.png',
+            width: 380,
+            height: 500,
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      Padding (
+          Padding (
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 200),
+              const SizedBox(height: 250),
 
               TextField(
                 controller: emailController,

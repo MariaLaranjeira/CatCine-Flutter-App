@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:core';
 import 'package:catcine_es/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
@@ -46,7 +47,7 @@ class API {
 
   static Future<List<Media>> makeMedia(String title) async {
     String info = await getInfo(title,'s');
-    Map <String, dynamic> json = jsonDecode(info);
+    Map<String, dynamic> json = jsonDecode(info);
     List<dynamic> body = json['search'] ?? [];
     List<Media> allMedia = body.map((dynamic item) => Media.fromJson(item))
         .toList();
@@ -66,7 +67,7 @@ class API {
 
   //FirebaseFirestore firestore = FirebaseFirestore.instance;
   static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
-      'mediaLeo');
+      'media');
 
   static addMedia(Media media) async {
     String type = 'show';

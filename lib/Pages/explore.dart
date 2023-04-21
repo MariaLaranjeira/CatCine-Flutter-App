@@ -1,11 +1,10 @@
-import 'package:catcine_es/Auth/authmain.dart';
 import 'package:catcine_es/main.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../api.dart';
 import '../media.dart';
+import 'initial.dart';
 
 class ExploreFilm extends StatefulWidget{
   const ExploreFilm({Key? key}) : super(key: key);
@@ -19,6 +18,16 @@ class _ExploreFilmState extends State<ExploreFilm>{
   List<Media> mediaList = [];
   List<Media> displayList = [];
 
+  Future<void> initList() async{
+    allLocalMedia = await API.loadMedia();
+  }
+
+  @override
+  void initState() {
+    initList();
+    super.initState();
+  }
+
   void updateList(String title) async{
     if (title.isEmpty) {
       setState(() {
@@ -31,7 +40,6 @@ class _ExploreFilmState extends State<ExploreFilm>{
     API.updateRemoteList();
     displayList = mediaList;
 
-    //print(FirebaseFirestore.instance.collection('media').)
 
     setState(() {
       displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
@@ -42,11 +50,8 @@ class _ExploreFilmState extends State<ExploreFilm>{
   Widget build(BuildContext context) {
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
-      appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a),
-        elevation: 0.0,
-      ),
 
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xCACBCBD2),
@@ -86,6 +91,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children:[
+            const SizedBox(height: 50,),
             SizedBox(
               height: 50,
               width: double.infinity,
@@ -100,7 +106,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context) => const AuthMainPage(pageSelector: false,))
+                            builder: (context) => const InitialScreen())
                     );
                   }),
             ),
@@ -127,9 +133,6 @@ class _ExploreFilmState extends State<ExploreFilm>{
                 hintText: "Search ...",
                 prefixIcon: const Icon(Icons.search),
               ),
-            ),
-            const SizedBox(
-              height: 20.0,
             ),
             Expanded(
               child: DraggableScrollableActuator(

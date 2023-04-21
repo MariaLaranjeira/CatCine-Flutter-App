@@ -26,17 +26,6 @@ class _InitialScreenState extends State<InitialScreen> {
     ));
   }
 
-  Future<void> initList() async{
-    allLocalMedia = await API.loadMedia();
-  }
-
-  @override
-  void initState(){
-    initList();
-    //API.searchById();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
