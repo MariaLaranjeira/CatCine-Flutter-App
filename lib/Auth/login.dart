@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:catcine_es/Pages/explore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -71,34 +69,34 @@ class _LoginScreenState extends State<LoginScreen> {
         showDialog(context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                alignment: Alignment.topCenter,
-                shape: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide.none,
-                ),
-                backgroundColor: const Color.fromARGB(255, 255, 87, 51),
-                content:
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      color: Colors.black,
-                      size: 20,
-                    ),
-                    SizedBox(width: 5),
-                    Text(
-                      "This User Does Not Exist",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
                       ),
-                    ),
-                  ],
-                )
+                      SizedBox(width: 5),
+                      Text(
+                        "This User Does Not Exist",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
               );
-          }
+            }
         );
       }
       if (exception.code == "wrong-password") {
@@ -183,16 +181,16 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Stack(
         children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          child: Image.asset(
-            'images/WelcomeBack.png',
-            width: 380,
-            height: 500,
-            fit: BoxFit.cover,
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              'images/WelcomeBack.png',
+              width: 380,
+              height: 500,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
           SingleChildScrollView(
             physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -204,72 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     const SizedBox(height: 250),
 
-<<<<<<< HEAD
-              TextField(
-                key: const Key("emailBox"),
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  filled:true,
-                  fillColor: const Color(0xFFFFFFFF),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintText: " Enter your email",
-                ),
-              ),
-              const SizedBox( height: 26.0),
-
-              TextField(
-                key: const Key("passwordBox"),
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  filled:true,
-                  fillColor: const Color(0xFFFFFFFF),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintText: " Enter your password",
-                ),
-              ),
-              const SizedBox( height: 26.0),
-
-              SizedBox(
-                key: const Key("signInButton"),
-                width:double.infinity,
-                child: RawMaterialButton(
-                  fillColor: const Color(0xFFEC6B76),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  elevation: 0.0,
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  onPressed: () async {
-                    loginUsingEmailPassword();
-                  },
-                  child: const Text(
-                      "Sign in" ,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("I'm a new user!",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15
-=======
                     TextField(
                       key: const Key("emailKey"),
                       controller: emailController,
@@ -279,82 +211,81 @@ class _LoginScreenState extends State<LoginScreen> {
                         filled:true,
                         fillColor: const Color(0xFFFFFFFF),
                         border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide.none,
-                      ),
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: BorderSide.none,
+                        ),
                         hintText: " Enter your email",
                       ),
                     ),
-                  const SizedBox( height: 26.0),
+                    const SizedBox( height: 26.0),
 
-                  TextField(
-                    key: const Key("passwordKey"),
-                    controller: passwordController,
-                    autocorrect: false,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      filled:true,
-                      fillColor: const Color(0xFFFFFFFF),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: " Enter your password",
->>>>>>> 8f15dc6bf51bb9ed46b29d5512181e7aac32c392
-                    ),
-                  ),
-                  const SizedBox( height: 26.0),
-
-                  SizedBox(
-                    key: const Key("loginButton"),
-                    width:double.infinity,
-                    child: RawMaterialButton(
-                      fillColor: const Color(0xFFEC6B76),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      elevation: 0.0,
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      onPressed: () async {
-                        loginUsingEmailPassword();
-                      },
-                      child: const Text(
-                        "Sign in" ,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold),
+                    TextField(
+                      key: const Key("passwordKey"),
+                      controller: passwordController,
+                      autocorrect: false,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        filled:true,
+                        fillColor: const Color(0xFFFFFFFF),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: " Enter your password",
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
+                    const SizedBox( height: 26.0),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("I'm a new user!",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15
+                    SizedBox(
+                      key: const Key("loginButton"),
+                      width:double.infinity,
+                      child: RawMaterialButton(
+                        fillColor: const Color(0xFFEC6B76),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        elevation: 0.0,
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        onPressed: () async {
+                          loginUsingEmailPassword();
+                        },
+                        child: const Text(
+                          "Sign in" ,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const SizedBox(width: 5),
-                      GestureDetector(
-                        onTap: widget.showRegisterPage,
-                        child: const Text(
-                          "Register Now",
+                    ),
+                    const SizedBox(height: 20),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("I'm a new user!",
                           style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15
                           ),
+                        ),
+                        const SizedBox(width: 5),
+                        GestureDetector(
+                            onTap: widget.showRegisterPage,
+                            child: const Text(
+                              "Register Now",
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15
+                              ),
+                            )
                         )
-                      )
-                    ],
-                  )
-                ],
-              )
+                      ],
+                    )
+                  ],
+                )
             ),
           ),
         ],
