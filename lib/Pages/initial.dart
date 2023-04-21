@@ -29,6 +29,7 @@ class _InitialScreenState extends State<InitialScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xff393d5a),
       body: Padding (
           padding: const EdgeInsets.all(16.0),

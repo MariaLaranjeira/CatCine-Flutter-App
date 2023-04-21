@@ -82,9 +82,13 @@ class _ExploreFilmState extends State<ExploreFilm>{
                   icon: const Icon(Icons.person),
                   onPressed: () {},
                 ),
-                IconButton(
-                 icon: Image.asset('images/catIcon.png'),
-                  onPressed: () {},
+                SizedBox(
+                  height: 60,
+                  child: IconButton(
+                    iconSize: 60,
+                    icon: Image.asset('images/catIcon.png'),
+                    onPressed: () {},
+                  ),
                 ),
                 IconButton(
                  icon: const Icon(Icons.search),
