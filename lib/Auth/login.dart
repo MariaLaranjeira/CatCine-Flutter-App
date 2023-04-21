@@ -194,6 +194,8 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
           SingleChildScrollView(
+            physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Padding (
                 padding: const EdgeInsets.all(16.0),
                 child: Column(

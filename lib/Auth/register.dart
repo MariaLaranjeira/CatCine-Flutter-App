@@ -235,6 +235,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
        Padding (
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
