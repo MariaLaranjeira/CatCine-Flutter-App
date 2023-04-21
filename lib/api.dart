@@ -124,6 +124,8 @@ class API {
   static Future<bool> doesMediaExist(String id) async {
     var ref = await mediaDB.doc(id).get();
     return ref.exists;
+
+
   }
 
   static Future<bool> isMediaInfoComplete(String id) async {
