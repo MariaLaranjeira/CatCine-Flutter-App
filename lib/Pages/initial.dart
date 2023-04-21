@@ -30,21 +30,21 @@ class _InitialScreenState extends State<InitialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff393d5a),
-      body: Padding (
+      body: Container (
+        constraints: BoxConstraints.expand(),
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/Initial.png'),
+              fit: BoxFit.contain,
+            )
+        ),
+        child: Padding (
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 60.0),
-              Expanded(
-                flex: 1,
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: Image.asset('images/Initial.png'),
-                ),
-              ),
-
+              const SizedBox(height: 560.0),
               SizedBox(
                 key: const Key('Sign In'),
                 width:double.infinity,
@@ -58,11 +58,11 @@ class _InitialScreenState extends State<InitialScreen> {
                   ),
                   onPressed: _signIn,
                   child: const Text(
-                      "Sign In" ,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
+                    "Sign In" ,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -81,14 +81,15 @@ class _InitialScreenState extends State<InitialScreen> {
                   child: const Text(
                     "Register" ,
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
             ],
-          )
+          ),
+        ),
       ),
     );
   }
