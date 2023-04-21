@@ -2,7 +2,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
 
-class ClickSignInButton extends Given1WithWorld<String, FlutterWorld> {
+class CheckSignInButton extends Given1WithWorld<String, FlutterWorld> {
   @override
   Future<void> executeStep(String signInButton) async {
     final signIn = find.byValueKey(signInButton);
@@ -10,9 +10,19 @@ class ClickSignInButton extends Given1WithWorld<String, FlutterWorld> {
   }
 
   @override
-  RegExp get pattern => RegExp(r"an user clicks the {string} button");
+  RegExp get pattern => RegExp(r"there is a {string} button");
 }
 
+class ClickSignInButton extends And1WithWorld<String, FlutterWorld> {
+  @override
+  Future<void> executeStep(String signInButton) async {
+    final signIn = find.byValueKey(signInButton);
+    await FlutterDriverUtils.tap(world.driver, signIn);
+  }
+
+  @override
+  RegExp get pattern => RegExp(r"an user clicks the {string} button");
+}
 
 class CheckAllBoxes extends Given3WithWorld<String, String, String, FlutterWorld> {
   @override
