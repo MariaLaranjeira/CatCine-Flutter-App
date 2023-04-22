@@ -24,8 +24,8 @@ class _ExploreFilmState extends State<ExploreFilm>{
 
   @override
   void initState() {
-    initList();
     super.initState();
+    initList();
   }
 
   void updateList(String title) async{
@@ -38,6 +38,8 @@ class _ExploreFilmState extends State<ExploreFilm>{
     mediaList = await Media.searchTitle(title);
     API.storeMedia(title);
     API.updateRemoteList();
+
+
     displayList = mediaList;
 
 

@@ -93,7 +93,7 @@ class Media {
   updateInfo(Map<String, dynamic> fullInfo) {
     bool _movie = false;
     if (fullInfo['type'] == 'movie') _movie == true;
-    List<dynamic> watchProviders_ = fullInfo['watch_providers'] ?? [];
+    //List<dynamic> watchProviders_ = fullInfo['watch_providers'] ?? [];
     description = fullInfo['description'] as String?;
     runtime = fullInfo['runtime'] ?? 0;
     imdbId = fullInfo['imdbid'] as String?;
@@ -133,7 +133,7 @@ class Media {
   static updateLocalList(List<Media> mediaList){
 
     for (var media in mediaList){
-      if (!allLocalMedia.values.contains(media)){
+      if (!allLocalMedia.values.any((it)=> it.id == media.id)){
         allLocalMedia[media.id] = media;
       }
     }
