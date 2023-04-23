@@ -91,7 +91,7 @@ class API {
       'age_rating': 1,
       'trailer': "",
       'backdrop': "",
-      'score': 1
+      'score': 1,
     },
     SetOptions(merge: true),
     );
@@ -138,26 +138,12 @@ class API {
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data();
         var aux = data as Map<String, dynamic>;
-        res = aux.containsKey('poster');
+        res = !(aux['poster'] == "" && aux['backdrop'] == "" && aux['description'] == "") ;
       }
     });
 
     return res;
 
-    //var doc = mediaDB.doc(id);
-    /*
-    if(await doc.get().then((value) {
-      try {
-        final test = value.get('poster');
-        return true;
-      } on StateError catch (e){
-        return false;
-      }
-    })) {
-      return true;
-    }
-    return false;
-    */
   }
 
   //Stores Media if not found in the db already
