@@ -65,9 +65,9 @@ class API {
     return json;
   }
 
-  //FirebaseFirestore firestore = FirebaseFirestore.instance;
   static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
-      'media');
+      'mediaLeo');
+
 
   static addMedia(Media media) async {
     String type = 'show';
@@ -81,17 +81,17 @@ class API {
       'id': media.id,
       'title': media.mediaName,
       'year': media.releaseDate,
-      'runtime': media.runtime,
-      'poster': media.coverUrl,
-      'description': media.description,
-      'imdbid': media.imdbId,
-      'traktid': media.traktId,
-      'tmdbid': media.tmdbId,
-      'type': type,
-      'age_rating': media.ageRating,
-      'trailer': media.trailerUrl,
-      'backdrop': media.backdropUrl,
-      'score': media.score
+      'runtime': 1,
+      'poster': "",
+      'description': "",
+      'imdbid': "",
+      'traktid': 1,
+      'tmdbid': 1,
+      'type': "",
+      'age_rating': 1,
+      'trailer': "",
+      'backdrop': "",
+      'score': 1
     },
     SetOptions(merge: true),
     );
@@ -117,14 +117,15 @@ class API {
       'trailer': media.trailerUrl,
       'backdrop': media.backdropUrl,
       'score': media.score
-    }
-    );
+    });
   }
 
 
   static Future<bool> doesMediaExist(String id) async {
     var ref = await mediaDB.doc(id).get();
     return ref.exists;
+
+
   }
 
   static Future<bool> isMediaInfoComplete(String id) async {
@@ -137,7 +138,6 @@ class API {
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data();
         var aux = data as Map<String, dynamic>;
-        print(aux);
         res = aux.containsKey('poster');
       }
     });
@@ -170,7 +170,6 @@ class API {
     }
   }
 
-  // maybe think about merging these two in the future? storeMedia <-> updateRemoteList
   static updateRemoteList() async {
 
     for (var media in allLocalMedia.values) {
@@ -203,15 +202,20 @@ class API {
               id: res['id'],
               mediaName: res['title'] ?? "",
               releaseDate: res['year'] ?? 0,
-              //
-            //
-            // watchProviders: []
-            //score: documents[i].get('score')
+              score: res['score'] ?? 0,
+              runtime: res['runtime'] ?? 0,
+              coverUrl: res['poster'] ?? "",
+              description: res['description'] ?? "",
+              imdbId: res['imdbid'] ?? "",
+              traktId: res['traktid'] ?? 0,
+              tmdbId: res['tmdbid'] ?? 0,
+              movie: res['type'] ?? false,
+              ageRating: res['age_rating'] ?? 0,
+              trailerUrl: res['trailer'] ?? "",
+              backdropUrl: res['backdrop'] ?? "",
           );
 
           allDBMedia[media.id] = media;
-          print ("Just added some media from the db! Purrr. Foi esta oh:");
-          print (media.mediaName);
         }
       });
     }
@@ -237,7 +241,7 @@ class API {
         mediaType = 'show';
       }
 
-      if (allLocalMedia[key]!.id == media.id) {
+      if (key == media.id) {
 
         Map<String, dynamic> infoMap;
 

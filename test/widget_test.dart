@@ -6,45 +6,43 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 
+import 'package:catcine_es/media.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
 import 'package:catcine_es/Pages/login.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
 
 
 void main() {
 
-  setUpAll(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-  });
+  final instance = FakeFirebaseFirestore();
 
-  late LoginScreen kevavs;
+  test("Insert and read movie data from database" , () async {
+    Media? media;
+    String id = "idTest";
+    String title = "titleTest";
+    int year = 0;
 
-  /*
-  testWidgets('Pipi', (WidgetTester tester) async {
-    assert(await tester.pumpWidget(const MyApp()),true);
-  });
-  */
-  test("kevavs", () async{
-    String expectedString = "";
-    User? user;
-    try {
-      var aux = await FirebaseAuth.instance.signInWithEmailAndPassword(email: 'test@test.com', password: 'testing');
-      user = aux.user;
-    } on FirebaseAuthException catch (exception) {
-      if (exception.code == "user-not-found") {
-        expectedString = "User not found for this email";
-      }
-    }
-    expect(expectedString,"User not found for this email" );
-  });
+    await instance.collection('media').doc('test').set ({
+      'id' : id,
+      'title': title,
+      'year': year
+    });
 
-  tearDownAll(() async {
-    await Firebase.app().delete();
+    final snapshot = await instance.collection('media').doc('test').get();
+
+    var x = snapshot.data() as Map<String, dynamic>;
+
+    media = Media.api(id: x['id'],mediaName: x['title'], releaseDate: x['year']);
+
+    expect(media.id, equals(id));
+    expect(media.mediaName, equals(title));
+    expect(media.releaseDate, equals(year));
+
   });
 
 }
