@@ -36,7 +36,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
       return;
     }
     mediaList = await Media.searchTitle(title);
-    API.storeMedia(title);
+    await API.storeMedia();
     API.updateRemoteList();
 
 
@@ -44,7 +44,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
 
 
     setState(() {
-      displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
+      displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase())).toList();
     });
   }
 
@@ -143,7 +143,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
                   itemBuilder: (context, index) => ListTile(
                     contentPadding: const EdgeInsets.all(8.0),
                     title: Text(
-                      displayList[index].mediaName!,
+                      displayList[index].mediaName,
                       style: const TextStyle(
                         color: Colors.white,
                       ),
