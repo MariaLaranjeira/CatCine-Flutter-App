@@ -29,12 +29,14 @@ class _InitialScreenState extends State<InitialScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: null,
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xff393d5a),
       body: Container (
         constraints: const BoxConstraints.expand(),
         decoration: const BoxDecoration(
             image: DecorationImage(
+              alignment: Alignment(0.2,-0.37),
               image: AssetImage('images/Initial.png'),
               fit: BoxFit.contain,
             )
@@ -45,7 +47,7 @@ class _InitialScreenState extends State<InitialScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height/1.27),
+              SizedBox(height: MediaQuery.of(context).size.height/1.35),
               SizedBox(
                 key: const Key('Sign In'),
                 width:double.infinity,
