@@ -32,7 +32,7 @@ class _InitialScreenState extends State<InitialScreen> {
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xff393d5a),
       body: Container (
-        constraints: BoxConstraints.expand(),
+        constraints: const BoxConstraints.expand(),
         decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('images/Initial.png'),
@@ -45,7 +45,7 @@ class _InitialScreenState extends State<InitialScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 560.0),
+              SizedBox(height: MediaQuery.of(context).size.height/1.27),
               SizedBox(
                 key: const Key('Sign In'),
                 width:double.infinity,
