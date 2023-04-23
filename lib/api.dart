@@ -26,7 +26,7 @@ class API {
     return response.body;
   }
 
-  static getTMTRInfo(String id, String searchType, String mediaType) async {
+  static getTRInfo(String id, String searchType, String mediaType) async {
     final client = http.Client();
 
     final request = http.Request('GET',
@@ -39,8 +39,6 @@ class API {
 
     final streamedResponse = await client.send(request);
     final response = await http.Response.fromStream(streamedResponse);
-
-    //print(response.body);
     return response.body;
   }
 
@@ -59,7 +57,7 @@ class API {
     if (isIMDB) {
       info = await getInfo(id, searchType);
     } else {
-      info = await getTMTRInfo(id, searchType, mediaType);
+      info = await getTRInfo(id, searchType, mediaType);
     }
     Map <String, dynamic> json = jsonDecode(info);
     return json;
@@ -130,26 +128,23 @@ class API {
 
   static Future<bool> isMediaInfoComplete(String id) async {
 
-    bool res = false;
-    mediaDB
-        .doc(id)
-        .get()
+    bool res = true;
+    await mediaDB.doc(id).get()
         .then((DocumentSnapshot documentSnapshot) async {
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data();
         var aux = data as Map<String, dynamic>;
-        res = !(aux['poster'] == "" && aux['backdrop'] == "" && aux['description'] == "") ;
+
+        res = !(aux['poster'] == '' && aux['description'] == '' && aux['backdrop'] == '');
       }
     });
 
     return res;
-
   }
 
   //Stores Media if not found in the db already
-  static storeMedia(String title) async {
-    List<Media> allMedia = await makeMedia(title);
-    for (var media in allMedia) {
+  static storeMedia() async {
+    for (var media in allLocalMedia.values) {
       if (!await doesMediaExist(media.id)) {
         addMedia(media);
       }
@@ -177,7 +172,7 @@ class API {
     }
 
     for (String _key in _userKey){
-      mediaDB
+      await mediaDB
           .doc(_key)
           .get()
           .then((DocumentSnapshot documentSnapshot) async {
