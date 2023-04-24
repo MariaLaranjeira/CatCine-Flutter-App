@@ -25,7 +25,7 @@ class API {
     return response.body;
   }
 
-  static getTMTRInfo(String id, String searchType, String mediaType) async {
+  static getTRInfo(String id, String searchType, String mediaType) async {
     final client = http.Client();
 
     final request = http.Request('GET',
@@ -38,8 +38,6 @@ class API {
 
     final streamedResponse = await client.send(request);
     final response = await http.Response.fromStream(streamedResponse);
-
-    //print(response.body);
     return response.body;
   }
 
@@ -58,15 +56,15 @@ class API {
     if (isIMDB) {
       info = await getInfo(id, searchType);
     } else {
-      info = await getTMTRInfo(id, searchType, mediaType);
+      info = await getTRInfo(id, searchType, mediaType);
     }
     Map <String, dynamic> json = jsonDecode(info);
     return json;
   }
 
-  //FirebaseFirestore firestore = FirebaseFirestore.instance;
   static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
-      'media');
+      'mediaLeo');
+
 
   static addMedia(Media media) async {
     String type = 'show';
@@ -80,17 +78,17 @@ class API {
       'id': media.id,
       'title': media.mediaName,
       'year': media.releaseDate,
-      'runtime': media.runtime,
-      'poster': media.coverUrl,
-      'description': media.description,
-      'imdbid': media.imdbId,
-      'traktid': media.traktId,
-      'tmdbid': media.tmdbId,
-      'type': type,
-      'age_rating': media.ageRating,
-      'trailer': media.trailerUrl,
-      'backdrop': media.backdropUrl,
-      'score': media.score
+      'runtime': 1,
+      'poster': "",
+      'description': "",
+      'imdbid': "",
+      'traktid': 1,
+      'tmdbid': 1,
+      'type': "",
+      'age_rating': 1,
+      'trailer': "",
+      'backdrop': "",
+      'score': 1
     },
     SetOptions(merge: true),
     );
@@ -116,60 +114,41 @@ class API {
       'trailer': media.trailerUrl,
       'backdrop': media.backdropUrl,
       'score': media.score
-    }
-    );
+    });
   }
 
 
   static Future<bool> doesMediaExist(String id) async {
     var ref = await mediaDB.doc(id).get();
     return ref.exists;
+
+
   }
 
   static Future<bool> isMediaInfoComplete(String id) async {
 
-    bool res = false;
-    mediaDB
-        .doc(id)
-        .get()
+    bool res = true;
+    await mediaDB.doc(id).get()
         .then((DocumentSnapshot documentSnapshot) async {
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data();
         var aux = data as Map<String, dynamic>;
-        print(aux);
-        res = aux.containsKey('poster');
+        res = !(aux['poster'] == '' && aux['description'] == '' && aux['backdrop'] == '');
       }
     });
 
     return res;
-
-    //var doc = mediaDB.doc(id);
-    /*
-    if(await doc.get().then((value) {
-      try {
-        final test = value.get('poster');
-        return true;
-      } on StateError catch (e){
-        return false;
-      }
-    })) {
-      return true;
-    }
-    return false;
-    */
   }
 
   //Stores Media if not found in the db already
-  static storeMedia(String title) async {
-    List<Media> allMedia = await makeMedia(title);
-    for (var media in allMedia) {
+  static storeMedia() async {
+    for (var media in allLocalMedia.values) {
       if (!await doesMediaExist(media.id)) {
         addMedia(media);
       }
     }
   }
 
-  // maybe think about merging these two in the future? storeMedia <-> updateRemoteList
   static updateRemoteList() async {
 
     for (var media in allLocalMedia.values) {
@@ -180,8 +159,7 @@ class API {
     }
   }
 
-  static Future<Map<String ,Media>> loadMedia() async {
-    Map<String, Media> allDBMedia = {};
+  static loadMedia() async {
 
     List<String> _userKey = [];
     final query = await mediaDB.get();
@@ -191,30 +169,40 @@ class API {
     }
 
     for (String _key in _userKey){
-      mediaDB
+      await mediaDB
           .doc(_key)
           .get()
           .then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
           var data = documentSnapshot.data();
           var res = data as Map<String, dynamic>;
+
+          bool _movie = false;
+          if (res['type'] == 'movie') {
+            _movie = true;
+          }
+
           Media media = Media.api(
               id: res['id'],
               mediaName: res['title'] ?? "",
               releaseDate: res['year'] ?? 0,
-              //
-            //
-            // watchProviders: []
-            //score: documents[i].get('score')
+              score: res['score'] ?? 0,
+              runtime: res['runtime'] ?? 0,
+              coverUrl: res['poster'] ?? "",
+              description: res['description'] ?? "",
+              imdbId: res['imdbid'] ?? "",
+              traktId: res['traktid'] ?? 0,
+              tmdbId: res['tmdbid'] ?? 0,
+              movie: _movie,
+              ageRating: res['age_rating'] ?? 0,
+              trailerUrl: res['trailer'] ?? "",
+              backdropUrl: res['backdrop'] ?? "",
           );
 
-          allDBMedia[media.id] = media;
-          print ("Just added some media from the db! Purrr. Foi esta oh:");
-          print (media.mediaName);
+          allLocalMedia[media.id] = media;
         }
       });
     }
-    return allDBMedia;
   }
 
   /*
@@ -236,7 +224,7 @@ class API {
         mediaType = 'show';
       }
 
-      if (allLocalMedia[key]!.id == media.id) {
+      if (key == media.id) {
 
         Map<String, dynamic> infoMap;
 

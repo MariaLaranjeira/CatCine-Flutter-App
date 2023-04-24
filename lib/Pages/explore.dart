@@ -1,4 +1,3 @@
-import 'package:catcine_es/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -19,13 +18,13 @@ class _ExploreFilmState extends State<ExploreFilm>{
   List<Media> displayList = [];
 
   Future<void> initList() async {
-    allLocalMedia = await API.loadMedia();
+    await API.loadMedia();
   }
 
   @override
   void initState() {
-    initList();
     super.initState();
+    initList();
   }
 
   void updateList(String title) async{
@@ -36,28 +35,30 @@ class _ExploreFilmState extends State<ExploreFilm>{
       return;
     }
     mediaList = await Media.searchTitle(title);
-    await API.storeMedia(title);
+    await API.storeMedia();
     API.updateRemoteList();
+
+
     displayList = mediaList;
 
 
     setState(() {
-      displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
+      displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase())).toList();
     });
   }
 
   ImageProvider getPosterURL(Media media) {
-    if (media.coverUrl != null) {
-      return NetworkImage(media.coverUrl!);
+    if (media.coverUrl != '') {
+      return NetworkImage(media.coverUrl);
     }
     return const AssetImage('images/catIcon.png');
   }
 
   String getTrimmedName(Media media) {
-    if (media.mediaName!.length > 15) {
-      return '${media.mediaName!.substring(0, 15)}...';
+    if (media.mediaName.length > 15) {
+      return '${media.mediaName.substring(0, 15)}...';
     }
-    return media.mediaName!;
+    return media.mediaName;
   }
 
   @override
@@ -158,6 +159,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
                 prefixIcon: const Icon(Icons.search),
               ),
             ),
+            const SizedBox(height: 10,),
             Expanded(
               child: DraggableScrollableActuator(
                 child: ListView.builder(
@@ -177,13 +179,14 @@ class _ExploreFilmState extends State<ExploreFilm>{
                                   fit: BoxFit.fill,
                                   isAntiAlias: true,
                                   image: getPosterURL(displayList[index * 2]),
-                                  semanticLabel: "${displayList[index * 2].mediaName!}...",
+                                  semanticLabel: "${displayList[index * 2].mediaName}...",
                                   loadingBuilder: (context, child, progress) {
                                     return progress == null ? child : const LinearProgressIndicator();
                                   },
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 10,),
                             Text(
                               getTrimmedName(displayList[index * 2]),
                               style: const TextStyle(
@@ -204,13 +207,14 @@ class _ExploreFilmState extends State<ExploreFilm>{
                                     isAntiAlias: true,
                                     image: getPosterURL(displayList[index * 2 + 1]),
                                     fit: BoxFit.fill,
-                                    semanticLabel: "${displayList[index * 2 + 1].mediaName!}...",
+                                    semanticLabel: "${displayList[index * 2 + 1].mediaName}...",
                                     loadingBuilder: (context, child, progress) {
                                       return progress == null ? child : const LinearProgressIndicator();
                                     },
                                   ),
                                 ),
                               ),
+                              const SizedBox(height: 10,),
                               Text(
                                 getTrimmedName(displayList[index * 2 + 1]),
                                 style: const TextStyle(
@@ -220,6 +224,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
                             ]
                         ),
                       ]
+
                     ),
                   ),
                 ),
