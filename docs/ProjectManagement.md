@@ -45,7 +45,7 @@
 >
 > ### * Retrospectives: 
 >
->  > This iteration felt increasingly challenging. Given the complexity of our API Searches and the fact that currently only three of us are actively working in the project, this iteration felt very demanding. Despite that, we feel like we organized ourselves in a more efficient manner compared to previous iterations, having done a lot of work. We made quite some progress in understanding and developing firebase media storage and API usages. We also succeeded in making our app's authentication screens more functional and asthetically pleasing.  <br>
+>  > This iteration felt increasingly challenging. Given the complexity of our API Searches and the fact that currently only three of us are actively working in the project, this iteration felt very demanding. Despite that, we feel like we organized ourselves in a more efficient manner compared to previous iterations, having done a lot of work. We made quite some progress in understanding and developing firebase media storage and API usages. We also succeeded in making our app's authentication screens more functional and aesthetically pleasing.  <br>
 >
 
 <br>
