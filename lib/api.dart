@@ -217,28 +217,23 @@ class API {
 
   static mediaSpecificUpdate(Media media) async {
     String mediaType;
-    for (var key in allLocalMedia.keys) {
 
-      if (allLocalMedia[key]!.movie) {
-        mediaType = 'movie';
-      } else {
-        mediaType = 'show';
-      }
-
-      if (key == media.id) {
-
-        Map<String, dynamic> infoMap;
-
-        if (allLocalMedia[key]!.id[1] == 't') {
-          infoMap = await API.fullInfo(true,allLocalMedia[key]!.id, 'i' , mediaType);
-        } else {
-          infoMap = await API.fullInfo(false,allLocalMedia[key]!.id.substring(2), 't',mediaType);
-        }
-
-        allLocalMedia[key]!.updateInfo(infoMap);
-        break;
-      }
+    if (media.movie) {
+      mediaType = 'movie';
+    } else {
+      mediaType = 'show';
     }
+
+
+    Map<String, dynamic> infoMap;
+
+    if (media.id[1] == 't') {
+      infoMap = await API.fullInfo(true,media.id, 'i' , mediaType);
+    } else {
+      infoMap = await API.fullInfo(false,media.id.substring(2), 't',mediaType);
+    }
+
+    media.updateInfo(infoMap);
   }
 }
 
