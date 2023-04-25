@@ -19,7 +19,6 @@ class API {
         'X-RapidAPI-Host': 'mdblist.p.rapidapi.com'
       });
 
-
     final streamedResponse = await client.send(request);
     final response = await http.Response.fromStream(streamedResponse);
 
@@ -161,8 +160,7 @@ class API {
     }
   }
 
-  static Future<Map<String ,Media>> loadMedia() async {
-    Map<String, Media> allDBMedia = {};
+  static loadMedia() async {
 
     List<String> _userKey = [];
     final query = await mediaDB.get();
@@ -179,6 +177,12 @@ class API {
         if (documentSnapshot.exists) {
           var data = documentSnapshot.data();
           var res = data as Map<String, dynamic>;
+
+          bool _movie = false;
+          if (res['type'] == 'movie') {
+            _movie = true;
+          }
+
           Media media = Media.api(
               id: res['id'],
               mediaName: res['title'] ?? "",
@@ -190,17 +194,16 @@ class API {
               imdbId: res['imdbid'] ?? "",
               traktId: res['traktid'] ?? 0,
               tmdbId: res['tmdbid'] ?? 0,
-              movie: res['type'] ?? false,
+              movie: _movie,
               ageRating: res['age_rating'] ?? 0,
               trailerUrl: res['trailer'] ?? "",
               backdropUrl: res['backdrop'] ?? "",
           );
 
-          allDBMedia[media.id] = media;
+          allLocalMedia[media.id] = media;
         }
       });
     }
-    return allDBMedia;
   }
 
   /*

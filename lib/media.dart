@@ -101,9 +101,9 @@ class Media {
 
   toJson(){
     return {
-      "Id": id,
-      "Name": mediaName,
-      "Date": releaseDate,
+      "id": id,
+      "title": mediaName,
+      "year": releaseDate,
       //"Duration": runtime,
       //"Score": score,
     };
