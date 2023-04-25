@@ -20,6 +20,7 @@ class Media {
   String backdropUrl;
 
 
+
   Media(
       this.id,
       this.mediaName,
