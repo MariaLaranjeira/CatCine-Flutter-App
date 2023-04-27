@@ -1,20 +1,12 @@
-import 'package:catcine_es/Auth/authinitial.dart';
-import 'package:catcine_es/Auth/register.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_indicator/loading_indicator.dart';
-
-import 'Auth/login.dart';
-
+import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'Auth/register.dart';
-import 'Pages/explore.dart';
-import 'Pages/initial.dart';
-import 'firebase_options.dart';
+import 'Auth/authinitial.dart';
+import 'media.dart';
 
-
+Map<String, Media> allLocalMedia = {};
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
       home:HomePage()
     );
   }
@@ -45,73 +38,61 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  var authentication = FirebaseAuth.instance.currentUser;
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
-  bool connected = false;
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
 
-  Future<void> checkConnectivity() async {
-    final connectivityResult = await (Connectivity().checkConnectivity());
-    switch (connectivityResult) {
-      case ConnectivityResult.wifi:
-        connected = true;
-        break;
-      case ConnectivityResult.ethernet:
-        connected = true;
-        break;
-      case ConnectivityResult.mobile:
-        connected = true;
-        break;
-      case ConnectivityResult.vpn:
-        connected = true;
-        break;
-      case ConnectivityResult.bluetooth:
-        connected = false;
-        break;
-      case ConnectivityResult.none:
-        connected = false;
-        break;
-      case ConnectivityResult.other:
-        connected = false;
-        break;
-      }
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException {
+      print('Couldn\'t check connectivity status');
+      return;
     }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    while(!connected) {
-      checkConnectivity();
-      return MaterialApp(
-        home: Scaffold(
-          body:
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height/(2.1),
-                  ),
-                  const Text("Loading!"),
-                  const SizedBox(
-                    height: 25,
-                    width: 25,
-                    child: LoadingIndicator(indicatorType:  // To use an actual loading Page?
-                    Indicator.ballClipRotateMultiple),
-                  )
-
-                ],
-              ),
-            )
-        ),
-      );
+    if (_connectionStatus != ConnectivityResult.none
+        && _connectionStatus != ConnectivityResult.bluetooth
+        && _connectionStatus != ConnectivityResult.other) {
+      return const MainPage();
+    } else {
+      return const CircularProgressIndicator();
     }
-
-    return const MaterialApp(
-        home: InitialScreen()
-    );
-
   }
 }
 

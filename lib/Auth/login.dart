@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:catcine_es/Pages/explore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -12,66 +15,194 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  static Future<User?> loginUsingEmailPassword(
-     {required String email,
-      required String password,
-      required BuildContext context}) async {
+  Future loginUsingEmailPassword() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
-
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
       user = userCredential.user;
+      if (user != null) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => const ExploreFilm()));
+
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: Colors.green,
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.check,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Success!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
     } on FirebaseAuthException catch (exception) {
       if (exception.code == "user-not-found") {
-        print("User not found for this email");
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                alignment: Alignment.topCenter,
+                shape: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none,
+                ),
+                backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                content:
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      "This User Does Not Exist",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20
+                      ),
+                    ),
+                  ],
+                )
+              );
+          }
+        );
+      }
+      if (exception.code == "wrong-password") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Wrong Password!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
+      if (exception.code == "invalid-email") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Invalid Email!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
       }
     }
-
-    return user;
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
       appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a),
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
-      body: Padding (
+      body: Stack(
+        children: [
+        Positioned(
+          top: 0,
+          left: 0,
+          child: Image.asset(
+            'images/WelcomeBack.png',
+            width: 380,
+            height: 500,
+            fit: BoxFit.cover,
+          ),
+        ),
+          Padding (
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Welcome",
-                style:
-                TextStyle(
-                  color: Colors.white,
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Text(
-                "Back",
-                style:
-                TextStyle(
-                  color: Colors.white,
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 44.0),
+              const SizedBox(height: 250),
 
               TextField(
+                key: const Key("emailKey"),
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
@@ -87,6 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox( height: 26.0),
 
               TextField(
+                key: const Key("passwordKey"),
                 controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
@@ -102,6 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox( height: 26.0),
 
               SizedBox(
+                key: const Key("loginButton"),
                 width:double.infinity,
                 child: RawMaterialButton(
                   fillColor: const Color(0xFFEC6B76),
@@ -111,24 +244,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   elevation: 0.0,
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   onPressed: () async {
-                    User? user = await loginUsingEmailPassword(
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
-                        context: context
-                    );
-                    print(user);
-                    if (user != null) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ExploreFilm()));
-                    }
-                    else {
-
-                    }
+                    loginUsingEmailPassword();
                   },
                   child: const Text(
                       "Sign in" ,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -162,6 +284,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           )
       ),
+      ],
+    ),
     );
   }
 }
