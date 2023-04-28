@@ -91,7 +91,7 @@ class API {
       'age_rating': 1,
       'trailer': "",
       'backdrop': "",
-      'score': 1
+      'score': 1,
     },
     SetOptions(merge: true),
     );
@@ -132,6 +132,7 @@ class API {
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data();
         var aux = data as Map<String, dynamic>;
+
         res = !(aux['poster'] == '' && aux['description'] == '' && aux['backdrop'] == '');
       }
     });
@@ -216,20 +217,19 @@ class API {
   static mediaSpecificUpdate(Media media) async {
     String mediaType;
 
-    if (allLocalMedia[media.id]!.movie) {
-        mediaType = 'movie';
-      } else {
-        mediaType = 'show';
-      }
+    if (media.movie) {
+      mediaType = 'movie';
+    } else {
+      mediaType = 'show';
+    }
+
 
     Map<String, dynamic> infoMap;
 
     if (media.id[1] == 't') {
-      infoMap =
-      await API.fullInfo(true, media.id, 'i', mediaType);
+      infoMap = await API.fullInfo(true,media.id, 'i' , mediaType);
     } else {
-      infoMap =
-      await API.fullInfo(false, media.id.substring(2), 't', mediaType);
+      infoMap = await API.fullInfo(false,media.id.substring(2), 't',mediaType);
     }
     media.updateInfo(infoMap);
   }
