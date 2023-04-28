@@ -19,7 +19,9 @@ void main() {
           true,
           13,
           'trailerUrl',
-          'backdropUrl');
+          'backdropUrl',
+          false,
+      );
 
       expect(media.id, 'tt343324');
       expect(media.mediaName, 'Random Movie');
@@ -44,7 +46,9 @@ void main() {
         true,
         13,
         'trailerUrl',
-        'backdropUrl');
+        'backdropUrl',
+        false,
+    );
 
     test('fromJson method works as expected', () {
       final Map<String, dynamic> jsonMap = {

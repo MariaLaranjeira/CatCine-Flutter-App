@@ -63,16 +63,19 @@ class API {
   }
 
   static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
-      'mediaLeo');
+      'media');
 
 
   static addMedia(Media media) async {
+
     String type = 'show';
     if (media.movie) {
       type = 'movie';
     }
 
     var ref = mediaDB.doc(media.id);
+
+    media.isInFirebase = true;
 
     ref.set({
       'id': media.id,
@@ -84,7 +87,7 @@ class API {
       'imdbid': "",
       'traktid': 1,
       'tmdbid': 1,
-      'type': "",
+      'type': type,
       'age_rating': 1,
       'trailer': "",
       'backdrop': "",
@@ -95,10 +98,6 @@ class API {
   }
 
   static updateMedia(Media media) async {
-    String type = 'show';
-    if (media.movie) {
-      type = 'movie';
-    }
 
     var ref = mediaDB.doc(media.id);
 
@@ -109,12 +108,12 @@ class API {
       'imdbid': media.imdbId,
       'traktid': media.traktId,
       'tmdbid': media.tmdbId,
-      'type': type,
       'age_rating': media.ageRating,
       'trailer': media.trailerUrl,
       'backdrop': media.backdropUrl,
       'score': media.score
     });
+
   }
 
 
@@ -143,19 +142,26 @@ class API {
   //Stores Media if not found in the db already
   static storeMedia() async {
     for (var media in allLocalMedia.values) {
-      if (!await doesMediaExist(media.id)) {
+      if (!media.isInFirebase) {
         addMedia(media);
       }
     }
   }
 
-  static updateRemoteList() async {
+  static updateRemoteList(List<Media> list) async {
+    for (var media in list) {
+      await mediaDB.doc(media.id).get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          var data = documentSnapshot.data();
+          var aux = data as Map<String, dynamic>;
 
-    for (var media in allLocalMedia.values) {
-      if (!await isMediaInfoComplete(media.id)) {
-        await mediaSpecificUpdate(media);
-        updateMedia(media);
-      }
+          if((aux['poster'] == '' && aux['description'] == '' && aux['backdrop'] == '')) {
+            await mediaSpecificUpdate(media);
+            updateMedia(media);
+          }
+        }
+      });
     }
   }
 
@@ -169,7 +175,7 @@ class API {
     }
 
     for (String _key in _userKey){
-      await mediaDB
+      mediaDB
           .doc(_key)
           .get()
           .then((DocumentSnapshot documentSnapshot) async {
@@ -197,6 +203,7 @@ class API {
               ageRating: res['age_rating'] ?? 0,
               trailerUrl: res['trailer'] ?? "",
               backdropUrl: res['backdrop'] ?? "",
+              isInFirebase: true,
           );
 
           allLocalMedia[media.id] = media;
@@ -205,39 +212,26 @@ class API {
     }
   }
 
-  /*
-  static searchById() async{
-    final query = await mediaDB.get();
-    for (var doc in query.docs) {
-
-    }
-  }
-  */
 
   static mediaSpecificUpdate(Media media) async {
     String mediaType;
-    for (var key in allLocalMedia.keys) {
 
-      if (allLocalMedia[key]!.movie) {
+    if (allLocalMedia[media.id]!.movie) {
         mediaType = 'movie';
       } else {
         mediaType = 'show';
       }
 
-      if (key == media.id) {
+    Map<String, dynamic> infoMap;
 
-        Map<String, dynamic> infoMap;
-
-        if (allLocalMedia[key]!.id[1] == 't') {
-          infoMap = await API.fullInfo(true,allLocalMedia[key]!.id, 'i' , mediaType);
-        } else {
-          infoMap = await API.fullInfo(false,allLocalMedia[key]!.id.substring(2), 't',mediaType);
-        }
-
-        allLocalMedia[key]!.updateInfo(infoMap);
-        break;
-      }
+    if (media.id[1] == 't') {
+      infoMap =
+      await API.fullInfo(true, media.id, 'i', mediaType);
+    } else {
+      infoMap =
+      await API.fullInfo(false, media.id.substring(2), 't', mediaType);
     }
+    media.updateInfo(infoMap);
   }
 }
 

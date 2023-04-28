@@ -18,6 +18,7 @@ class Media {
   int ageRating;
   String trailerUrl;
   String backdropUrl;
+  bool isInFirebase;
 
 
   Media(
@@ -35,7 +36,8 @@ class Media {
       //this.watchProviders,
       this.ageRating,
       this.trailerUrl,
-      this.backdropUrl
+      this.backdropUrl,
+      this.isInFirebase,
       );
 
   Media.api({
@@ -53,7 +55,8 @@ class Media {
     //required this.watchProviders,
     this.ageRating = 1,
     this.trailerUrl = '',
-    this.backdropUrl = ''
+    this.backdropUrl = '',
+    this.isInFirebase = false,
   });
 
   factory Media.fromJson(Map<String,dynamic> json){
@@ -77,8 +80,6 @@ class Media {
     var trailerUrl = json['trailer'] ?? '';
     var backdropUrl = json['backdrop'] ?? '';
 
-
-
     return Media.api(
         id: id,
         mediaName: mediaName,
@@ -94,7 +95,8 @@ class Media {
         movie: type,
         ageRating: ageRating,
         trailerUrl: trailerUrl,
-        backdropUrl: backdropUrl
+        backdropUrl: backdropUrl,
+        isInFirebase: false,
     );
   }
 
@@ -122,8 +124,6 @@ class Media {
     trailerUrl = fullInfo['trailer'] ?? '';
     backdropUrl = fullInfo['backdrop'] ?? '';
     coverUrl = fullInfo['poster'] ?? '';
-
-
   }
 
   static Future<List<Media>> searchTitle(String title) async {

@@ -36,7 +36,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
     }
     mediaList = await Media.searchTitle(title);
     await API.storeMedia();
-    API.updateRemoteList();
+    API.updateRemoteList(mediaList);
 
 
     displayList = mediaList;
