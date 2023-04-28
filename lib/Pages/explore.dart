@@ -1,4 +1,3 @@
-import 'package:catcine_es/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -19,13 +18,13 @@ class _ExploreFilmState extends State<ExploreFilm>{
   List<Media> displayList = [];
 
   Future<void> initList() async {
-    allLocalMedia = await API.loadMedia();
+    await API.loadMedia();
   }
 
   @override
   void initState() {
-    initList();
     super.initState();
+    initList();
   }
 
   void updateList(String title) async{
@@ -36,14 +35,30 @@ class _ExploreFilmState extends State<ExploreFilm>{
       return;
     }
     mediaList = await Media.searchTitle(title);
-    await API.storeMedia(title);
-    API.updateRemoteList();
+    await API.storeMedia();
+    API.updateRemoteList(mediaList);
+
+
     displayList = mediaList;
 
 
     setState(() {
-      displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
+      displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase())).toList();
     });
+  }
+
+  ImageProvider getPosterURL(Media media) {
+    if (media.coverUrl != '') {
+      return NetworkImage(media.coverUrl);
+    }
+    return const AssetImage('images/catIcon.png');
+  }
+
+  String getTrimmedName(Media media) {
+    if (media.mediaName.length > 15) {
+      return '${media.mediaName.substring(0, 15)}...';
+    }
+    return media.mediaName;
   }
 
   @override
@@ -68,9 +83,13 @@ class _ExploreFilmState extends State<ExploreFilm>{
                   icon: const Icon(Icons.person),
                   onPressed: () {},
                 ),
-                IconButton(
-                 icon: Image.asset('images/catIcon.png'),
-                  onPressed: () {},
+                SizedBox(
+                  height: 60,
+                  child: IconButton(
+                    iconSize: 60,
+                    icon: Image.asset('images/catIcon.png'),
+                    onPressed: () {},
+                  ),
                 ),
                 IconButton(
                  icon: const Icon(Icons.search),
@@ -140,6 +159,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
                 prefixIcon: const Icon(Icons.search),
               ),
             ),
+            const SizedBox(height: 10,),
             Expanded(
               child: DraggableScrollableActuator(
                 child: ListView.builder(
@@ -148,18 +168,63 @@ class _ExploreFilmState extends State<ExploreFilm>{
                     contentPadding: const EdgeInsets.all(8.0),
                     title: Row(
                       children: [
-                        Text(
-                          displayList[index * 2].mediaName!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(displayList[index * 2 + 1].mediaName!,
-                            style: const TextStyle(
-                              color: Colors.white,
+                        Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(16.0),
+                              child: SizedBox(
+                                width: (MediaQuery.of(context).size.width/11) * 4.35,
+                                height: 250,
+                                child: Image(
+                                  fit: BoxFit.fill,
+                                  isAntiAlias: true,
+                                  image: getPosterURL(displayList[index * 2]),
+                                  semanticLabel: "${displayList[index * 2].mediaName}...",
+                                  loadingBuilder: (context, child, progress) {
+                                    return progress == null ? child : const LinearProgressIndicator();
+                                  },
+                                ),
+                              ),
                             ),
-                        )
+                            const SizedBox(height: 10,),
+                            Text(
+                              getTrimmedName(displayList[index * 2]),
+                              style: const TextStyle(
+                                color: Colors.white
+                              ),
+                            )
+                          ]
+                        ),
+                        SizedBox(width: MediaQuery.of(context).size.width/11,),
+                        Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(16.0),
+                                child: SizedBox(
+                                  width: (MediaQuery.of(context).size.width/11) * 4.35,
+                                  height: 250,
+                                  child: Image(
+                                    isAntiAlias: true,
+                                    image: getPosterURL(displayList[index * 2 + 1]),
+                                    fit: BoxFit.fill,
+                                    semanticLabel: "${displayList[index * 2 + 1].mediaName}...",
+                                    loadingBuilder: (context, child, progress) {
+                                      return progress == null ? child : const LinearProgressIndicator();
+                                    },
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10,),
+                              Text(
+                                getTrimmedName(displayList[index * 2 + 1]),
+                                style: const TextStyle(
+                                    color: Colors.white
+                                ),
+                              )
+                            ]
+                        ),
                       ]
+
                     ),
                   ),
                 ),

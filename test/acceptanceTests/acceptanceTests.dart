@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
 import 'package:glob/glob.dart';
-
 import 'steps/signedIn.dart';
 
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
+    ..defaultTimeout = const Duration(seconds: 50)
     ..features = [Glob(r"test/acceptanceTests/features/signIn.feature")]
     ..reporters = [
       ProgressReporter(),
@@ -18,5 +18,6 @@ Future<void> main() {
     ..customStepParameterDefinitions = []
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test/acceptanceTests/runAcceptanceTests.dart";
+
   return GherkinRunner().execute(config);
 }

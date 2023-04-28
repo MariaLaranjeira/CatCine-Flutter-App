@@ -4,20 +4,22 @@ import 'package:catcine_es/main.dart';
 
 class Media {
   String id;
-  String? mediaName;
-  int? releaseDate;
-  int? runtime;
-  int? score;
-  String? coverUrl;
-  String? description;
-  String? imdbId;
-  int? traktId;
-  int? tmdbId;
+  String mediaName;
+  int releaseDate;
+  int runtime;
+  int score;
+  String coverUrl;
+  String description;
+  String imdbId;
+  int traktId;
+  int tmdbId;
   bool movie;
   //List<String> watchProviders = [];
-  int? ageRating;
-  String? trailerUrl;
-  String? backdropUrl;
+  int ageRating;
+  String trailerUrl;
+  String backdropUrl;
+  bool isInFirebase;
+
 
 
   Media(
@@ -35,25 +37,27 @@ class Media {
       //this.watchProviders,
       this.ageRating,
       this.trailerUrl,
-      this.backdropUrl
+      this.backdropUrl,
+      this.isInFirebase,
       );
 
   Media.api({
     this.id = '',
-    this.mediaName,
-    this.releaseDate,
-    this.runtime,
-    this.score,
-    this.coverUrl,
-    this.description,
-    this.imdbId,
-    this.traktId,
-    this.tmdbId,
+    this.mediaName = '',
+    this.releaseDate = 1,
+    this.runtime = 1,
+    this.score = 1,
+    this.coverUrl = '',
+    this.description = '',
+    this.imdbId = '',
+    this.traktId = 1,
+    this.tmdbId = 1,
     this.movie = false,
     //required this.watchProviders,
-    this.ageRating,
-    this.trailerUrl,
-    this.backdropUrl
+    this.ageRating = 1,
+    this.trailerUrl = '',
+    this.backdropUrl = '',
+    this.isInFirebase = false,
   });
 
   factory Media.fromJson(Map<String,dynamic> json){
@@ -61,22 +65,39 @@ class Media {
     if (json['type'] == 'movie'){
       type = true;
     }
+
+    var id = json['id'] ?? '';
+    var mediaName = json['title'] ?? '';
+    var releaseDate = json['year'] ?? 1;
+    //watchProviders: [];
+    var score = json['score_average'] ?? 1;
+    var runtime = json['runtime'] ?? 1;
+    var coverUrl = json['poster'] ?? '';
+    var description = json['description'] ?? '';
+    var imdbId = json['imdbid'] ?? '';
+    var traktId = json['traktid'] ?? 1;
+    var tmdbId = json['tmdbid'] ?? 1;
+    var ageRating = json['age_rating'] ?? 1;
+    var trailerUrl = json['trailer'] ?? '';
+    var backdropUrl = json['backdrop'] ?? '';
+
     return Media.api(
-        id: json['id'] as String,
-        mediaName: json['title'] as String?,
-        releaseDate: json['year'],
+        id: id,
+        mediaName: mediaName,
+        releaseDate: releaseDate,
         //watchProviders: [],
-        score: json['score_average'] ?? 0,
-        runtime: json['runtime'],
-        coverUrl: json['poster'] as String?,
-        description: json['description'] as String?,
-        imdbId: json['imdbid'] as String?,
-        traktId: json['traktid'],
-        tmdbId: json['tmdbid'],
+        score: score,
+        runtime: runtime,
+        coverUrl: coverUrl,
+        description: description,
+        imdbId: imdbId,
+        traktId: traktId,
+        tmdbId: tmdbId,
         movie: type,
-        ageRating: json['age_rating'],
-        trailerUrl: json['trailer'] as String?,
-        backdropUrl: json['backdrop'] as String?
+        ageRating: ageRating,
+        trailerUrl: trailerUrl,
+        backdropUrl: backdropUrl,
+        isInFirebase: false,
     );
   }
 
@@ -93,33 +114,24 @@ class Media {
   updateInfo(Map<String, dynamic> fullInfo) {
     bool _movie = false;
     if (fullInfo['type'] == 'movie') _movie == true;
-    List<dynamic> watchProviders_ = fullInfo['watch_providers'] ?? [];
-    description = fullInfo['description'] as String?;
-    runtime = fullInfo['runtime'] ?? 0;
-    imdbId = fullInfo['imdbid'] as String?;
-    traktId = fullInfo['traktid'] ?? 0;
-    tmdbId = fullInfo['tmdbid'] ?? 0;
+    //List<dynamic> watchProviders_ = fullInfo['watch_providers'] ?? [];
+    description = fullInfo['description'] ?? '';
+    runtime = fullInfo['runtime'] ?? 1;
+    imdbId = fullInfo['imdbid'] ?? '';
+    traktId = fullInfo['traktid'] ?? 1;
+    tmdbId = fullInfo['tmdbid'] ?? 1;
     movie = _movie;
-    ageRating = fullInfo['age_rating'] ?? 0;
-    trailerUrl = fullInfo['trailer'] as String?;
-    backdropUrl = fullInfo['backdrop'] as String?;
-    coverUrl = fullInfo['poster'] as String?;
-    /*
-    for (Map<String, dynamic> provider in watchProviders_) {
-      for (final i in provider.keys) {
-          watchProviders.add(i ?? '');
-      }
-    }
-    */
-
+    ageRating = fullInfo['age_rating'] ?? 1;
+    trailerUrl = fullInfo['trailer'] ?? '';
+    backdropUrl = fullInfo['backdrop'] ?? '';
+    coverUrl = fullInfo['poster'] ?? '';
   }
 
   static Future<List<Media>> searchTitle(String title) async {
     List<Media> tempMedia = [];
     for (var media in allLocalMedia.values){
-      if (allLocalMedia.isEmpty) break;
-      if (media.mediaName!.toLowerCase().contains(title.toLowerCase()) ||
-          media.mediaName!.toUpperCase().contains(title.toUpperCase())){
+      if (media.mediaName.toLowerCase().contains(title.toLowerCase()) ||
+          media.mediaName.toUpperCase().contains(title.toUpperCase())){
         tempMedia.add(media);
       }
     }
@@ -133,7 +145,7 @@ class Media {
   static updateLocalList(List<Media> mediaList){
 
     for (var media in mediaList){
-      if (!allLocalMedia.values.contains(media)){
+      if (!allLocalMedia.values.any((it)=> it.id == media.id)){
         allLocalMedia[media.id] = media;
       }
     }

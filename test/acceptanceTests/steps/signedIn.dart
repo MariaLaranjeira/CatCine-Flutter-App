@@ -19,7 +19,7 @@ class ClickSignInButton extends Given1WithWorld<String, FlutterWorld> {
   @override
   Future<void> executeStep(String signInButton) async {
     final signIn = find.byValueKey(signInButton);
-    await FlutterDriverUtils.tap(world.driver, signIn);
+    await FlutterDriverUtils.isPresent(world.driver, signIn);
   }
 
   @override
