@@ -2,10 +2,11 @@ import 'media.dart';
 
 class Category {
 
+  String title;
+
   List<Media> catMedia;
   String creator;
   String description;
-  String title;
   int likes;
   int interactions;
   String backDrop;
@@ -19,5 +20,34 @@ class Category {
     this.interactions,
     this.backDrop
   );
+
+  Category.fromFirebase({
+    this.title = "",
+    this.creator = "",
+    this.catMedia = const [],
+    this.description = "",
+    this.backDrop = "",
+    this.interactions = 1,
+    this.likes = 1
+  });
+
+  factory Category.fromJson(Map<String,dynamic> json){
+
+    var title = json['title'] ?? '';
+    var creator = json['creator'] ?? '';
+    var description = json['description'] ?? "";
+    var backDrop = json['backDrop'] ?? "";
+    var likes = json['likes'] ?? 1;
+    var interactions = json['interactions'] ?? 1;
+
+    return Category.fromFirebase(
+      title: title,
+      creator: creator,
+      description: description,
+      backDrop: backDrop,
+      likes: likes,
+      interactions: interactions
+    );
+  }
 
 }

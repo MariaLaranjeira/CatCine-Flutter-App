@@ -14,7 +14,7 @@ class Media {
   int traktId;
   int tmdbId;
   bool movie;
-  //List<String> watchProviders = [];
+  List<String> watchProviders = [];
   int ageRating;
   String trailerUrl;
   String backdropUrl;
@@ -34,7 +34,7 @@ class Media {
       this.traktId,
       this.tmdbId,
       this.movie,
-      //this.watchProviders,
+      this.watchProviders,
       this.ageRating,
       this.trailerUrl,
       this.backdropUrl,
@@ -53,7 +53,7 @@ class Media {
     this.traktId = 1,
     this.tmdbId = 1,
     this.movie = false,
-    //required this.watchProviders,
+    this.watchProviders = const [],
     this.ageRating = 1,
     this.trailerUrl = '',
     this.backdropUrl = '',
