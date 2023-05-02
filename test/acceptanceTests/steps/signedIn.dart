@@ -42,8 +42,7 @@ class CheckAllBoxes extends Given3WithWorld<String, String, String, FlutterWorld
 class FillEmailPassBoxes extends When2WithWorld<String, String, FlutterWorld> {
   @override
   Future<void> executeStep(String field1, String field2) async {
-    await FlutterDriverUtils.enterText(
-        world.driver, find.byValueKey(field1), field2);
+    await FlutterDriverUtils.enterText(world.driver, find.byValueKey(field1), field2);
   }
 
   @override
