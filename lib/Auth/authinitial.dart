@@ -1,7 +1,7 @@
-import 'package:catcine_es/Pages/explore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../Pages/homePage.dart';
 import '../Pages/initial.dart';
 
 
@@ -15,7 +15,7 @@ class MainPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const ExploreFilm();
+            return const Home();
           } else {
             return const InitialScreen();
           }

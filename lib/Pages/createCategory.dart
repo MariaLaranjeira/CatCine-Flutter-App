@@ -1,6 +1,8 @@
+import 'package:catcine_es/Pages/exploreCategories.dart';
+import 'package:catcine_es/Pages/exploreMedia.dart';
+import 'package:catcine_es/Pages/homePage.dart';
+import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-
 
 class CreateCategoryScreen extends StatefulWidget {
   const CreateCategoryScreen({super.key});
@@ -16,11 +18,6 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
 
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-      ),
-
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xCACBCBD2),
         child: IconTheme(
@@ -30,23 +27,67 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
             children: [
               IconButton(
                 icon: const Icon(Icons.home),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                    pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                      return const Home();
+                    },
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                        (Route<dynamic> route) => false,
+                  );
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.person),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                    pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                      return const Profile();
+                    },
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                        (Route<dynamic> route) => false,
+                  );
+                },
               ),
-              IconButton(
-                icon: Image.asset('images/catIcon.png'),
-                onPressed: () {},
+              SizedBox(
+                height: 60,
+                child: IconButton(
+                  iconSize: 60,
+                  icon: Image.asset('images/catIcon.png'),
+                  onPressed: () {},
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.search),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                    pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                      return const ExploreMedia();
+                    },
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                        (Route<dynamic> route) => false,
+                  );
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.category),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                    pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                      return const ExploreCategories();
+                    },
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                        (Route<dynamic> route) => false,
+                  );
+                },
               ),
             ],
           ),

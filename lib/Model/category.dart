@@ -50,4 +50,15 @@ class Category {
     );
   }
 
+  toJson() {
+    return {
+      "title": title,
+      "creator": creator,
+      "description": description,
+      "bakDrop": backDrop,
+      "likes": likes,
+      "interactions": interactions
+    };
+  }
+
 }

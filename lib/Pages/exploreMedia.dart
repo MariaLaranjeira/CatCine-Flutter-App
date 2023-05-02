@@ -1,18 +1,22 @@
+import 'package:catcine_es/Pages/homePage.dart';
+import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../api.dart';
 import '../Model/media.dart';
+import 'createCategory.dart';
+import 'exploreCategories.dart';
 import 'initial.dart';
 
-class ExploreFilm extends StatefulWidget{
-  const ExploreFilm({Key? key}) : super(key: key);
+class ExploreMedia extends StatefulWidget{
+  const ExploreMedia({Key? key}) : super(key: key);
 
   @override
-  State<ExploreFilm> createState() => _ExploreFilmState();
+  State<ExploreMedia> createState() => _ExploreMediaState();
 }
 
-class _ExploreFilmState extends State<ExploreFilm>{
+class _ExploreMediaState extends State<ExploreMedia>{
 
   List<Media> mediaList = [];
   List<Media> displayList = [];
@@ -77,18 +81,48 @@ class _ExploreFilmState extends State<ExploreFilm>{
               children: [
                 IconButton(
                   icon: const Icon(Icons.home),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                        return const Home();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
                 ),
                 IconButton(
                   icon: const Icon(Icons.person),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                        return const Profile();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
                 ),
                 SizedBox(
                   height: 60,
                   child: IconButton(
                     iconSize: 60,
                     icon: Image.asset('images/catIcon.png'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                        pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                          return const CreateCategoryScreen();
+                        },
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                            (Route<dynamic> route) => false,
+                      );
+                    },
                   ),
                 ),
                 IconButton(
@@ -97,7 +131,17 @@ class _ExploreFilmState extends State<ExploreFilm>{
                 ),
                 IconButton(
                  icon: const Icon(Icons.category),
-                 onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                        return const ExploreCategories();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
                 ),
               ],
             ),
