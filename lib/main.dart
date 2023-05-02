@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Auth/authinitial.dart';
-import 'media.dart';
+import 'Model/media.dart';
 
 Map<String, Media> allLocalMedia = {};
 

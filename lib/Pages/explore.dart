@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../api.dart';
-import '../media.dart';
+import '../Model/media.dart';
 import 'initial.dart';
 
 class ExploreFilm extends StatefulWidget{
