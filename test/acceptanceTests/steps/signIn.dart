@@ -20,7 +20,7 @@ class CheckAllSignInBoxes extends Given3WithWorld<String, String, String, Flutte
   RegExp get pattern => RegExp(r"there is a {string} field, a {string} field and a {string} button");
 }
 
-class FillEmailBox extends When2WithWorld<String, String, FlutterWorld> {
+class FillLEmailBox extends When2WithWorld<String, String, FlutterWorld> {
   @override
   Future<void> executeStep(String emailBox, String theEmail) async {
     await FlutterDriverUtils.enterText(
@@ -32,7 +32,7 @@ class FillEmailBox extends When2WithWorld<String, String, FlutterWorld> {
 
 }
 
-class FillPasswordBox extends When2WithWorld<String, String, FlutterWorld> {
+class FillLPasswordBox extends When2WithWorld<String, String, FlutterWorld> {
   @override
   Future<void> executeStep(String passwordBox, String thePass) async {
     await FlutterDriverUtils.enterText(

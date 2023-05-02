@@ -33,7 +33,7 @@ class FillCatnameBox extends When2WithWorld<String, String, FlutterWorld> {
   RegExp get pattern => RegExp(r"the user fills the {string} with {string}");
 }
 
-class FillEmailBox extends And2WithWorld<String, String, FlutterWorld> {
+class FillREmailBox extends And2WithWorld<String, String, FlutterWorld> {
   @override
   Future<void> executeStep(String field1, String field2) async {
     await FlutterDriverUtils.enterText(world.driver,
@@ -44,7 +44,7 @@ class FillEmailBox extends And2WithWorld<String, String, FlutterWorld> {
   RegExp get pattern => RegExp(r"the user fills the {string} with {string}");
 }
 
-class FillPasswordBox extends And2WithWorld<String, String, FlutterWorld> {
+class FillRPasswordBox extends And2WithWorld<String, String, FlutterWorld> {
   @override
   Future<void> executeStep(String field1, String field2) async {
     await FlutterDriverUtils.enterText(world.driver,
