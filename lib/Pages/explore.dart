@@ -1,7 +1,10 @@
+import 'package:catcine_es/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../api.dart';
 import '../media.dart';
+import 'initial.dart';
 
 class ExploreFilm extends StatefulWidget{
   const ExploreFilm({Key? key}) : super(key: key);
@@ -11,14 +14,32 @@ class ExploreFilm extends StatefulWidget{
 }
 
 class _ExploreFilmState extends State<ExploreFilm>{
-  Api client = Api();
 
   List<Media> mediaList = [];
   List<Media> displayList = [];
 
+  Future<void> initList() async {
+    allLocalMedia = await API.loadMedia();
+  }
+
+  @override
+  void initState() {
+    initList();
+    super.initState();
+  }
+
   void updateList(String title) async{
-    mediaList = await client.makeMedia(title);
-    displayList = List.from(mediaList);
+    if (title.isEmpty) {
+      setState(() {
+        displayList = [];
+      });
+      return;
+    }
+    mediaList = await Media.searchTitle(title);
+    await API.storeMedia(title);
+    API.updateRemoteList();
+    displayList = mediaList;
+
 
     setState(() {
       displayList = mediaList.where((element) => element.mediaName!.toLowerCase().contains(title.toLowerCase())).toList();
@@ -27,18 +48,73 @@ class _ExploreFilmState extends State<ExploreFilm>{
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
-      appBar: AppBar(
-        backgroundColor: const Color(0xff393d5a), // not sure o que é isto
-        elevation: 0.0,
+
+      bottomNavigationBar: BottomAppBar(
+        color: const Color(0xCACBCBD2),
+        child: IconTheme(
+          data: const IconThemeData(color: Color(0xCB6D706B)),
+            child:Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  key: const Key("homeButton"),
+                  icon: const Icon(Icons.home),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  key: const Key("profileButton"),
+                  icon: const Icon(Icons.person),
+                  onPressed: () {},
+                ),
+                IconButton(
+                 key: const Key("createCategoryButton"),
+                 icon: Image.asset('images/catIcon.png'),
+                  onPressed: () {},
+                ),
+                IconButton(
+                 key: const Key("exploreButton"),
+                 icon: const Icon(Icons.search),
+                 onPressed: () {},
+                ),
+                IconButton(
+                 key: const Key("exploreCategoryButton"),
+                 icon: const Icon(Icons.category),
+                 onPressed: () {},
+                ),
+              ],
+            ),
+        ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children:[
+            const SizedBox(height: 50,),
+            SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: RawMaterialButton(
+                child: const Text(
+                  "Log out temporary",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0)
+                ),
+                  onPressed: () async {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const InitialScreen())
+                    );
+                  }),
+            ),
             const Text(
               "Explore",
               style: TextStyle(
@@ -50,6 +126,7 @@ class _ExploreFilmState extends State<ExploreFilm>{
               height:20.0,
             ),
             TextField(
+              key: const Key("explore"),
               onChanged: (title) => updateList(title),
               style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
@@ -63,19 +140,17 @@ class _ExploreFilmState extends State<ExploreFilm>{
                 prefixIcon: const Icon(Icons.search),
               ),
             ),
-            const SizedBox(
-              height: 20.0,
-            ),
             Expanded(
-
-              child: ListView.builder(
-                itemCount: displayList.length,
-                itemBuilder: (context, index) => ListTile(
-                  contentPadding: const EdgeInsets.all(8.0),
-                  title: Text(
-                    displayList[index].mediaName!,
-                    style: const TextStyle(
-                      color: Colors.white,
+              child: DraggableScrollableActuator(
+                child: ListView.builder(
+                  itemCount: displayList.length,
+                  itemBuilder: (context, index) => ListTile(
+                    contentPadding: const EdgeInsets.all(8.0),
+                    title: Text(
+                      displayList[index].mediaName!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

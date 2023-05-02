@@ -4,4 +4,4 @@ build
 .DS_Store
 .flutter-plugins
 .flutter-plugins-dependencies
-
+.flutter*
