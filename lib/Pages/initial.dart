@@ -74,6 +74,7 @@ class _InitialScreenState extends State<InitialScreen> {
               SizedBox(
                 width:double.infinity,
                 child: RawMaterialButton(
+                  key: const Key("registerButton"),
                   fillColor: const Color(0xBDD3D4FF),
                   elevation: 0.0,
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
