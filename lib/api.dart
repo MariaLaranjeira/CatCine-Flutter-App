@@ -4,7 +4,7 @@ import 'package:catcine_es/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
-import 'media.dart';
+import 'Model/media.dart';
 
 
 class API {

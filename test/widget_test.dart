@@ -6,7 +6,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 
-import 'package:catcine_es/media.dart';
+import 'package:catcine_es/Model/media.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
