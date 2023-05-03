@@ -50,6 +50,21 @@
 
 <br>
 
+> ## Iteration 3
+>
+> ### * Plans:
+>
+>   > ### Development Board
+>   >
+>   >![board2](https://user-images.githubusercontent.com/92693155/236057000-e32073a3-6fb8-4efb-a2b7-e42bc5589057.png)
+>
+> ### * Retrospectives: 
+>
+>  > We finally completed all things related to API media searches and firebase management regarding the explore page, which is now complete and fully optimized. This was a major step forward because we consider this was one of our most challenging user stories. We also have a fully functioning main app bar and made the front-end for the page that handles category creation.  <br>
+>
+
+<br>
+
 
 
 
