@@ -241,7 +241,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                     child: RawMaterialButton(
                       fillColor: Colors.white,
                       onPressed: () {
-                        Navigator.pushReplacement(context, PageRouteBuilder(
+                        Navigator.push(context, PageRouteBuilder(
                           pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
                             return const searchCreateCat();
                           },
