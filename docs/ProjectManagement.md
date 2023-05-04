@@ -45,7 +45,22 @@
 >
 > ### * Retrospectives: 
 >
->  > This iteration felt increasingly challenging. Given the complexity of our API Searches and the fact that currently only three of us are actively working in the project, this iteration felt very demanding. Despite that, we feel like we organized ourselves in a more efficient manner compared to previous iterations, having done a lot of work. We made quite some progress in understanding and developing firebase media storage and API usages. We also succeeded in making our app's authentication screens more functional and asthetically pleasing.  <br>
+>  > This iteration felt increasingly challenging. Given the complexity of our API Searches and the fact that currently only three of us are actively working in the project, this iteration felt very demanding. Despite that, we feel like we organized ourselves in a more efficient manner compared to previous iterations, having done a lot of work. We made quite some progress in understanding and developing firebase media storage and API usages. We also succeeded in making our app's authentication screens more functional and aesthetically pleasing.  <br>
+>
+
+<br>
+
+> ## Iteration 3
+>
+> ### * Plans:
+>
+>   > ### Development Board
+>   >
+>   >![board2](https://user-images.githubusercontent.com/92693155/236057000-e32073a3-6fb8-4efb-a2b7-e42bc5589057.png)
+>
+> ### * Retrospectives: 
+>
+>  > We finally completed all things related to API media searches and firebase management regarding the explore page, which is now complete and fully optimized. This was a major step forward because we consider this was one of our most challenging user stories. We also have a fully functioning main app bar and made the front-end for the page that handles category creation.  <br>
 >
 
 <br>
