@@ -1,6 +1,7 @@
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
+import 'package:catcine_es/Pages/searchMediaForCat.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:flutter/material.dart';
 
@@ -234,6 +235,23 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  SizedBox(
+                    width: 300,
+                    height: 100,
+                    child: RawMaterialButton(
+                      fillColor: Colors.white,
+                      onPressed: () {
+                        Navigator.pushReplacement(context, PageRouteBuilder(
+                          pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                            return const searchCreateCat();
+                          },
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               )
           ),

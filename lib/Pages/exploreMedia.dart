@@ -3,6 +3,7 @@ import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../Model/searchesBackEnd.dart';
 import '../api.dart';
 import '../Model/media.dart';
 import 'createCategory.dart';
@@ -32,20 +33,8 @@ class _ExploreMediaState extends State<ExploreMedia>{
   }
 
   void updateList(String title) async{
-    if (title.isEmpty) {
-      setState(() {
-        displayList = [];
-      });
-      return;
-    }
-    mediaList = await Media.searchTitle(title);
-    await API.storeMedia();
-    API.updateRemoteList(mediaList);
 
-
-    displayList = mediaList;
-
-
+    mediaList = await SearchesBackEnd.updateList(title);
     setState(() {
       displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase())).toList();
     });
