@@ -13,6 +13,10 @@ class CreateCategoryScreen extends StatefulWidget {
 }
 
 class _CreateCategoryState extends State<CreateCategoryScreen> {
+
+  var maxLength = 200;
+  var textLength = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,13 +109,14 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                 children: [
                   const SizedBox(height: 30),
                   Row(
-                      children: const [
-                        Text(
-                          "Create  Your\nCategory",
-                          style: TextStyle(
-                            color:Colors.white,
-                            fontSize: 32.0,
-                            fontWeight: FontWeight.bold,
+                      children: [
+                        RichText(
+                          text: const TextSpan(
+                            children: <TextSpan> [
+                              TextSpan(text: "Create Your\n", style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 32.0)),
+                              TextSpan(text: "Cat", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEC6B76),fontSize: 32.0)),
+                              TextSpan(text: "egory", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 32.0))
+                            ],
                           ),
                         ),
                       ]
@@ -134,8 +139,8 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                   const SizedBox( height:10.0),
 
                   Container(
-                    height: 1.0,
-                    width: 1000.0,
+                    height: 0.9,
+                    width: MediaQuery.of(context).size.width,
                     color: Colors.grey,
                   ),
 
@@ -182,9 +187,8 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                   ),
                   const SizedBox( height:20.0),
 
-                  TextField(
+                  TextFormField(
                     key: const Key("categoryDescription"),
-                    obscureText: true,
                     decoration: InputDecoration(
                       filled:true,
                       fillColor: const Color(0xFFFFFFFF),
@@ -193,10 +197,21 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         borderSide: BorderSide.none,
                       ),
                       hintText: " Enter your description ...",
+                      suffixText: '${textLength.toString()}/${maxLength.toString()}',
+                      counterText: "",
                     ),
+                    cursorRadius: Radius.circular(10),
+                    keyboardType: TextInputType.text,
+                    autofocus: true,
+                    maxLength: maxLength,
+                    onChanged: (value) {
+                      setState(() {
+                        textLength = value.length;
+                      });
+                    },
+                    maxLines: 4,
                   ),
-                  const SizedBox( height: 26.0),
-
+                  const SizedBox( height: 20.0),
 
                   Row(
                       children: const [
@@ -211,6 +226,35 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                       ]
                   ),
                   const SizedBox( height: 26.0),
+                  SizedBox(
+                    width: 90,
+                    height: 90,
+                    child: RawMaterialButton(
+                      fillColor: Color(0x8B84898B),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      onPressed: () {
+                        Navigator.push(context, PageRouteBuilder(
+                          pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                            return const searchCreateCat();
+                          },
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                        );
+                      },
+                      child: const Text(
+                        "+",
+                        style: TextStyle(
+                            color: Color(0xFFCFDBDC),
+                            fontSize: 54.0,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height:20),
                   Center(
                     child:SizedBox(
                       key: const Key("CreateButton"),
@@ -222,8 +266,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         ),
                         elevation: 0.0,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        onPressed: () async {
-                        },
+                        onPressed: () async {},
                         child: const Text(
                           "Create" ,
                           style: TextStyle(
@@ -235,23 +278,6 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: 300,
-                    height: 100,
-                    child: RawMaterialButton(
-                      fillColor: Colors.white,
-                      onPressed: () {
-                        Navigator.push(context, PageRouteBuilder(
-                          pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                            return const searchCreateCat();
-                          },
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
                 ],
               )
           ),

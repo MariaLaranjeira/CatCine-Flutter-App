@@ -58,12 +58,6 @@ class _searchCreateCatState extends State<searchCreateCat> {
 
 
 
-
-
-
-
-
-
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xCACBCBD2),
         child: IconTheme(
