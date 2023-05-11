@@ -4,6 +4,8 @@ import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:flutter/material.dart';
 
+import '../api.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -12,6 +14,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  Future<void> initList() async {
+    await API.loadMedia();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initList();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

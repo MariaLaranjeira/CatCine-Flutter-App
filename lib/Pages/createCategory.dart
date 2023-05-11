@@ -5,6 +5,11 @@ import 'package:catcine_es/Pages/searchMediaForCat.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:flutter/material.dart';
 
+import '../Model/category.dart';
+import '../Model/media.dart';
+
+List<Media> mediaCat = [];
+
 class CreateCategoryScreen extends StatefulWidget {
   const CreateCategoryScreen({super.key});
 
@@ -16,6 +21,11 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
   var maxLength = 200;
   var textLength = 0;
+  late Category newCat;
+
+  TextEditingController nameCat = TextEditingController();
+  TextEditingController descCat = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,50 +111,40 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
       body: Stack(
         children: [
-          Padding (
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 30),
-                  Row(
+          SingleChildScrollView(
+            physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            child: Padding (
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 30),
+                    Row(
                       children: [
                         RichText(
                           text: const TextSpan(
-                            children: <TextSpan> [
-                              TextSpan(text: "Create Your\n", style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 32.0)),
-                              TextSpan(text: "Cat", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEC6B76),fontSize: 32.0)),
-                              TextSpan(text: "egory", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 32.0))
-                            ],
+                          children: <TextSpan> [
+                            TextSpan(text: "Create Your\n", style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 32.0)),
+                            TextSpan(text: "Cat", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEC6B76),fontSize: 32.0)),
+                            TextSpan(text: "egory", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 32.0))
+                          ],
                           ),
                         ),
                       ]
-                  ),
-                  const SizedBox( height:20.0),
+                    ),
+                    const SizedBox( height:20.0),
 
-                  Row(
-                      children: const [
-                        Text(
-                          "Add movies, upvote and downvote them, \nand share it with your friends!",
-                          style: TextStyle(
-                              color: Color.fromARGB(215, 255, 255, 255),
-                              fontSize: 16.5,
-                              fontWeight: FontWeight.normal
-                          ),
+                    const Text(
+                      "Add movies, upvote and downvote them, \nand share it with your friends!",
+                       style: TextStyle(
+                         color: Color.fromARGB(215, 255, 255, 255),
+                         fontSize: 16.5,
+                         fontWeight: FontWeight.normal
                         ),
-                      ]
-                  ),
+                    ),
+                    const SizedBox( height:10.0),
 
-                  const SizedBox( height:10.0),
-
-                  Container(
-                    height: 0.9,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.grey,
-                  ),
-
-                  const SizedBox( height:10.0),
                   Row(
                       children: const [
                         Text(
@@ -161,6 +161,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
                   TextField(
                     key: const Key("categoryName"),
+                    controller: nameCat,
                     decoration: InputDecoration(
                       filled:true,
                       fillColor: const Color(0xFFFFFFFF),
@@ -171,7 +172,12 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                       hintText: " Enter your category’s name",
                     ),
                   ),
-                  const SizedBox( height: 26.0),
+                    Container(
+                      height: 0.9,
+                      width: double.infinity,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox( height:10.0),
 
                   Row(
                       children: const [
@@ -189,6 +195,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
                   TextFormField(
                     key: const Key("categoryDescription"),
+                    controller: descCat,
                     decoration: InputDecoration(
                       filled:true,
                       fillColor: const Color(0xFFFFFFFF),
@@ -266,7 +273,9 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         ),
                         elevation: 0.0,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        onPressed: () async {},
+                        onPressed: () {
+                          newCat = Category(mediaCat,"", descCat as String, nameCat as String, 0, 0);
+                        },
                         child: const Text(
                           "Create" ,
                           style: TextStyle(
@@ -279,10 +288,14 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                   ),
                   const SizedBox(height: 20),
                 ],
-              )
-          ),
-        ],
+              ),
+              ),
+            ),
+          ],
       ),
     );
   }
 }
+
+
+

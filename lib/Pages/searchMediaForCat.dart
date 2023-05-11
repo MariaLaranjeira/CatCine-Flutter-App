@@ -27,31 +27,108 @@ class _searchCreateCatState extends State<searchCreateCat> {
     });
   }
 
+  ImageProvider getPosterURL(Media media) {
+    if (media.coverUrl != '') {
+      return NetworkImage(media.coverUrl);
+    }
+    return const AssetImage('images/catIcon.png');
+  }
+
+  String getTrimmedName(Media media) {
+    if (media.mediaName.length > 25) {
+      return '${media.mediaName.substring(0, 25)}...';
+    }
+    return media.mediaName;
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 73,
+        flexibleSpace: Column(
+          children: [
+            const SizedBox(height: 45),
+            Row(
+              children: [
+                SizedBox(width: MediaQuery.of(context).size.width/8.5),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width/1.17,
+                  child: TextField(
+                  onChanged: (title) => updateList(title),
+                  style: const TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: const Color(0xffcccede),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintText: "Film, TV Show ...",
+                    prefixIcon: const Icon(Icons.search),
+                  ),
+              ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        backgroundColor: const Color(0xff717488),
+        elevation: 0.0,
+      ),
+      backgroundColor: const Color(0xff393d5a),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children:[
-          TextField(
-            onChanged: (title) => updateList(title),
-            style: const TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color(0xffcccede),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide.none,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:[
+            Expanded(
+              child: DraggableScrollableActuator(
+                child: ListView.builder(
+                  itemCount: displayList.length ~/ 2,
+                  itemBuilder: (context, index) => ListTile(
+                    contentPadding: const EdgeInsets.all(8.0),
+                    title: Row(
+                      children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width/5,
+                                height: 130,
+                                child: Image(
+                                  fit: BoxFit.fill,
+                                  isAntiAlias: true,
+                                  image: getPosterURL(displayList[index]),
+                                  semanticLabel: "${displayList[index].mediaName}...",
+                                  loadingBuilder: (context, child, progress) {
+                                    return progress == null ? child : const LinearProgressIndicator();
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10,),
+                            Expanded(
+                              child: RichText(
+                                text : TextSpan (
+                                  children: <TextSpan> [
+                                    TextSpan(text:"${getTrimmedName(displayList[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                                    TextSpan(text:displayList[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                  ]
+                                ),
+                                maxLines: 5,
+                                overflow: TextOverflow.fade,
+                                softWrap: true,
+                              ),
+                            )
+                        ]
+                      ),
+                  ),
+                ),
               ),
-              hintText: "Film, TV Show ...",
-              prefixIcon: const Icon(Icons.search),
             ),
-          ),
-        ],
+          ],
         ),
       ),
 

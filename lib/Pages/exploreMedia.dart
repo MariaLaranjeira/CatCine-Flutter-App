@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/searchesBackEnd.dart';
-import '../api.dart';
 import '../Model/media.dart';
 import 'createCategory.dart';
 import 'exploreCategories.dart';
@@ -21,16 +20,6 @@ class _ExploreMediaState extends State<ExploreMedia>{
 
   List<Media> mediaList = [];
   List<Media> displayList = [];
-
-  Future<void> initList() async {
-    await API.loadMedia();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initList();
-  }
 
   void updateList(String title) async{
 

@@ -9,7 +9,7 @@ class Category {
   String description;
   int likes;
   int interactions;
-  String backDrop;
+  //String backDrop;
 
   Category(
     this.catMedia,
@@ -18,7 +18,7 @@ class Category {
     this.title,
     this.likes,
     this.interactions,
-    this.backDrop
+    //this.backDrop
   );
 
   Category.fromFirebase({
@@ -26,7 +26,7 @@ class Category {
     this.creator = "",
     this.catMedia = const [],
     this.description = "",
-    this.backDrop = "",
+    //this.backDrop = "",
     this.interactions = 1,
     this.likes = 1
   });
@@ -44,7 +44,7 @@ class Category {
       title: title,
       creator: creator,
       description: description,
-      backDrop: backDrop,
+      //backDrop: backDrop,
       likes: likes,
       interactions: interactions
     );
@@ -55,7 +55,7 @@ class Category {
       "title": title,
       "creator": creator,
       "description": description,
-      "bakDrop": backDrop,
+      //"bakDrop": backDrop,
       "likes": likes,
       "interactions": interactions
     };
