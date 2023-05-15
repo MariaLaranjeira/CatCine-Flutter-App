@@ -107,6 +107,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
       'title': cat.title,
       'creator': cat.creator,
       'description': cat.description,
+      'catMedia': cat.catMedia,
       'likes': cat.likes,
       'interactions': cat.interactions,
     },

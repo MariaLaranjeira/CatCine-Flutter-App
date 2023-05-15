@@ -5,6 +5,8 @@ import 'package:catcine_es/Pages/homePage.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:flutter/material.dart';
 
+import '../Model/media.dart';
+
 
 class CategoryPage extends StatefulWidget{
 
@@ -19,6 +21,20 @@ class CategoryPage extends StatefulWidget{
 class _CategoryPageState extends State<CategoryPage>{
 
   late Category cat;
+
+  ImageProvider getPosterURL(Media media) {
+    if (media.coverUrl != '') {
+      return NetworkImage(media.coverUrl);
+    }
+    return const AssetImage('images/catIcon.png');
+  }
+
+  String getTrimmedName(Media media) {
+    if (media.mediaName.length > 25) {
+      return '${media.mediaName.substring(0, 25)}...';
+    }
+    return media.mediaName;
+  }
 
   @override
   void initState(){
@@ -111,8 +127,162 @@ class _CategoryPageState extends State<CategoryPage>{
 
       body: Stack(
         children: [
-          Text(
-            cat.title,
+          Container (
+          constraints: const BoxConstraints.expand(),
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                alignment: Alignment.topLeft,
+                image: AssetImage('images/catBackDrop.png'),
+                fit: BoxFit.contain,
+              )
+          ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 35.0,
+                ),
+                Text(
+                    cat.title,
+                    style: const TextStyle(
+                      fontSize: 40,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                ),
+                Text(
+                  "by @SironaRyan",
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                      child: const Image(
+                        image: AssetImage('images/heart.png'),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 7,
+                    ),
+                    Text(
+                      "${cat.likes}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                      )
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                      child: const Image(
+                        image: AssetImage('images/votes.png'),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 7,
+                    ),
+                    Text(
+                      "${cat.interactions}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                        )
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 13,
+                ),
+                Text(
+                  cat.description,
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox( height:9.0),
+                Container(
+                  height: 0.9,
+                  width: double.infinity,
+                  color: Colors.grey,
+                ),
+                Expanded(
+                  child: DraggableScrollableActuator(
+                    child: ListView.builder(
+                      itemCount: cat.catMedia.length ~/ 2,
+                      itemBuilder: (context, index) => ListTile(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        title: Row(
+                            children: [
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    height: 60,
+                                    child: IconButton(
+                                      iconSize: 60,
+                                      icon: Image.asset('images/catIcon.png'),
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 60,
+                                    child: IconButton(
+                                      iconSize: 60,
+                                      icon: Image.asset('images/catIcon.png'),
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width/5,
+                                  height: (MediaQuery.of(context).size.width/5) * 3/2,
+                                  child: Image(
+                                    fit: BoxFit.fill,
+                                    isAntiAlias: true,
+                                    image: getPosterURL(cat.catMedia[index]),
+                                    semanticLabel: "${cat.catMedia[index].mediaName}...",
+                                    loadingBuilder: (context, child, progress) {
+                                      return progress == null ? child : const LinearProgressIndicator();
+                                    },
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10,),
+                              Expanded(
+                                child: RichText(
+                                  text : TextSpan (
+                                      children: <TextSpan> [
+                                        TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                                        TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                      ]
+                                  ),
+                                  maxLines: 5,
+                                  overflow: TextOverflow.fade,
+                                  softWrap: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
           ),
         ],
       ),
