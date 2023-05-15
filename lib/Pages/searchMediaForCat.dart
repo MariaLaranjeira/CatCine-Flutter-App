@@ -53,7 +53,7 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
   ListView listViewProvider() {
     if (displayList.isNotEmpty) {
       return ListView.builder(
-        itemCount: displayList.length ~/ 2,
+        itemCount: displayList.length,
         itemBuilder: (context, index) => ListTile(
           contentPadding: const EdgeInsets.all(8.0),
           title: Container(

@@ -103,7 +103,15 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
     var ref = catDB.doc(cat.title);
 
+    var list = ref.collection('catmedia').doc('medialist');
 
+    for (int i = 0; i < cat.catMedia.length; i++) {
+      list.set({
+        'media$i': cat.catMedia[i].id
+      },
+      SetOptions(merge: true)
+      );
+    }
 
     ref.set({
       'title': cat.title,

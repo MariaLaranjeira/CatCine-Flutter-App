@@ -1,4 +1,5 @@
 import 'package:catcine_es/Model/category.dart';
+import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
@@ -72,7 +73,17 @@ class _CategoryPageState extends State<CategoryPage>{
                 child: IconButton(
                   iconSize: 60,
                   icon: Image.asset('images/catIcon.png'),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                        return const CreateCategoryScreen();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
                 ),
               ),
               IconButton(
