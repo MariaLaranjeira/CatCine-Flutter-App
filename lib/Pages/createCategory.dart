@@ -86,7 +86,8 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 30,
-                color: Colors.white,
+                color: Colors.black,
+                fontWeight: FontWeight.bold
               )
           ),
         ),
