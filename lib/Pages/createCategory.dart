@@ -1,8 +1,10 @@
+import 'package:catcine_es/Pages/categoryPage.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
 import 'package:catcine_es/Pages/searchMediaForCat.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -26,9 +28,9 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
   var textLength = 0;
   late Category newCat;
 
+  ImageProvider image0 = MemoryImage(kTransparentImage);
   ImageProvider image1 = MemoryImage(kTransparentImage);
   ImageProvider image2 = MemoryImage(kTransparentImage);
-  ImageProvider image3 = MemoryImage(kTransparentImage);
 
   TextEditingController nameCat = TextEditingController();
   TextEditingController descCat = TextEditingController();
@@ -51,7 +53,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
       return const AssetImage('images/transparent.png');
     }
   }
-
+  
   BoxDecoration boxDecorator(var i) {
     if (mediaCat.isEmpty){
       return const BoxDecoration();
@@ -92,9 +94,25 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
     }
     return const DecoratedBox(decoration: BoxDecoration());
   }
+  
+  static CollectionReference catDB = FirebaseFirestore.instance.collection(
+      'categories');
 
+  static addCat(Category cat) async {
 
+    var ref = catDB.doc(cat.title);
 
+    ref.set({
+      'title': cat.title,
+      'creator': cat.creator,
+      'description': cat.description,
+      'likes': cat.likes,
+      'interactions': cat.interactions,
+    },
+      SetOptions(merge: true),
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -316,9 +334,9 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                               ),
                               ).whenComplete(() {
                                 setState(() {
+                                  image0 = getPosterURL(0);
                                   image1 = getPosterURL(1);
                                   image2 = getPosterURL(2);
-                                  image3 = getPosterURL(3);
                                 });
                               });
                             },
@@ -342,8 +360,8 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                               Positioned(
                                 left: 0,
                                 child: Container(
-                                  decoration: boxDecorator(1),
-                                  child: Image(image: image1,
+                                  decoration: boxDecorator(0),
+                                  child: Image(image: image0,
                                     height: (MediaQuery.of(context).size.width/5.87) * 3/2,
                                     width: MediaQuery.of(context).size.width/5.87,
                                     colorBlendMode: BlendMode.screen,
@@ -353,8 +371,8 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                               Positioned(
                                 left: MediaQuery.of(context).size.width/5.87/5*4,
                                 child: Container(
-                                  decoration: boxDecorator(2),
-                                  child: Image(image: image2,
+                                  decoration: boxDecorator(1),
+                                  child: Image(image: image1,
                                     height: (MediaQuery.of(context).size.width/5.87) * 3/2,
                                     width: MediaQuery.of(context).size.width/5.87,
                                     colorBlendMode: BlendMode.screen,
@@ -364,8 +382,8 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                               Positioned(
                                 left: MediaQuery.of(context).size.width/5.87/5*8,
                                 child: Container(
-                                  decoration: boxDecorator(3),
-                                  child: Image(image: image3,
+                                  decoration: boxDecorator(2),
+                                  child: Image(image: image2,
                                     height: (MediaQuery.of(context).size.width/5.87) * 3/2,
                                     width: MediaQuery.of(context).size.width/5.87,
                                     colorBlendMode: BlendMode.screen,
@@ -397,7 +415,16 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         elevation: 0.0,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         onPressed: () {
-                          newCat = Category(mediaCat,"", descCat as String, nameCat as String, 0, 0);
+                          newCat = Category(mediaCat,"", descCat.text, nameCat.text, 0, 0);
+                          addCat(newCat);
+                          Navigator.push(context, PageRouteBuilder(
+                            pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                              return CategoryPage(category: newCat);
+                            },
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                          );
                         },
                         child: const Text(
                           "Create" ,
