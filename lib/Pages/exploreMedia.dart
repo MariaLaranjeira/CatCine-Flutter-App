@@ -193,10 +193,10 @@ class _ExploreMediaState extends State<ExploreMedia>{
                         Column(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(16.0),
+                              borderRadius: BorderRadius.circular(12.0),
                               child: SizedBox(
                                 width: (MediaQuery.of(context).size.width/11) * 4.35,
-                                height: 250,
+                                height: ((MediaQuery.of(context).size.width/11) * 4.35) * 3/2,
                                 child: Image(
                                   fit: BoxFit.fill,
                                   isAntiAlias: true,
@@ -224,7 +224,7 @@ class _ExploreMediaState extends State<ExploreMedia>{
                                 borderRadius: BorderRadius.circular(16.0),
                                 child: SizedBox(
                                   width: (MediaQuery.of(context).size.width/11) * 4.35,
-                                  height: 250,
+                                  height: ((MediaQuery.of(context).size.width/11) * 4.35) * 3/2,
                                   child: Image(
                                     isAntiAlias: true,
                                     image: getPosterURL(displayList[index * 2 + 1]),

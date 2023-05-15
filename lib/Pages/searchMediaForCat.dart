@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import '../Model/media.dart';
 import '../Model/searchesBackEnd.dart';
 
-class searchCreateCat extends StatefulWidget {
-  const searchCreateCat({Key? key}) : super(key: key);
+class SearchCreateCat extends StatefulWidget {
+  const SearchCreateCat({Key? key}) : super(key: key);
 
   @override
-  State<searchCreateCat> createState() => _searchCreateCatState();
+  State<SearchCreateCat> createState() => _SearchCreateCatState();
 }
 
-class _searchCreateCatState extends State<searchCreateCat> {
+class _SearchCreateCatState extends State<SearchCreateCat> {
 
   List<Media> mediaList = [];
   List<Media> displayList = [];
@@ -102,7 +102,7 @@ class _searchCreateCatState extends State<searchCreateCat> {
                                 borderRadius: BorderRadius.circular(10.0),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width/5,
-                                  height: 130,
+                                  height: (MediaQuery.of(context).size.width/5) * 3/2,
                                   child: Image(
                                     fit: BoxFit.fill,
                                     isAntiAlias: true,

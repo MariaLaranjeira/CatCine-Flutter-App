@@ -4,6 +4,7 @@ import 'package:catcine_es/Pages/homePage.dart';
 import 'package:catcine_es/Pages/searchMediaForCat.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../Model/category.dart';
 import '../Model/media.dart';
@@ -25,22 +26,73 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
   var textLength = 0;
   late Category newCat;
 
+  ImageProvider image1 = MemoryImage(kTransparentImage);
+  ImageProvider image2 = MemoryImage(kTransparentImage);
+  ImageProvider image3 = MemoryImage(kTransparentImage);
+
   TextEditingController nameCat = TextEditingController();
   TextEditingController descCat = TextEditingController();
 
   ImageProvider getPosterURL(var i) {
     if (mediaCat.isEmpty){
-      return const AssetImage('images/catIcon.png');
+      return const AssetImage('images/transparent.png');
     }
-    if (mediaCat[i].coverUrl != '') {
+    if (mediaCat[i].coverUrl != '' && i < mediaCat.length) {
       NetworkImage imageMedia = NetworkImage(mediaCat[i].coverUrl);
       setState(() {
         imageMedia;
       });
       return NetworkImage(mediaCat[i].coverUrl);
     }
-    return const AssetImage('images/catIcon.png');
+    else if (mediaCat[i].coverUrl == '') {
+      return const AssetImage('images/catIcon.png');
+    }
+    else {
+      return const AssetImage('images/transparent.png');
+    }
   }
+
+  BoxDecoration boxDecorator(var i) {
+    if (mediaCat.isEmpty){
+      return const BoxDecoration();
+    }
+    if (i < mediaCat.length) {
+      return BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              blurRadius: 4,
+              offset: const Offset(0, 4), // changes position of shadow
+            ),
+          ]
+      );
+    }
+    else {
+      return const BoxDecoration();
+    }
+  }
+
+  DecoratedBox displayDecoratedBox() {
+    if (mediaCat.length > 3) {
+      return DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Colors.black26,
+        ),
+        child: Center(
+          child: Text (
+              "+${mediaCat.length-3}",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 30,
+                color: Colors.white,
+              )
+          ),
+        ),
+      );
+    }
+    return const DecoratedBox(decoration: BoxDecoration());
+  }
+
 
 
   @override
@@ -214,9 +266,8 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                       suffixText: '${textLength.toString()}/${maxLength.toString()}',
                       counterText: "",
                     ),
-                    cursorRadius: Radius.circular(10),
+                    cursorRadius: const Radius.circular(10),
                     keyboardType: TextInputType.text,
-                    autofocus: true,
                     maxLength: maxLength,
                     onChanged: (value) {
                       setState(() {
@@ -235,78 +286,103 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                     ),
                   ),
                   const SizedBox( height: 20.0),
-                  Row(
-                      children: [
-                      const SizedBox( height: 26.0),
-                      SizedBox(
-                        width: 90,
-                        height: 90,
-                        child: RawMaterialButton(
-                          fillColor: Color(0x8B84898B),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          onPressed: () {
-                            Navigator.push(context, PageRouteBuilder(
-                              pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                                return const searchCreateCat();
-                              },
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFCFDBDC),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12.0),
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width - 32,
+                    height: (MediaQuery.of(context).size.width - 32)/3.1,
+                    child: Row(
+                        children: [
+                        SizedBox(width: MediaQuery.of(context).size.width/20.57),
+                        SizedBox.square(
+                          dimension: MediaQuery.of(context).size.width/4.56,
+                          child: RawMaterialButton(
+                            fillColor: const Color(0x8B84898B),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                            );
-                          },
-                          child: const Text(
-                            "+",
-                            style: TextStyle(
-                                color: Color(0xFFCFDBDC),
-                                fontSize: 54.0,
-                                fontWeight: FontWeight.bold
+                            onPressed: () {
+                              Navigator.push(context, PageRouteBuilder(
+                                pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                                  return const SearchCreateCat();
+                                },
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                              ).whenComplete(() {
+                                setState(() {
+                                  image1 = getPosterURL(1);
+                                  image2 = getPosterURL(2);
+                                  image3 = getPosterURL(3);
+                                });
+                              });
+                            },
+                            child: const Text(
+                              "+",
+                              style: TextStyle(
+                                  color: Color(0xFFCFDBDC),
+                                  fontSize: 54.0,
+                                  fontWeight: FontWeight.bold
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width:15),
-                      Row(
-                        children: <Widget> [
-                          SizedBox(
-                            height: 95,
-                            child: Image(
-                              image: getPosterURL(0),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 95,
-                            child: Image(
-                              image: getPosterURL(1),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 95,
-                            child: Image(
-                              image: getPosterURL(2),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 95,
-                            width: 60,
-                            child: DecoratedBox(
-                              decoration: const BoxDecoration(
-                                color: Colors.black26
+                        SizedBox(width: MediaQuery.of(context).size.width/27.42),
+                        SizedBox(
+                          height: (MediaQuery.of(context).size.width/5.87) * 3/2,
+                          width: MediaQuery.of(context).size.width/1.62,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Positioned(
+                                left: 0,
+                                child: Container(
+                                  decoration: boxDecorator(1),
+                                  child: Image(image: image1,
+                                    height: (MediaQuery.of(context).size.width/5.87) * 3/2,
+                                    width: MediaQuery.of(context).size.width/5.87,
+                                    colorBlendMode: BlendMode.screen,
+                                  ),
+                                ),
                               ),
-                              child: Text (
-                                  "+${mediaCat.length-3}",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    color: Colors.white,
-                                  )
+                              Positioned(
+                                left: MediaQuery.of(context).size.width/5.87/5*4,
+                                child: Container(
+                                  decoration: boxDecorator(2),
+                                  child: Image(image: image2,
+                                    height: (MediaQuery.of(context).size.width/5.87) * 3/2,
+                                    width: MediaQuery.of(context).size.width/5.87,
+                                    colorBlendMode: BlendMode.screen,
+                                  ),
+                                ),
                               ),
-                            ),
+                              Positioned(
+                                left: MediaQuery.of(context).size.width/5.87/5*8,
+                                child: Container(
+                                  decoration: boxDecorator(3),
+                                  child: Image(image: image3,
+                                    height: (MediaQuery.of(context).size.width/5.87) * 3/2,
+                                    width: MediaQuery.of(context).size.width/5.87,
+                                    colorBlendMode: BlendMode.screen,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: MediaQuery.of(context).size.width/5.87/5*12,
+                                height: (MediaQuery.of(context).size.width/5.87) * 3/2,
+                                width: MediaQuery.of(context).size.width/5.87,
+                                child: displayDecoratedBox()
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height:30),
                   Center(
