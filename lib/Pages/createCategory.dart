@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import '../Model/category.dart';
 import '../Model/media.dart';
 
+
 List<Media> mediaCat = [];
+
 
 class CreateCategoryScreen extends StatefulWidget {
   const CreateCategoryScreen({super.key});
@@ -25,6 +27,20 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
   TextEditingController nameCat = TextEditingController();
   TextEditingController descCat = TextEditingController();
+
+  ImageProvider getPosterURL(var i) {
+    if (mediaCat.isEmpty){
+      return const AssetImage('images/catIcon.png');
+    }
+    if (mediaCat[i].coverUrl != '') {
+      NetworkImage imageMedia = NetworkImage(mediaCat[i].coverUrl);
+      setState(() {
+        imageMedia;
+      });
+      return NetworkImage(mediaCat[i].coverUrl);
+    }
+    return const AssetImage('images/catIcon.png');
+  }
 
 
   @override
@@ -112,7 +128,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            //physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
             child: Padding (
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -143,20 +159,21 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                          fontWeight: FontWeight.normal
                         ),
                     ),
-                    const SizedBox( height:10.0),
-
-                  Row(
-                      children: const [
-                        Text(
-                          "Name your category:",
-                          style: TextStyle(
-                              color: Color.fromARGB(215, 255, 255, 255),
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ]
-                  ),
+                    const SizedBox( height:9.0),
+                    Container(
+                      height: 0.9,
+                      width: double.infinity,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox( height: 9.0),
+                    const Text(
+                      "Name your category:",
+                      style: TextStyle(
+                          color: Color.fromARGB(215, 255, 255, 255),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
                   const SizedBox( height:20.0),
 
                   TextField(
@@ -172,25 +189,15 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                       hintText: " Enter your category’s name",
                     ),
                   ),
-                    Container(
-                      height: 0.9,
-                      width: double.infinity,
-                      color: Colors.grey,
-                    ),
                     const SizedBox( height:10.0),
-
-                  Row(
-                      children: const [
-                        Text(
-                          "Write a Description:",
-                          style: TextStyle(
-                              color: Color.fromARGB(215, 255, 255, 255),
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ]
-                  ),
+                    const Text (
+                      "Write a Description:",
+                      style: TextStyle(
+                          color: Color.fromARGB(215, 255, 255, 255),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
                   const SizedBox( height:20.0),
 
                   TextFormField(
@@ -219,49 +226,89 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                     maxLines: 4,
                   ),
                   const SizedBox( height: 20.0),
-
-                  Row(
-                      children: const [
-                        Text(
-                          "Add films:",
-                          style: TextStyle(
-                              color: Color.fromARGB(215, 255, 255, 255),
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ]
-                  ),
-                  const SizedBox( height: 26.0),
-                  SizedBox(
-                    width: 90,
-                    height: 90,
-                    child: RawMaterialButton(
-                      fillColor: Color(0x8B84898B),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      onPressed: () {
-                        Navigator.push(context, PageRouteBuilder(
-                          pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                            return const searchCreateCat();
-                          },
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
-                        );
-                      },
-                      child: const Text(
-                        "+",
-                        style: TextStyle(
-                            color: Color(0xFFCFDBDC),
-                            fontSize: 54.0,
-                            fontWeight: FontWeight.bold
-                        ),
-                      ),
+                  const Text(
+                    "Add films:",
+                    style: TextStyle(
+                        color: Color.fromARGB(215, 255, 255, 255),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
                     ),
                   ),
-                  const SizedBox(height:20),
+                  const SizedBox( height: 20.0),
+                  Row(
+                      children: [
+                      const SizedBox( height: 26.0),
+                      SizedBox(
+                        width: 90,
+                        height: 90,
+                        child: RawMaterialButton(
+                          fillColor: Color(0x8B84898B),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          onPressed: () {
+                            Navigator.push(context, PageRouteBuilder(
+                              pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                                return const searchCreateCat();
+                              },
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
+                            ),
+                            );
+                          },
+                          child: const Text(
+                            "+",
+                            style: TextStyle(
+                                color: Color(0xFFCFDBDC),
+                                fontSize: 54.0,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width:15),
+                      Row(
+                        children: <Widget> [
+                          SizedBox(
+                            height: 95,
+                            child: Image(
+                              image: getPosterURL(0),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 95,
+                            child: Image(
+                              image: getPosterURL(1),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 95,
+                            child: Image(
+                              image: getPosterURL(2),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 95,
+                            width: 60,
+                            child: DecoratedBox(
+                              decoration: const BoxDecoration(
+                                color: Colors.black26
+                              ),
+                              child: Text (
+                                  "+${mediaCat.length-3}",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                  )
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height:30),
                   Center(
                     child:SizedBox(
                       key: const Key("CreateButton"),

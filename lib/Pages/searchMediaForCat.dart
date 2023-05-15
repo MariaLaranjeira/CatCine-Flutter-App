@@ -56,19 +56,19 @@ class _searchCreateCatState extends State<searchCreateCat> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width/1.17,
                   child: TextField(
-                  onChanged: (title) => updateList(title),
-                  style: const TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xffcccede),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    hintText: "Film, TV Show ...",
-                    prefixIcon: const Icon(Icons.search),
+                    onChanged: (title) => updateList(title),
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xffcccede),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: "Film, TV Show ...",
+                      prefixIcon: const Icon(Icons.search),
+                      ),
                   ),
-              ),
                 ),
               ],
             ),
@@ -90,40 +90,47 @@ class _searchCreateCatState extends State<searchCreateCat> {
                   itemCount: displayList.length ~/ 2,
                   itemBuilder: (context, index) => ListTile(
                     contentPadding: const EdgeInsets.all(8.0),
-                    title: Row(
-                      children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width/5,
-                                height: 130,
-                                child: Image(
-                                  fit: BoxFit.fill,
-                                  isAntiAlias: true,
-                                  image: getPosterURL(displayList[index]),
-                                  semanticLabel: "${displayList[index].mediaName}...",
-                                  loadingBuilder: (context, child, progress) {
-                                    return progress == null ? child : const LinearProgressIndicator();
-                                  },
+                    title: RawMaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          mediaCat.add(displayList[index]);
+                        });
+                      },
+                      child:Row(
+                        children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width/5,
+                                  height: 130,
+                                  child: Image(
+                                    fit: BoxFit.fill,
+                                    isAntiAlias: true,
+                                    image: getPosterURL(displayList[index]),
+                                    semanticLabel: "${displayList[index].mediaName}...",
+                                    loadingBuilder: (context, child, progress) {
+                                      return progress == null ? child : const LinearProgressIndicator();
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 10,),
-                            Expanded(
-                              child: RichText(
-                                text : TextSpan (
-                                  children: <TextSpan> [
-                                    TextSpan(text:"${getTrimmedName(displayList[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                                    TextSpan(text:displayList[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
-                                  ]
+                              const SizedBox(width: 10,),
+                              Expanded(
+                                child: RichText(
+                                  text : TextSpan (
+                                    children: <TextSpan> [
+                                      TextSpan(text:"${getTrimmedName(displayList[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                                      TextSpan(text:displayList[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                    ]
+                                  ),
+                                  maxLines: 5,
+                                  overflow: TextOverflow.fade,
+                                  softWrap: true,
                                 ),
-                                maxLines: 5,
-                                overflow: TextOverflow.fade,
-                                softWrap: true,
                               ),
-                            )
-                        ]
-                      ),
+                          ],
+                        ),
+                    ),
                   ),
                 ),
               ),
