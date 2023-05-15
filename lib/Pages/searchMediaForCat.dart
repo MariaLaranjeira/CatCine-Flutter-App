@@ -18,6 +18,7 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
 
   List<Media> mediaList = [];
   List<Media> displayList = [];
+  String searchedTitle = '';
 
   void updateList(String title) async{
 
@@ -46,12 +47,12 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
       return const Color(0xFF42A7AD);
     }
     else {
-      return Color(0xFF6E7398);
+      return const Color(0xFF6E7398);
     }
   }
 
   ListView listViewProvider() {
-    if (displayList.isNotEmpty) {
+    if (searchedTitle.isNotEmpty) {
       return ListView.builder(
         itemCount: displayList.length,
         itemBuilder: (context, index) => ListTile(
@@ -189,7 +190,10 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width/1.17,
                   child: TextField(
-                    onChanged: (title) => updateList(title),
+                    onChanged: (title) {
+                      updateList(title);
+                      searchedTitle = title;
+                    },
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       filled: true,

@@ -103,26 +103,25 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
     var ref = catDB.doc(cat.title);
 
-    var list = ref.collection('catmedia').doc('medialist');
-
-    for (int i = 0; i < cat.catMedia.length; i++) {
-      list.set({
-        'media$i': cat.catMedia[i].id
-      },
-      SetOptions(merge: true)
-      );
-    }
-
-    ref.set({
+    await ref.set({
       'title': cat.title,
       'creator': cat.creator,
       'description': cat.description,
-      'catMedia': cat.catMedia,
       'likes': cat.likes,
       'interactions': cat.interactions,
     },
       SetOptions(merge: true),
     );
+
+    for (Media media in cat.catMedia) {
+      var list = ref.collection('catmedia').doc(media.id);
+      list.set({
+        'upvotes': 0,
+        'downvotes': 0
+      },
+      SetOptions(merge: true));
+    }
+
   }
 
   @override
@@ -136,8 +135,6 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
   
   @override
   Widget build(BuildContext context) {
-
-    print(MediaQuery.of(context).size.width);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -439,7 +436,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         elevation: 0.0,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         onPressed: () {
-                          newCat = Category(mediaCat,"", descCat.text, nameCat.text, 0, 0);
+                          newCat = Category(mediaCat,"", descCat.text.trim(), nameCat.text.trim(), 0, 0);
                           addCat(newCat);
                           Navigator.push(context, PageRouteBuilder(
                             pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {

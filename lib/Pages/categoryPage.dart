@@ -149,7 +149,7 @@ class _CategoryPageState extends State<CategoryPage>{
           ),
           ),
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,9 +165,9 @@ class _CategoryPageState extends State<CategoryPage>{
                       fontWeight: FontWeight.bold,
                     ),
                 ),
-                Text(
+                const Text(
                   "by @SironaRyan",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16.0,
                     color: Colors.white,
                   ),
@@ -179,7 +179,7 @@ class _CategoryPageState extends State<CategoryPage>{
                   children: [
                     const SizedBox(
                       height: 20,
-                      child: const Image(
+                      child: Image(
                         image: AssetImage('images/heart.png'),
                       ),
                     ),
@@ -197,7 +197,7 @@ class _CategoryPageState extends State<CategoryPage>{
                     ),
                     const SizedBox(
                       height: 20,
-                      child: const Image(
+                      child: Image(
                         image: AssetImage('images/votes.png'),
                       ),
                     ),
@@ -231,63 +231,63 @@ class _CategoryPageState extends State<CategoryPage>{
                 Expanded(
                   child: DraggableScrollableActuator(
                     child: ListView.builder(
-                      itemCount: cat.catMedia.length ~/ 2,
+                      itemCount: cat.catMedia.length,
                       itemBuilder: (context, index) => ListTile(
                         contentPadding: const EdgeInsets.all(8.0),
                         title: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  SizedBox(
-                                    height: 60,
-                                    child: IconButton(
-                                      iconSize: 60,
-                                      icon: Image.asset('images/catIcon.png'),
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 60,
-                                    child: IconButton(
-                                      iconSize: 60,
-                                      icon: Image.asset('images/catIcon.png'),
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width/5,
-                                  height: (MediaQuery.of(context).size.width/5) * 3/2,
-                                  child: Image(
-                                    fit: BoxFit.fill,
-                                    isAntiAlias: true,
-                                    image: getPosterURL(cat.catMedia[index]),
-                                    semanticLabel: "${cat.catMedia[index].mediaName}...",
-                                    loadingBuilder: (context, child, progress) {
-                                      return progress == null ? child : const LinearProgressIndicator();
-                                    },
+                          children: [
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: 60,
+                                  child: IconButton(
+                                    iconSize: 60,
+                                    icon: Image.asset('images/catIcon.png'),
+                                    onPressed: () {},
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 10,),
-                              Expanded(
-                                child: RichText(
-                                  text : TextSpan (
-                                      children: <TextSpan> [
-                                        TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                                        TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
-                                      ]
+                                SizedBox(
+                                  height: 60,
+                                  child: IconButton(
+                                    iconSize: 60,
+                                    icon: Image.asset('images/catIcon.png'),
+                                    onPressed: () {},
                                   ),
-                                  maxLines: 5,
-                                  overflow: TextOverflow.fade,
-                                  softWrap: true,
+                                ),
+                              ],
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width/5,
+                                height: (MediaQuery.of(context).size.width/5) * 3/2,
+                                child: Image(
+                                  fit: BoxFit.fill,
+                                  isAntiAlias: true,
+                                  image: getPosterURL(cat.catMedia[index]),
+                                  semanticLabel: "${cat.catMedia[index].mediaName}...",
+                                  loadingBuilder: (context, child, progress) {
+                                    return progress == null ? child : const LinearProgressIndicator();
+                                  },
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 10,),
+                            Expanded(
+                              child: RichText(
+                                text : TextSpan (
+                                    children: <TextSpan> [
+                                      TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                                      TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                    ]
+                                ),
+                                maxLines: 5,
+                                overflow: TextOverflow.fade,
+                                softWrap: true,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
