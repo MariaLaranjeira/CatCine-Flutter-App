@@ -95,7 +95,7 @@ class _CategoryPageState extends State<CategoryPage>{
                   Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
                     pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
                       return const ExploreCategories();
-                    },
+                      },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration.zero,
                   ),
