@@ -1,8 +1,10 @@
+import 'package:catcine_es/Pages/categoryPage.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
 import 'package:catcine_es/Pages/searchMediaForCat.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/category.dart';
@@ -40,6 +42,24 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
       return NetworkImage(mediaCat[i].coverUrl);
     }
     return const AssetImage('images/catIcon.png');
+  }
+
+  static CollectionReference catDB = FirebaseFirestore.instance.collection(
+      'categories');
+
+  static addCat(Category cat) async {
+
+    var ref = catDB.doc(cat.title);
+
+    ref.set({
+      'title': cat.title,
+      'creator': cat.creator,
+      'description': cat.description,
+      'likes': cat.likes,
+      'interactions': cat.interactions,
+    },
+      SetOptions(merge: true),
+    );
   }
 
 
@@ -321,7 +341,16 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         elevation: 0.0,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         onPressed: () {
-                          newCat = Category(mediaCat,"", descCat as String, nameCat as String, 0, 0);
+                          newCat = Category(mediaCat,"", descCat.text, nameCat.text, 0, 0);
+                          addCat(newCat);
+                          Navigator.push(context, PageRouteBuilder(
+                            pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                              return CategoryPage(category: newCat);
+                            },
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                          );
                         },
                         child: const Text(
                           "Create" ,
