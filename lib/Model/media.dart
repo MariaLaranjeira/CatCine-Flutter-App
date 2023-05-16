@@ -135,17 +135,28 @@ class Media {
         tempMedia.add(media);
       }
     }
-    if (tempMedia.length < 10){
+    if (tempMedia.isEmpty){
       tempMedia = await API.makeMedia(title);
       updateLocalList(tempMedia);
+    }
+    else if (tempMedia.length < 10) {
+      List<Media> temp = await API.makeMedia(title);
+      updateLocalList(temp);
+      for (var elem in temp) {
+        if (tempMedia.any((element) => elem.id == element.id)) {
+          continue;
+        }
+        else {
+          tempMedia.add(elem);
+        }
+      }
     }
     return tempMedia;
   }
 
   static updateLocalList(List<Media> mediaList){
-
     for (var media in mediaList){
-      if (!allLocalMedia.values.any((it)=> it.id == media.id)){
+      if (!allLocalMedia.keys.any((element) => element == media.id)){
         allLocalMedia[media.id] = media;
       }
     }

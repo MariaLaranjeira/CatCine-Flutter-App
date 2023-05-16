@@ -2,7 +2,9 @@ import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
+import 'package:catcine_es/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../Model/media.dart';
 import '../Model/searchesBackEnd.dart';
@@ -178,39 +180,56 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
 
   @override
   Widget build(BuildContext context) {
+    print(allLocalMedia.length);
+    Media media = allLocalMedia['tt5420376']!;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 73,
-        flexibleSpace: Column(
-          children: [
-            const SizedBox(height: 45),
-            Row(
-              children: [
-                SizedBox(width: MediaQuery.of(context).size.width/8.5),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width/1.17,
-                  child: TextField(
-                    onChanged: (title) {
-                      updateList(title);
-                      searchedTitle = title;
+        leadingWidth: double.infinity,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Color(0x00717488),
+        ),
+        leading: Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
                     },
-                    style: const TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: const Color(0xffcccede),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: "Film, TV Show ...",
-                      prefixIcon: const Icon(Icons.search),
+                    icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width/1.17,
+                    child: TextField(
+                      onChanged: (title) {
+                        updateList(title);
+                        searchedTitle = title;
+                      },
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color(0xffcccede),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: "Film, TV Show ...",
+                        prefixIcon: const Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
+        toolbarHeight: MediaQuery.of(context).size.height/10,
         backgroundColor: const Color(0xff717488),
         elevation: 0.0,
       ),

@@ -25,7 +25,8 @@ class _ExploreMediaState extends State<ExploreMedia>{
 
     mediaList = await SearchesBackEnd.updateList(title);
     setState(() {
-      displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase())).toList();
+      displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase()) ||
+          element.mediaName.toUpperCase().contains(title.toUpperCase())).toList();
     });
   }
 
@@ -41,6 +42,53 @@ class _ExploreMediaState extends State<ExploreMedia>{
       return '${media.mediaName.substring(0, 15)}...';
     }
     return media.mediaName;
+  }
+
+  int rowCounter() {
+    if (displayList.isEmpty) {
+      return 0;
+    }
+    else if (displayList.length%2==1) {
+      return (displayList.length ~/ 2) + 1;
+    }
+    else {
+      return displayList.length ~/ 2;
+    }
+  }
+
+  Column drawSecondElement(int index) {
+    if (index >= displayList.length) {
+      return Column();
+    }
+    else {
+      return Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: SizedBox(
+                width: (MediaQuery.of(context).size.width/11) * 4.35,
+                height: ((MediaQuery.of(context).size.width/11) * 4.35) * 3/2,
+                child: Image(
+                  isAntiAlias: true,
+                  image: getPosterURL(displayList[index]),
+                  fit: BoxFit.fill,
+                  semanticLabel: "${displayList[index].mediaName}...",
+                  loadingBuilder: (context, child, progress) {
+                    return progress == null ? child : const LinearProgressIndicator();
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 10,),
+            Text(
+              getTrimmedName(displayList[index]),
+              style: const TextStyle(
+                  color: Colors.white
+              ),
+            )
+          ]
+      );
+    }
   }
 
   @override
@@ -185,7 +233,7 @@ class _ExploreMediaState extends State<ExploreMedia>{
             Expanded(
               child: DraggableScrollableActuator(
                 child: ListView.builder(
-                  itemCount: displayList.length ~/ 2,
+                  itemCount: rowCounter(),
                   itemBuilder: (context, index) => ListTile(
                     contentPadding: const EdgeInsets.all(8.0),
                     title: Row(
@@ -218,35 +266,8 @@ class _ExploreMediaState extends State<ExploreMedia>{
                           ]
                         ),
                         SizedBox(width: MediaQuery.of(context).size.width/11,),
-                        Column(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(16.0),
-                                child: SizedBox(
-                                  width: (MediaQuery.of(context).size.width/11) * 4.35,
-                                  height: ((MediaQuery.of(context).size.width/11) * 4.35) * 3/2,
-                                  child: Image(
-                                    isAntiAlias: true,
-                                    image: getPosterURL(displayList[index * 2 + 1]),
-                                    fit: BoxFit.fill,
-                                    semanticLabel: "${displayList[index * 2 + 1].mediaName}...",
-                                    loadingBuilder: (context, child, progress) {
-                                      return progress == null ? child : const LinearProgressIndicator();
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10,),
-                              Text(
-                                getTrimmedName(displayList[index * 2 + 1]),
-                                style: const TextStyle(
-                                    color: Colors.white
-                                ),
-                              )
-                            ]
-                        ),
+                        drawSecondElement((index * 2) + 1),
                       ]
-
                     ),
                   ),
                 ),
