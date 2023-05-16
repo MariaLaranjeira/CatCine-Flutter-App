@@ -231,7 +231,7 @@ class _CategoryPageState extends State<CategoryPage>{
                 Container(
                   height: 0.9,
                   width: double.infinity,
-                  color: Colors.grey,
+                  color: Color(0xFF6B6D7B),
                 ),
                 Expanded(
                   child: DraggableScrollableActuator(
@@ -239,68 +239,78 @@ class _CategoryPageState extends State<CategoryPage>{
                       itemCount: cat.catMedia.length,
                       itemBuilder: (context, index) => ListTile(
                         contentPadding: const EdgeInsets.all(0),
-                        title: Row(
-                            children: [
-                              Column(
+                        title: Column(
+                          children: [
+                            Row(
                                 children: [
-                                  SizedBox(
-                                    height: 55,
-                                    child: IconButton(
-                                      iconSize: 40,
-                                      icon: const Icon(MyFlutterApp.upvote),
-                                      color : const Color(0xFFD9D9D9),
-                                      onPressed: () {},
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 55,
+                                        child: IconButton(
+                                          iconSize: 40,
+                                          icon: const Icon(MyFlutterApp.upvote),
+                                          color : const Color(0xFFD9D9D9),
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                          height: 20,
+                                          child: Text(
+                                            "0",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            )
+                                          )
+                                      ),
+                                      SizedBox(
+                                        height: 55,
+                                        child: IconButton(
+                                          iconSize: 40,
+                                          icon:  const Icon(MyFlutterApp.downvote),
+                                          color : const Color(0xFFD9D9D9),
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width/5,
+                                      height: (MediaQuery.of(context).size.width/5) * 3/2,
+                                      child: Image(
+                                        fit: BoxFit.fill,
+                                        isAntiAlias: true,
+                                        image: getPosterURL(cat.catMedia[index]),
+                                        semanticLabel: "${cat.catMedia[index].mediaName}...",
+                                        loadingBuilder: (context, child, progress) {
+                                          return progress == null ? child : const LinearProgressIndicator();
+                                        },
                                     ),
                                   ),
-                                  const SizedBox(
-                                      height: 20,
-                                      child: Text(
-                                        "0",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        )
-                                      )
-                                  ),
-                                  SizedBox(
-                                    height: 55,
-                                    child: IconButton(
-                                      iconSize: 40,
-                                      icon:  const Icon(MyFlutterApp.downvote),
-                                      color : const Color(0xFFD9D9D9),
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width/5,
-                                  height: (MediaQuery.of(context).size.width/5) * 3/2,
-                                  child: Image(
-                                    fit: BoxFit.fill,
-                                    isAntiAlias: true,
-                                    image: getPosterURL(cat.catMedia[index]),
-                                    semanticLabel: "${cat.catMedia[index].mediaName}...",
-                                    loadingBuilder: (context, child, progress) {
-                                      return progress == null ? child : const LinearProgressIndicator();
-                                    },
                                 ),
-                              ),
+                                const SizedBox(width: 10,),
+                                Expanded(
+                                  child: RichText(
+                                    text : TextSpan (
+                                        children: <TextSpan> [
+                                          TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                                          TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                        ]
+                                    ),
+                                    maxLines: 5,
+                                    overflow: TextOverflow.fade,
+                                    softWrap: true,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 10,),
-                            Expanded(
-                              child: RichText(
-                                text : TextSpan (
-                                    children: <TextSpan> [
-                                      TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                                      TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
-                                    ]
-                                ),
-                                maxLines: 5,
-                                overflow: TextOverflow.fade,
-                                softWrap: true,
-                              ),
+                            const SizedBox(height: 4),
+                            Container(
+                              height: 0.9,
+                              width: double.infinity,
+                              color: Color(0xFF6B6D7B),
                             ),
                           ],
                         ),
