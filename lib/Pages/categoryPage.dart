@@ -23,6 +23,7 @@ class CategoryPage extends StatefulWidget{
 class _CategoryPageState extends State<CategoryPage>{
 
   late Category cat;
+  bool isLiked = false;
 
   ImageProvider getPosterURL(Media media) {
     if (media.coverUrl != '') {
@@ -38,11 +39,20 @@ class _CategoryPageState extends State<CategoryPage>{
     return media.mediaName;
   }
 
+  getIcon(){
+    if (isLiked) {
+      return const Icon(MyFlutterApp.heart);
+    }
+    return const Icon(MyFlutterApp.heart_outline);
+  }
+
   @override
   void initState(){
     super.initState();
     cat = widget.category;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -159,26 +169,85 @@ class _CategoryPageState extends State<CategoryPage>{
                   height: 35.0,
                 ),
 
-                Text(
-                  cat.title,
-                  style: const TextStyle(
-                    fontSize: 40,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height/6.5,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          width: 147,
+                          height: 39,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Color(0xB3D9D9D9),
+                          ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {  },
+                                icon: const Icon(Icons.edit),
+                                color: Color(0xFF393D5A),
+                              ),
+                              Container(
+                                color: Color(0xCCA7A7A7),
+                                height: 50,
+                                width: 0.5,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {  },
+                                color: Color(0xFF393D5A),
+                              ),
+                              Container(
+                                color: Color(0xCCA7A7A7),
+                                height: 50,
+                                width: 0.5,
+                              ),
+                              IconButton(
+                                icon: getIcon(),
+                                onPressed: () {
+                                  setState(() {
+                                    isLiked = !isLiked;
+                                  });
+                                },
+                                color: Color(0xFF393D5A),
+                              ),
+                            ]
+                          ),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            cat.title,
+                            style: const TextStyle(
+                              fontSize: 40,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          const Text(
+                            "by @SironaRyan",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
 
-                const SizedBox(width: 40),
-
-                const Text(
-                  "by @SironaRyan",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.white,
-                  ),
-                ),
                 const SizedBox(
-                  height: 50,
+                  height: 30,
                 ),
                 Row(
                   children: [
@@ -251,7 +320,9 @@ class _CategoryPageState extends State<CategoryPage>{
                                           iconSize: 40,
                                           icon: const Icon(MyFlutterApp.upvote),
                                           color : const Color(0xFFD9D9D9),
-                                          onPressed: () {},
+                                          onPressed: () {
+
+                                          },
                                         ),
                                       ),
                                       const SizedBox(
@@ -269,7 +340,9 @@ class _CategoryPageState extends State<CategoryPage>{
                                           iconSize: 40,
                                           icon:  const Icon(MyFlutterApp.downvote),
                                           color : const Color(0xFFD9D9D9),
-                                          onPressed: () {},
+                                          onPressed: () {
+
+                                          },
                                         ),
                                       ),
                                     ],
