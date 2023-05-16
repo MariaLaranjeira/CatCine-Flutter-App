@@ -12,8 +12,8 @@ import '../Model/media.dart';
 
 class CategoryPage extends StatefulWidget{
 
-  Category category;
-  CategoryPage({super.key, required this.category});
+  final Category category;
+  const CategoryPage({super.key, required this.category});
 
   @override
   State<CategoryPage> createState() => _CategoryPageState();
@@ -154,7 +154,7 @@ class _CategoryPageState extends State<CategoryPage>{
           decoration: const BoxDecoration(
               image: DecorationImage(
                 alignment: Alignment.topLeft,
-                image: AssetImage('images/catBackDrop.png'),
+                image: AssetImage('images/catBackdrop.png'),
                 fit: BoxFit.contain,
               )
           ),
@@ -169,7 +169,7 @@ class _CategoryPageState extends State<CategoryPage>{
                   height: 35.0,
                 ),
 
-                Container(
+                SizedBox(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height/6.5,
                   child: Stack(
@@ -182,27 +182,27 @@ class _CategoryPageState extends State<CategoryPage>{
                           height: 39,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
-                            color: Color(0xB3D9D9D9),
+                            color: const Color(0xB3D9D9D9),
                           ),
                           child: Row(
                             children: [
                               IconButton(
                                 onPressed: () {  },
                                 icon: const Icon(Icons.edit),
-                                color: Color(0xFF393D5A),
+                                color: const Color(0xFF393D5A),
                               ),
                               Container(
-                                color: Color(0xCCA7A7A7),
+                                color: const Color(0xCCA7A7A7),
                                 height: 50,
                                 width: 0.5,
                               ),
                               IconButton(
                                 icon: const Icon(Icons.add),
                                 onPressed: () {  },
-                                color: Color(0xFF393D5A),
+                                color: const Color(0xFF393D5A),
                               ),
                               Container(
-                                color: Color(0xCCA7A7A7),
+                                color: const Color(0xCCA7A7A7),
                                 height: 50,
                                 width: 0.5,
                               ),
@@ -213,7 +213,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                     isLiked = !isLiked;
                                   });
                                 },
-                                color: Color(0xFF393D5A),
+                                color: const Color(0xFF393D5A),
                               ),
                             ]
                           ),
@@ -300,7 +300,7 @@ class _CategoryPageState extends State<CategoryPage>{
                 Container(
                   height: 0.9,
                   width: double.infinity,
-                  color: Color(0xFF6B6D7B),
+                  color: const Color(0xFF6B6D7B),
                 ),
                 Expanded(
                   child: DraggableScrollableActuator(
@@ -383,7 +383,7 @@ class _CategoryPageState extends State<CategoryPage>{
                             Container(
                               height: 0.9,
                               width: double.infinity,
-                              color: Color(0xFF6B6D7B),
+                              color: const Color(0xFF6B6D7B),
                             ),
                           ],
                         ),
