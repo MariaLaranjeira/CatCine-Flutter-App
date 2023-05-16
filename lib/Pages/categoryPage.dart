@@ -3,6 +3,7 @@ import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
+import 'package:catcine_es/my_flutter_app_icons.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/media.dart';
@@ -146,14 +147,17 @@ class _CategoryPageState extends State<CategoryPage>{
                 const SizedBox(
                   height: 35.0,
                 ),
+
                 Text(
-                    cat.title,
-                    style: const TextStyle(
-                      fontSize: 40,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  cat.title,
+                  style: const TextStyle(
+                    fontSize: 40,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                const SizedBox(width: 40),
+
                 Text(
                   "by @SironaRyan",
                   style: const TextStyle(
@@ -222,24 +226,35 @@ class _CategoryPageState extends State<CategoryPage>{
                     child: ListView.builder(
                       itemCount: cat.catMedia.length ~/ 2,
                       itemBuilder: (context, index) => ListTile(
-                        contentPadding: const EdgeInsets.all(8.0),
+                        contentPadding: const EdgeInsets.all(0),
                         title: Row(
                             children: [
                               Column(
                                 children: [
                                   SizedBox(
-                                    height: 60,
+                                    height: 55,
                                     child: IconButton(
-                                      iconSize: 60,
-                                      icon: Image.asset('images/catIcon.png'),
+                                      iconSize: 40,
+                                      icon: const Icon(MyFlutterApp.upvote),
+                                      color : const Color(0xFFD9D9D9),
                                       onPressed: () {},
                                     ),
                                   ),
+                                  const SizedBox(
+                                      height: 20,
+                                      child: Text(
+                                        "0",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        )
+                                      )
+                                  ),
                                   SizedBox(
-                                    height: 60,
+                                    height: 55,
                                     child: IconButton(
-                                      iconSize: 60,
-                                      icon: Image.asset('images/catIcon.png'),
+                                      iconSize: 40,
+                                      icon:  const Icon(MyFlutterApp.downvote),
+                                      color : const Color(0xFFD9D9D9),
                                       onPressed: () {},
                                     ),
                                   ),
