@@ -28,16 +28,16 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
   var textLength = 0;
   late Category newCat;
 
-  ImageProvider image0 = MemoryImage(kTransparentImage);
-  ImageProvider image1 = MemoryImage(kTransparentImage);
-  ImageProvider image2 = MemoryImage(kTransparentImage);
+  late ImageProvider image0;
+  late ImageProvider image1;
+  late ImageProvider image2;
 
   TextEditingController nameCat = TextEditingController();
   TextEditingController descCat = TextEditingController();
 
   ImageProvider getPosterURL(var i) {
     if (mediaCat.isEmpty){
-      return const AssetImage('images/transparent.png');
+      return MemoryImage(kTransparentImage);
     }
     if (mediaCat[i].coverUrl != '' && i < mediaCat.length) {
       NetworkImage imageMedia = NetworkImage(mediaCat[i].coverUrl);
@@ -50,7 +50,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
       return const AssetImage('images/catIcon.png');
     }
     else {
-      return const AssetImage('images/transparent.png');
+      return MemoryImage(kTransparentImage);
     }
   }
   
@@ -103,20 +103,39 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
     var ref = catDB.doc(cat.title);
 
-    ref.set({
+    await ref.set({
       'title': cat.title,
       'creator': cat.creator,
       'description': cat.description,
-      'catMedia': cat.catMedia,
       'likes': cat.likes,
       'interactions': cat.interactions,
     },
       SetOptions(merge: true),
     );
+
+    for (Media media in cat.catMedia) {
+      var list = ref.collection('catmedia').doc(media.id);
+      list.set({
+        'upvotes': 0,
+        'downvotes': 0
+      },
+      SetOptions(merge: true));
+    }
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    image0 = getPosterURL(0);
+    image1 = getPosterURL(1);
+    image2 = getPosterURL(2);
+
   }
   
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
@@ -318,9 +337,9 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                     height: (MediaQuery.of(context).size.width - 32)/3.1,
                     child: Row(
                         children: [
-                        SizedBox(width: MediaQuery.of(context).size.width/20.57),
+                        SizedBox(width: MediaQuery.of(context).size.width/20.575),
                         SizedBox.square(
-                          dimension: MediaQuery.of(context).size.width/4.56,
+                          dimension: MediaQuery.of(context).size.width/4.572,
                           child: RawMaterialButton(
                             fillColor: const Color(0x8B84898B),
                             shape: RoundedRectangleBorder(
@@ -352,9 +371,9 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: MediaQuery.of(context).size.width/27.42),
+                        SizedBox(width: MediaQuery.of(context).size.width/27.43),
                         SizedBox(
-                          height: (MediaQuery.of(context).size.width/5.87) * 3/2,
+                          height: (MediaQuery.of(context).size.width/5.88) * 3/2,
                           width: MediaQuery.of(context).size.width/1.62,
                           child: Stack(
                             fit: StackFit.expand,
@@ -364,38 +383,38 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                                 child: Container(
                                   decoration: boxDecorator(0),
                                   child: Image(image: image0,
-                                    height: (MediaQuery.of(context).size.width/5.87) * 3/2,
-                                    width: MediaQuery.of(context).size.width/5.87,
+                                    height: (MediaQuery.of(context).size.width/5.88) * 3/2,
+                                    width: MediaQuery.of(context).size.width/5.88,
                                     colorBlendMode: BlendMode.screen,
                                   ),
                                 ),
                               ),
                               Positioned(
-                                left: MediaQuery.of(context).size.width/5.87/5*4,
+                                left: MediaQuery.of(context).size.width/5.88/5*4,
                                 child: Container(
                                   decoration: boxDecorator(1),
                                   child: Image(image: image1,
-                                    height: (MediaQuery.of(context).size.width/5.87) * 3/2,
-                                    width: MediaQuery.of(context).size.width/5.87,
+                                    height: (MediaQuery.of(context).size.width/5.88) * 3/2,
+                                    width: MediaQuery.of(context).size.width/5.88,
                                     colorBlendMode: BlendMode.screen,
                                   ),
                                 ),
                               ),
                               Positioned(
-                                left: MediaQuery.of(context).size.width/5.87/5*8,
+                                left: MediaQuery.of(context).size.width/5.88/5*8,
                                 child: Container(
                                   decoration: boxDecorator(2),
                                   child: Image(image: image2,
-                                    height: (MediaQuery.of(context).size.width/5.87) * 3/2,
-                                    width: MediaQuery.of(context).size.width/5.87,
+                                    height: (MediaQuery.of(context).size.width/5.88) * 3/2,
+                                    width: MediaQuery.of(context).size.width/5.88,
                                     colorBlendMode: BlendMode.screen,
                                   ),
                                 ),
                               ),
                               Positioned(
-                                left: MediaQuery.of(context).size.width/5.87/5*12,
-                                height: (MediaQuery.of(context).size.width/5.87) * 3/2,
-                                width: MediaQuery.of(context).size.width/5.87,
+                                left: MediaQuery.of(context).size.width/5.88/5*12,
+                                height: (MediaQuery.of(context).size.width/5.88) * 3/2,
+                                width: MediaQuery.of(context).size.width/5.88,
                                 child: displayDecoratedBox()
                               ),
                             ],
@@ -417,7 +436,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         elevation: 0.0,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         onPressed: () {
-                          newCat = Category(mediaCat,"", descCat.text, nameCat.text, 0, 0);
+                          newCat = Category(mediaCat,"", descCat.text.trim(), nameCat.text.trim(), 0, 0);
                           addCat(newCat);
                           Navigator.push(context, PageRouteBuilder(
                             pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {

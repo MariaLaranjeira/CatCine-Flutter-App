@@ -1,4 +1,5 @@
 import 'package:catcine_es/Model/category.dart';
+import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
@@ -89,7 +90,17 @@ class _CategoryPageState extends State<CategoryPage>{
                 child: IconButton(
                   iconSize: 60,
                   icon: Image.asset('images/catIcon.png'),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                        return const CreateCategoryScreen();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
                 ),
               ),
               IconButton(
@@ -112,7 +123,7 @@ class _CategoryPageState extends State<CategoryPage>{
                   Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
                     pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
                       return const ExploreCategories();
-                    },
+                      },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration.zero,
                   ),
@@ -139,7 +150,7 @@ class _CategoryPageState extends State<CategoryPage>{
           ),
           ),
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,11 +167,12 @@ class _CategoryPageState extends State<CategoryPage>{
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+
                 const SizedBox(width: 40),
 
-                Text(
+                const Text(
                   "by @SironaRyan",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16.0,
                     color: Colors.white,
                   ),
@@ -172,7 +184,7 @@ class _CategoryPageState extends State<CategoryPage>{
                   children: [
                     const SizedBox(
                       height: 20,
-                      child: const Image(
+                      child: Image(
                         image: AssetImage('images/heart.png'),
                       ),
                     ),
@@ -190,7 +202,7 @@ class _CategoryPageState extends State<CategoryPage>{
                     ),
                     const SizedBox(
                       height: 20,
-                      child: const Image(
+                      child: Image(
                         image: AssetImage('images/votes.png'),
                       ),
                     ),
@@ -224,7 +236,7 @@ class _CategoryPageState extends State<CategoryPage>{
                 Expanded(
                   child: DraggableScrollableActuator(
                     child: ListView.builder(
-                      itemCount: cat.catMedia.length ~/ 2,
+                      itemCount: cat.catMedia.length,
                       itemBuilder: (context, index) => ListTile(
                         contentPadding: const EdgeInsets.all(0),
                         title: Row(
@@ -273,25 +285,25 @@ class _CategoryPageState extends State<CategoryPage>{
                                     loadingBuilder: (context, child, progress) {
                                       return progress == null ? child : const LinearProgressIndicator();
                                     },
-                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 10,),
-                              Expanded(
-                                child: RichText(
-                                  text : TextSpan (
-                                      children: <TextSpan> [
-                                        TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                                        TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
-                                      ]
-                                  ),
-                                  maxLines: 5,
-                                  overflow: TextOverflow.fade,
-                                  softWrap: true,
+                            ),
+                            const SizedBox(width: 10,),
+                            Expanded(
+                              child: RichText(
+                                text : TextSpan (
+                                    children: <TextSpan> [
+                                      TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                                      TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                    ]
                                 ),
+                                maxLines: 5,
+                                overflow: TextOverflow.fade,
+                                softWrap: true,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
