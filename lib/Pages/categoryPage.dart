@@ -4,6 +4,7 @@ import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
+import 'package:catcine_es/my_flutter_app_icons.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/media.dart';
@@ -22,6 +23,7 @@ class CategoryPage extends StatefulWidget{
 class _CategoryPageState extends State<CategoryPage>{
 
   late Category cat;
+  bool isLiked = false;
 
   ImageProvider getPosterURL(Media media) {
     if (media.coverUrl != '') {
@@ -37,11 +39,20 @@ class _CategoryPageState extends State<CategoryPage>{
     return media.mediaName;
   }
 
+  getIcon(){
+    if (isLiked) {
+      return const Icon(MyFlutterApp.heart);
+    }
+    return const Icon(MyFlutterApp.heart_outline);
+  }
+
   @override
   void initState(){
     super.initState();
     cat = widget.category;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -157,23 +168,86 @@ class _CategoryPageState extends State<CategoryPage>{
                 const SizedBox(
                   height: 35.0,
                 ),
-                Text(
-                    cat.title,
-                    style: const TextStyle(
-                      fontSize: 40,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                ),
-                const Text(
-                  "by @SironaRyan",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.white,
+
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height/6.5,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          width: 147,
+                          height: 39,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Color(0xB3D9D9D9),
+                          ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {  },
+                                icon: const Icon(Icons.edit),
+                                color: Color(0xFF393D5A),
+                              ),
+                              Container(
+                                color: Color(0xCCA7A7A7),
+                                height: 50,
+                                width: 0.5,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {  },
+                                color: Color(0xFF393D5A),
+                              ),
+                              Container(
+                                color: Color(0xCCA7A7A7),
+                                height: 50,
+                                width: 0.5,
+                              ),
+                              IconButton(
+                                icon: getIcon(),
+                                onPressed: () {
+                                  setState(() {
+                                    isLiked = !isLiked;
+                                  });
+                                },
+                                color: Color(0xFF393D5A),
+                              ),
+                            ]
+                          ),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            cat.title,
+                            style: const TextStyle(
+                              fontSize: 40,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          const Text(
+                            "by @SironaRyan",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
+
                 const SizedBox(
-                  height: 50,
+                  height: 30,
                 ),
                 Row(
                   children: [
@@ -226,65 +300,90 @@ class _CategoryPageState extends State<CategoryPage>{
                 Container(
                   height: 0.9,
                   width: double.infinity,
-                  color: Colors.grey,
+                  color: Color(0xFF6B6D7B),
                 ),
                 Expanded(
                   child: DraggableScrollableActuator(
                     child: ListView.builder(
                       itemCount: cat.catMedia.length,
                       itemBuilder: (context, index) => ListTile(
-                        contentPadding: const EdgeInsets.all(8.0),
-                        title: Row(
+                        contentPadding: const EdgeInsets.all(0),
+                        title: Column(
                           children: [
-                            Column(
-                              children: [
-                                SizedBox(
-                                  height: 60,
-                                  child: IconButton(
-                                    iconSize: 60,
-                                    icon: Image.asset('images/catIcon.png'),
-                                    onPressed: () {},
+                            Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 55,
+                                        child: IconButton(
+                                          iconSize: 40,
+                                          icon: const Icon(MyFlutterApp.upvote),
+                                          color : const Color(0xFFD9D9D9),
+                                          onPressed: () {
+
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                          height: 20,
+                                          child: Text(
+                                            "0",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            )
+                                          )
+                                      ),
+                                      SizedBox(
+                                        height: 55,
+                                        child: IconButton(
+                                          iconSize: 40,
+                                          icon:  const Icon(MyFlutterApp.downvote),
+                                          color : const Color(0xFFD9D9D9),
+                                          onPressed: () {
+
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width/5,
+                                      height: (MediaQuery.of(context).size.width/5) * 3/2,
+                                      child: Image(
+                                        fit: BoxFit.fill,
+                                        isAntiAlias: true,
+                                        image: getPosterURL(cat.catMedia[index]),
+                                        semanticLabel: "${cat.catMedia[index].mediaName}...",
+                                        loadingBuilder: (context, child, progress) {
+                                          return progress == null ? child : const LinearProgressIndicator();
+                                        },
+                                    ),
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 60,
-                                  child: IconButton(
-                                    iconSize: 60,
-                                    icon: Image.asset('images/catIcon.png'),
-                                    onPressed: () {},
+                                const SizedBox(width: 10,),
+                                Expanded(
+                                  child: RichText(
+                                    text : TextSpan (
+                                        children: <TextSpan> [
+                                          TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                                          TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                                        ]
+                                    ),
+                                    maxLines: 5,
+                                    overflow: TextOverflow.fade,
+                                    softWrap: true,
                                   ),
                                 ),
                               ],
                             ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width/5,
-                                height: (MediaQuery.of(context).size.width/5) * 3/2,
-                                child: Image(
-                                  fit: BoxFit.fill,
-                                  isAntiAlias: true,
-                                  image: getPosterURL(cat.catMedia[index]),
-                                  semanticLabel: "${cat.catMedia[index].mediaName}...",
-                                  loadingBuilder: (context, child, progress) {
-                                    return progress == null ? child : const LinearProgressIndicator();
-                                  },
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10,),
-                            Expanded(
-                              child: RichText(
-                                text : TextSpan (
-                                    children: <TextSpan> [
-                                      TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                                      TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
-                                    ]
-                                ),
-                                maxLines: 5,
-                                overflow: TextOverflow.fade,
-                                softWrap: true,
-                              ),
+                            const SizedBox(height: 4),
+                            Container(
+                              height: 0.9,
+                              width: double.infinity,
+                              color: Color(0xFF6B6D7B),
                             ),
                           ],
                         ),

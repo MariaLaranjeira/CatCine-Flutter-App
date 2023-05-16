@@ -254,7 +254,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                     Container(
                       height: 0.9,
                       width: double.infinity,
-                      color: Colors.grey,
+                      color: Color(0xFF6B6D7B),
                     ),
                     const SizedBox( height: 9.0),
                     const Text(
