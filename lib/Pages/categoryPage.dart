@@ -154,7 +154,7 @@ class _CategoryPageState extends State<CategoryPage>{
           decoration: const BoxDecoration(
               image: DecorationImage(
                 alignment: Alignment.topLeft,
-                image: AssetImage('images/catBackDrop.png'),
+                image: AssetImage('images/catBackdrop.png'),
                 fit: BoxFit.contain,
               )
           ),

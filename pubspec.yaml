@@ -85,7 +85,7 @@ flutter:
   assets:
     - images/votes.png
     - images/heart.png
-    - images/catBackDrop.png
+    - images/catBackdrop.png
     - images/CritCineLogo.png
     - images/Initial.png
     - images/catIcon.png
