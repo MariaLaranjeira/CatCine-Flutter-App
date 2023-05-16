@@ -30,18 +30,37 @@ class _CategoryPageState extends State<CategoryPage>{
   static CollectionReference catDB = FirebaseFirestore.instance.collection(
       'categories');
 
-  static updateLikes(Category cat) async {
+  updateLikes() async {
+    var likes;
+
+    catDB
+        .doc(cat.title)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) async {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        var res = data as Map<String, dynamic>;
+
+        likes = res['likes'];
+      }
+    });
+
+    if (isLiked){
+      likes--;
+    } else {
+      likes++;
+    }
     var ref = catDB.doc(cat.title);
     await ref.update({
-      'likes':cat.likes,
+      'likes':likes,
     });
   }
 
-  static Future<bool> doesMediaExist(String id) async {
+  Future<bool> doesMediaExist(String id) async {
     var ref = await catDB.doc(id).get();
     return ref.exists;
   }
-  static updateList(Category cat) async {
+  updateList() async {
     var ref = catDB.doc(cat.title);
     for (Media media in cat.catMedia) {
       if (!await doesMediaExist(media.id)){
@@ -229,7 +248,7 @@ class _CategoryPageState extends State<CategoryPage>{
                               IconButton(
                                 icon: const Icon(Icons.add),
                                 onPressed: () {
-                                  updateList(cat);
+                                  updateList();
                                   Navigator.push(context, PageRouteBuilder(
                                   pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
                                     return const SearchCreateCat();
@@ -251,8 +270,8 @@ class _CategoryPageState extends State<CategoryPage>{
                               IconButton(
                                 icon: getIcon(),
                                 onPressed: () {
-                                  updateLikes(cat);
                                   setState(() {
+                                    updateLikes();
                                     if (isLiked){
                                       cat.likes--;
                                     } else {
