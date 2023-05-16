@@ -17,7 +17,6 @@ class CategoryPage extends StatefulWidget{
 
   @override
   State<CategoryPage> createState() => _CategoryPageState();
-
 }
 
 class _CategoryPageState extends State<CategoryPage>{
