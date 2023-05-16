@@ -50,6 +50,7 @@ class _CategoryPageState extends State<CategoryPage>{
   void initState(){
     super.initState();
     cat = widget.category;
+
   }
 
 
