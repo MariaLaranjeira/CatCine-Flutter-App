@@ -3,8 +3,10 @@ import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
+import 'package:catcine_es/Pages/searchMediaForCat.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:catcine_es/my_flutter_app_icons.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/media.dart';
@@ -24,6 +26,33 @@ class _CategoryPageState extends State<CategoryPage>{
 
   late Category cat;
   bool isLiked = false;
+
+  static CollectionReference catDB = FirebaseFirestore.instance.collection(
+      'categories');
+
+  static updateLikes(Category cat) async {
+    var ref = catDB.doc(cat.title);
+    await ref.update({
+      'likes':cat.likes,
+    });
+  }
+
+  static Future<bool> doesMediaExist(String id) async {
+    var ref = await catDB.doc(id).get();
+    return ref.exists;
+  }
+  static updateList(Category cat) async {
+    var ref = catDB.doc(cat.title);
+    for (Media media in cat.catMedia) {
+      if (!await doesMediaExist(media.id)){
+        var list = ref.collection('catmedia').doc(media.id);
+        list.set({
+          'upvotes': 0,
+          'downvotes': 0
+        }, SetOptions(merge: true));
+      }
+    }
+  }
 
   ImageProvider getPosterURL(Media media) {
     if (media.coverUrl != '') {
@@ -199,7 +228,19 @@ class _CategoryPageState extends State<CategoryPage>{
                               ),
                               IconButton(
                                 icon: const Icon(Icons.add),
-                                onPressed: () {  },
+                                onPressed: () {
+                                  updateList(cat);
+                                  Navigator.push(context, PageRouteBuilder(
+                                  pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                                    return const SearchCreateCat();
+                                  },
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                  ),
+                                  ).whenComplete(() =>
+                                      setState(() {})
+                                  );
+                                },
                                 color: const Color(0xFF393D5A),
                               ),
                               Container(
@@ -210,7 +251,13 @@ class _CategoryPageState extends State<CategoryPage>{
                               IconButton(
                                 icon: getIcon(),
                                 onPressed: () {
+                                  updateLikes(cat);
                                   setState(() {
+                                    if (isLiked){
+                                      cat.likes--;
+                                    } else {
+                                      cat.likes++;
+                                    }
                                     isLiked = !isLiked;
                                   });
                                 },
