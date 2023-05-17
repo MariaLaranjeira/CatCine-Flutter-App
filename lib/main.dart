@@ -39,6 +39,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  var isDialogOpen = false;
+
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -87,13 +89,55 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_connectionStatus != ConnectivityResult.none
-        && _connectionStatus != ConnectivityResult.bluetooth
-        && _connectionStatus != ConnectivityResult.other) {
-      return const MainPage();
-    } else {
-      return const CircularProgressIndicator();
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_connectionStatus == ConnectivityResult.wifi
+          || _connectionStatus == ConnectivityResult.mobile
+          || _connectionStatus == ConnectivityResult.ethernet
+          || _connectionStatus == ConnectivityResult.vpn) {
+        print('Has Connection');
+        if (isDialogOpen) {
+          Navigator.of(context, rootNavigator: true).pop();
+          isDialogOpen = false;
+        }
+      } else {
+        Navigator.of(context).push(PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+              isDialogOpen = true;
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "No Internet Connection!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+          )
+        );
+      }
+    });
+    return const MainPage();
   }
 }
 
