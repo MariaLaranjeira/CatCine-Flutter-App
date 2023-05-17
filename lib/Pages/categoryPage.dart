@@ -121,6 +121,9 @@ class _CategoryPageState extends State<CategoryPage>{
 
   @override
   Widget build(BuildContext context) {
+
+    String userName = FirebaseAuth.instance.currentUser!.displayName!;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
@@ -315,10 +318,10 @@ class _CategoryPageState extends State<CategoryPage>{
                             ),
                           ),
 
-                          const Text(
-                            "by @SironaRyan",
+                          Text(
+                            "by @$userName",
                             textAlign: TextAlign.start,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16.0,
                               color: Colors.white,
                             ),

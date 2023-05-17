@@ -333,13 +333,13 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                       ),
                     ),
                     alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width - 32,
+                    width: MediaQuery.of(context).size.width,
                     height: (MediaQuery.of(context).size.width - 32)/3.1,
                     child: Row(
                         children: [
-                        SizedBox(width: MediaQuery.of(context).size.width/20.575),
+                        SizedBox(width: MediaQuery.of(context).size.width/26.2),
                         SizedBox.square(
-                          dimension: MediaQuery.of(context).size.width/4.572,
+                          dimension: MediaQuery.of(context).size.width/4.6,
                           child: RawMaterialButton(
                             fillColor: const Color(0x8B84898B),
                             shape: RoundedRectangleBorder(
@@ -371,9 +371,9 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: MediaQuery.of(context).size.width/27.43),
+                        SizedBox(width: MediaQuery.of(context).size.width/26.2),
                         SizedBox(
-                          height: (MediaQuery.of(context).size.width/5.88) * 3/2,
+                          height: (MediaQuery.of(context).size.width/5.9) * 3/2,
                           width: MediaQuery.of(context).size.width/1.62,
                           child: Stack(
                             fit: StackFit.expand,
@@ -383,38 +383,38 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                                 child: Container(
                                   decoration: boxDecorator(0),
                                   child: Image(image: image0,
-                                    height: (MediaQuery.of(context).size.width/5.88) * 3/2,
-                                    width: MediaQuery.of(context).size.width/5.88,
+                                    height: (MediaQuery.of(context).size.width/5.9) * 3/2,
+                                    width: MediaQuery.of(context).size.width/5.9,
                                     colorBlendMode: BlendMode.screen,
                                   ),
                                 ),
                               ),
                               Positioned(
-                                left: MediaQuery.of(context).size.width/5.88/5*4,
+                                left: MediaQuery.of(context).size.width/5.9/5*4,
                                 child: Container(
                                   decoration: boxDecorator(1),
                                   child: Image(image: image1,
-                                    height: (MediaQuery.of(context).size.width/5.88) * 3/2,
-                                    width: MediaQuery.of(context).size.width/5.88,
+                                    height: (MediaQuery.of(context).size.width/5.9) * 3/2,
+                                    width: MediaQuery.of(context).size.width/5.9,
                                     colorBlendMode: BlendMode.screen,
                                   ),
                                 ),
                               ),
                               Positioned(
-                                left: MediaQuery.of(context).size.width/5.88/5*8,
+                                left: MediaQuery.of(context).size.width/5.9/5*8,
                                 child: Container(
                                   decoration: boxDecorator(2),
                                   child: Image(image: image2,
-                                    height: (MediaQuery.of(context).size.width/5.88) * 3/2,
-                                    width: MediaQuery.of(context).size.width/5.88,
+                                    height: (MediaQuery.of(context).size.width/5.9) * 3/2,
+                                    width: MediaQuery.of(context).size.width/5.9,
                                     colorBlendMode: BlendMode.screen,
                                   ),
                                 ),
                               ),
                               Positioned(
-                                left: MediaQuery.of(context).size.width/5.88/5*12,
-                                height: (MediaQuery.of(context).size.width/5.88) * 3/2,
-                                width: MediaQuery.of(context).size.width/5.88,
+                                left: MediaQuery.of(context).size.width/5.9/5*12,
+                                height: (MediaQuery.of(context).size.width/5.9) * 3/2,
+                                width: MediaQuery.of(context).size.width/5.9,
                                 child: displayDecoratedBox()
                               ),
                             ],

@@ -26,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
 
   Future<void> signUp() async {
     try {
-      if (passwordConfirmed()) {
+      if (passwordConfirmed() && catNameController.text.trim().length > 3 && catNameController.text.trim().length <= 20) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text.trim(),
             password: passwordController.text.trim()
@@ -34,7 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
 
           var usersDB = FirebaseFirestore.instance.collection('users');
 
-          var ref = usersDB.doc(result.user!.uid);
+          var ref = usersDB.doc(catNameController.text.trim());
 
           await ref.set({
             'uid': result.user!.uid,
@@ -84,8 +84,14 @@ class _RegisterScreenState extends State<RegisterScreen>{
         );
 
       }
-      else {
+      else if (!passwordConfirmed()) {
         throw const FormatException("passwords-not-matching");
+      }
+      else if  (!(catNameController.text.trim().length > 3)){
+        throw const FormatException("catname-too-small");
+      }
+      else {
+        throw const FormatException("catname-too-big");
       }
     } on FirebaseAuthException catch (exception) {
       if (exception.code == "email-already-in-use") {
@@ -225,9 +231,75 @@ class _RegisterScreenState extends State<RegisterScreen>{
             }
         );
       }
+      else if(exception.message == "catname-too-small") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "CatName too small!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
+      else if(exception.message == "catname-too-big") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "CatName too big!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
     }
-
-
   }
 
   @override
@@ -252,7 +324,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
             ),
           ),
        Padding (
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
