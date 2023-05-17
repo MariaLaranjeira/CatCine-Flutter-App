@@ -17,6 +17,8 @@ class CategoryPage extends StatefulWidget{
   final Category category;
   const CategoryPage({super.key, required this.category});
 
+  late List<List<int,int>> updown;
+
   @override
   State<CategoryPage> createState() => _CategoryPageState();
 
@@ -27,7 +29,7 @@ class _CategoryPageState extends State<CategoryPage>{
   late Category cat;
   bool isLiked = false;
 
-  static CollectionReference catDB = FirebaseFirestore.instance.collection(
+  CollectionReference catDB = FirebaseFirestore.instance.collection(
       'categories');
 
   updateLikes() async {
