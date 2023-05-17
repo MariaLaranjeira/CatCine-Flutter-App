@@ -333,7 +333,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                       ),
                     ),
                     alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width - 32,
+                    width: MediaQuery.of(context).size.width-32,
                     height: (MediaQuery.of(context).size.width - 32)/3.1,
                     child: Row(
                         children: [
@@ -436,7 +436,12 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         elevation: 0.0,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         onPressed: () {
-                          newCat = Category(mediaCat,"", descCat.text.trim(), nameCat.text.trim(), 0, 0);
+                          List<List<int>> updown = [];
+                          for (int i = 0; i < mediaCat.length; i++){
+                            List<int> temp = [0,0];
+                            updown.add(temp);
+                          }
+                          newCat = Category(mediaCat,"", descCat.text.trim(), nameCat.text.trim(), 0, 0, updown);
                           addCat(newCat);
                           Navigator.push(context, PageRouteBuilder(
                             pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
