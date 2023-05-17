@@ -436,16 +436,56 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         elevation: 0.0,
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         onPressed: () {
-                          newCat = Category(mediaCat,"", descCat.text.trim(), nameCat.text.trim(), 0, 0);
-                          addCat(newCat);
-                          Navigator.push(context, PageRouteBuilder(
-                            pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                              return CategoryPage(category: newCat);
-                            },
-                            transitionDuration: Duration.zero,
-                            reverseTransitionDuration: Duration.zero,
-                          ),
-                          );
+                          if (nameCat.text.trim().length >= 3 && nameCat.text.trim().length <= 50){
+                            List<List<int>> updown = [];
+                            for (int i = 0; i < mediaCat.length; i++){
+                              List<int> temp = [0,0];
+                              updown.add(temp);
+                            }
+                            newCat = Category(mediaCat,"", descCat.text.trim(), nameCat.text.trim(), 0, 0, updown);
+                            addCat(newCat);
+                            Navigator.push(context, PageRouteBuilder(
+                              pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                                return CategoryPage(category: newCat);
+                              },
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
+                            ),
+                            );
+                          } else {
+                            showDialog(context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                      alignment: Alignment.topCenter,
+                                      shape: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                                      content:
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(
+                                            Icons.warning_amber_rounded,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Invalid Category name",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                  );
+                                }
+                            );
+                          }
                         },
                         child: const Text(
                           "Create" ,

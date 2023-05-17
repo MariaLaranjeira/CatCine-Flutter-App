@@ -26,19 +26,10 @@ class CategoryPage extends StatefulWidget{
 
 class _CategoryPageState extends State<CategoryPage>{
 
-  late List<List<int>> updown;
-
   late Category cat;
   bool isLiked = false;
   late final bool initialLike;
 
-
-  makeUpdown(){
-    for (int i = 0; i < cat.catMedia.length; i++){
-      List<int> temp = [0,0];
-      updown.add(temp);
-    }
-  }
 
   CollectionReference catDB = FirebaseFirestore.instance.collection(
       'categories');
@@ -407,16 +398,17 @@ class _CategoryPageState extends State<CategoryPage>{
                                           icon: const Icon(MyFlutterApp.upvote),
                                           color : const Color(0xFFD9D9D9),
                                           onPressed: () {
-                                            //updown[index][0]++;
+                                            setState(() {
+                                              cat.updown[index][0]++;
+                                            });
                                           },
                                         ),
                                       ),
-                                      const SizedBox(
+                                      SizedBox(
                                           height: 20,
                                           child: Text(
-                                            "0",
-                                            //"${updown[index][0]}",
-                                            style: TextStyle(
+                                            "${cat.updown[index][0]}",
+                                            style: const TextStyle(
                                               color: Colors.white,
                                             )
                                           )
@@ -428,7 +420,9 @@ class _CategoryPageState extends State<CategoryPage>{
                                           icon:  const Icon(MyFlutterApp.downvote),
                                           color : const Color(0xFFD9D9D9),
                                           onPressed: () {
-                                            //updown[index][1]++;
+                                            setState(() {
+                                              cat.updown[index][1]++;
+                                            });
                                           },
                                         ),
                                       ),
