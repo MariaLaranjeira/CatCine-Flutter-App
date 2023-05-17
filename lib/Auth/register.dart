@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:catcine_es/Auth/authinitial.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController catNameController = TextEditingController();
 
   bool passwordConfirmed() {
     return (passwordController.text.trim() == confirmPasswordController.text.trim());
@@ -25,7 +27,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
   Future<void> signUp() async {
     try {
       if (passwordConfirmed()) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text.trim(),
             password: passwordController.text.trim()
         );
@@ -66,6 +68,16 @@ class _RegisterScreenState extends State<RegisterScreen>{
               );
             }
         );
+
+        var usersDB = FirebaseFirestore.instance.collection('users');
+
+        var ref = usersDB.doc(userCredential.user!.uid);
+
+        await ref.set({
+          'uid': userCredential.user!.uid,
+          'catname': catNameController.text.trim()
+        });
+
       }
       else {
         throw const FormatException("passwords-not-matching");
@@ -209,6 +221,8 @@ class _RegisterScreenState extends State<RegisterScreen>{
         );
       }
     }
+
+
   }
 
   @override
@@ -244,6 +258,8 @@ class _RegisterScreenState extends State<RegisterScreen>{
                 const SizedBox(height: 230),
 
                 TextField(
+                  controller: catNameController,
+                  autocorrect: false,
                   decoration: InputDecoration(
                     filled:true,
                     fillColor: const Color(0xFFFFFFFF),
