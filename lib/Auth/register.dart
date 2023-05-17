@@ -27,10 +27,24 @@ class _RegisterScreenState extends State<RegisterScreen>{
   Future<void> signUp() async {
     try {
       if (passwordConfirmed()) {
-        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text.trim(),
             password: passwordController.text.trim()
-        );
+        ).then((result) async {
+
+          var usersDB = FirebaseFirestore.instance.collection('users');
+
+          var ref = usersDB.doc(result.user!.uid);
+
+          await ref.set({
+            'uid': result.user!.uid,
+            'catname': catNameController.text.trim()
+          });
+
+          result.user!.updateDisplayName(catNameController.text.trim());
+
+        });
+
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) => const MainPage()
@@ -68,15 +82,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
               );
             }
         );
-
-        var usersDB = FirebaseFirestore.instance.collection('users');
-
-        var ref = usersDB.doc(userCredential.user!.uid);
-
-        await ref.set({
-          'uid': userCredential.user!.uid,
-          'catname': catNameController.text.trim()
-        });
 
       }
       else {
