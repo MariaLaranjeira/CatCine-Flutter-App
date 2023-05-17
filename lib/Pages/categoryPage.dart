@@ -7,6 +7,7 @@ import 'package:catcine_es/Pages/searchMediaForCat.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:catcine_es/my_flutter_app_icons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/media.dart';
@@ -21,21 +22,21 @@ class CategoryPage extends StatefulWidget{
 
   @override
   State<CategoryPage> createState() => _CategoryPageState();
-
 }
 
 class _CategoryPageState extends State<CategoryPage>{
 
   late Category cat;
   bool isLiked = false;
+  late final bool initialLike;
 
   CollectionReference catDB = FirebaseFirestore.instance.collection(
       'categories');
 
   updateLikes() async {
-    var likes;
+    var likes = 0;
 
-    catDB
+    await catDB
         .doc(cat.title)
         .get()
         .then((DocumentSnapshot documentSnapshot) async {
@@ -48,9 +49,9 @@ class _CategoryPageState extends State<CategoryPage>{
     });
 
     if (isLiked){
-      likes--;
-    } else {
       likes++;
+    } else {
+      likes--;
     }
     var ref = catDB.doc(cat.title);
     await ref.update({
@@ -100,10 +101,13 @@ class _CategoryPageState extends State<CategoryPage>{
   void initState(){
     super.initState();
     cat = widget.category;
-
   }
 
-
+  @override
+  void dispose() {
+    super.dispose();
+    updateLikes();
+  }
 
   @override
   Widget build(BuildContext context) {

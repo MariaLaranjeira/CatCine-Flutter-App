@@ -94,6 +94,8 @@ class _ExploreMediaState extends State<ExploreMedia>{
   @override
   Widget build(BuildContext context) {
 
+    print(FirebaseAuth.instance.currentUser!.uid);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
