@@ -36,8 +36,7 @@ class _CategoryPageState extends State<CategoryPage>{
   late bool isAdmin;
   Map<String, bool> votedMedia = {};
 
-  CollectionReference catDB = FirebaseFirestore.instance.collection(
-      'categories');
+  CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
 
   CollectionReference userDB = FirebaseFirestore.instance.collection('users');
 
@@ -168,7 +167,9 @@ class _CategoryPageState extends State<CategoryPage>{
     var ref = await catDB.doc(id).get();
     return ref.exists;
   }
+
   updateCatListOnAddedMedia() async {
+
     var ref = catDB.doc(cat.title);
     for (Media media in cat.catMedia) {
       if (!await doesMediaExist(media.id)){

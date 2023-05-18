@@ -136,7 +136,6 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
   
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
