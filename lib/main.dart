@@ -11,7 +11,6 @@ Map<String, Media> allLocalMedia = {};
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   runApp(const MyApp());
 }
 
@@ -142,6 +141,7 @@ class _HomePageState extends State<HomePage> {
         );
       }
     });
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return const MainPage();
   }
 }
