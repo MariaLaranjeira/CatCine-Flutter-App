@@ -27,12 +27,46 @@ class CategoryPage extends StatefulWidget{
 class _CategoryPageState extends State<CategoryPage>{
 
   late Category cat;
-  bool isLiked = false;
   late final bool initialLike;
-
+  String username = '';
+  bool isLiked = false;
+  Map<String, bool> votedMedia = {};
 
   CollectionReference catDB = FirebaseFirestore.instance.collection(
       'categories');
+
+  CollectionReference userDB = FirebaseFirestore.instance.collection('users');
+
+  disposeSave() async {
+    var user = userDB.doc(FirebaseAuth.instance.currentUser!.displayName!);
+    var catColection = user.collection('catColections');
+    var cat_ = catColection.doc(cat.title);
+    await cat_.set({
+      'isLiked': isLiked,
+    });
+    var voted = cat_.collection('voted_media');
+    for (String element in votedMedia.keys) {
+      var media = voted.doc(element);
+      await media.set({
+        'voted': votedMedia[element]
+      });
+    }
+  }
+
+  loadCreatorName() async {
+    setState(() async {
+      await catDB
+          .doc(cat.title)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          var data = documentSnapshot.data();
+          var res = data as Map<String, dynamic>;
+          username = res['creator'];
+        }
+      });
+    });
+  }
 
   updateLikes() async {
     var likes = 0;
@@ -98,10 +132,34 @@ class _CategoryPageState extends State<CategoryPage>{
     return const Icon(MyFlutterApp.heart_outline);
   }
 
+  getColorUpvote(String id){
+    if(!votedMedia.containsKey(id)) {
+        return const Color(0xFFD9D9D9);
+    } else if (votedMedia[id]!) {
+      return const Color(0xFF42A7AD);
+    }
+    else {
+      return const Color(0xFFD9D9D9);
+    }
+  }
+
+  getColorDownVote(String id){
+    if(!votedMedia.containsKey(id)) {
+      return const Color(0xFFD9D9D9);
+    }
+    else if (!votedMedia[id]!) {
+      return const Color(0xFFEC6B76);
+    }
+    else {
+      return const Color(0xFFD9D9D9);
+    }
+  }
+
   @override
   void initState(){
     super.initState();
     cat = widget.category;
+    loadCreatorName();
   }
 
   @override
@@ -112,8 +170,6 @@ class _CategoryPageState extends State<CategoryPage>{
 
   @override
   Widget build(BuildContext context) {
-
-    String userName = FirebaseAuth.instance.currentUser!.displayName!;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -310,7 +366,7 @@ class _CategoryPageState extends State<CategoryPage>{
                           ),
 
                           Text(
-                            "by @$userName",
+                            "by @$username",
                             textAlign: TextAlign.start,
                             style: const TextStyle(
                               fontSize: 16.0,
@@ -396,11 +452,22 @@ class _CategoryPageState extends State<CategoryPage>{
                                         child: IconButton(
                                           iconSize: 40,
                                           icon: const Icon(MyFlutterApp.upvote),
-                                          color : const Color(0xFFD9D9D9),
+                                          color : getColorUpvote(cat.catMedia[index].id),
                                           onPressed: () {
-                                            setState(() {
-                                              cat.updown[index][0]++;
-                                            });
+                                            if (!votedMedia.containsKey(cat.catMedia[index].id)) {
+                                              setState(() {
+                                                votedMedia[cat.catMedia[index].id] = true;
+                                              });
+                                            } else if (votedMedia[cat.catMedia[index].id]! == true) {
+                                              setState(() {
+                                                votedMedia.remove(cat.catMedia[index].id);
+                                              });
+                                            }
+                                            else {
+                                              setState(() {
+                                                votedMedia[cat.catMedia[index].id] = true;
+                                              });
+                                            }
                                           },
                                         ),
                                       ),
@@ -418,11 +485,22 @@ class _CategoryPageState extends State<CategoryPage>{
                                         child: IconButton(
                                           iconSize: 40,
                                           icon:  const Icon(MyFlutterApp.downvote),
-                                          color : const Color(0xFFD9D9D9),
+                                          color : getColorDownVote(cat.catMedia[index].id),
                                           onPressed: () {
-                                            setState(() {
-                                              cat.updown[index][1]++;
-                                            });
+                                            if (!votedMedia.containsKey(cat.catMedia[index].id)) {
+                                              setState(() {
+                                                votedMedia[cat.catMedia[index].id] = false;
+                                              });
+                                            } else if (votedMedia[cat.catMedia[index].id]! == false) {
+                                              setState(() {
+                                                votedMedia.remove(cat.catMedia[index].id);
+                                              });
+                                            }
+                                            else {
+                                              setState(() {
+                                                votedMedia[cat.catMedia[index].id] = false;
+                                              });
+                                            }
                                           },
                                         ),
                                       ),

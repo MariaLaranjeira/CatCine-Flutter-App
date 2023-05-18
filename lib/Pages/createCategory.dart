@@ -5,6 +5,7 @@ import 'package:catcine_es/Pages/homePage.dart';
 import 'package:catcine_es/Pages/searchMediaForCat.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -442,7 +443,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                               List<int> temp = [0,0];
                               updown.add(temp);
                             }
-                            newCat = Category(mediaCat,"", descCat.text.trim(), nameCat.text.trim(), 0, 0, updown);
+                            newCat = Category(mediaCat, FirebaseAuth.instance.currentUser!.displayName!, descCat.text.trim(), nameCat.text.trim(), 0, 0, updown);
                             addCat(newCat);
                             Navigator.push(context, PageRouteBuilder(
                               pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
