@@ -9,7 +9,7 @@ class Category {
   String description;
   int likes;
   int interactions;
-  List<List<int>> updown;
+  Map<String, List<int>> updown;
   //String backDrop;
 
   Category(
@@ -31,7 +31,7 @@ class Category {
     //this.backDrop = "",
     this.interactions = 1,
     this.likes = 1,
-    this.updown = const [[]],
+    this.updown = const {},
   });
 
   factory Category.fromJson(Map<String,dynamic> json){

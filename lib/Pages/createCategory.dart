@@ -437,10 +437,9 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         onPressed: () {
                           if (nameCat.text.trim().length >= 3 && nameCat.text.trim().length <= 50){
-                            List<List<int>> updown = [];
-                            for (int i = 0; i < mediaCat.length; i++){
-                              List<int> temp = [0,0];
-                              updown.add(temp);
+                            Map<String,List<int>> updown = {};
+                            for (var elem in mediaCat){
+                              updown[elem.id] = [0,0];
                             }
                             newCat = Category(mediaCat, FirebaseAuth.instance.currentUser!.displayName!, descCat.text.trim(), nameCat.text.trim(), 0, 0, updown);
                             addCat(newCat);

@@ -28,8 +28,12 @@ class _CategoryPageState extends State<CategoryPage>{
 
   late Category cat;
   late final bool initialLike;
+  late final int initialInteractions;
+
   String username = '';
   bool isLiked = false;
+  bool isEditMode = false;
+  late bool isAdmin;
   Map<String, bool> votedMedia = {};
 
   CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
@@ -67,8 +71,65 @@ class _CategoryPageState extends State<CategoryPage>{
     });
   }
 
-  updateLikes() async {
+  getAllCatInfo() async {
+    await catDB
+        .doc(cat.title)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) async {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        var res = data as Map<String, dynamic>;
+
+        cat.likes = res['likes'];
+        cat.interactions = res['interactions'];
+      }
+    });
+
+    var catmedia = await catDB.doc(cat.title).collection('catmedia').get();
+    var catmediaDB = catDB.doc(cat.title).collection('catmedia');
+
+    List<String> _mediaId = [];
+    for (var doc in catmedia.docs) {
+      _mediaId.add(doc.id);
+    }
+
+    for (String _key in _mediaId){
+      catmediaDB
+          .doc(_key)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          var data = documentSnapshot.data();
+          var res = data as Map<String, dynamic>;
+
+          cat.updown[_key]![0] = res['upvotes'];
+          cat.updown[_key]![1] = res['downvotes'];
+
+        }
+      });
+    }
+
+    var usercatsDB = userDB.doc(username).collection('interacted_cats');
+    //var usercats = await userDB.doc(username).collection('interacted_cats').get();
+
+    var catInfoUser = usercatsDB.doc(cat.title);
+    await catInfoUser.get().then((DocumentSnapshot documentSnapshot) async {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        var res = data as Map<String, dynamic>;
+
+        initialLike = res['liked'];
+      }
+    });
+
+    usercatsDB.doc(/*id do filme*/).collection('interacted_media');
+
+
+  }
+
+  updateLikesInts() async {
     var likes = 0;
+    var interactions = 0;
 
     await catDB
         .doc(cat.title)
@@ -79,26 +140,36 @@ class _CategoryPageState extends State<CategoryPage>{
         var res = data as Map<String, dynamic>;
 
         likes = res['likes'];
+        interactions = res['interactions'];
       }
     });
 
-    if (isLiked){
+
+    if (isLiked != initialLike && isLiked){
       likes++;
-    } else {
+    } else if (isLiked != initialLike && !isLiked){
       likes--;
     }
+
+
+    interactions += votedMedia.length - initialInteractions;
+
+
     var ref = catDB.doc(cat.title);
     await ref.update({
       'likes':likes,
+      'interactions':interactions,
     });
   }
+
 
   Future<bool> doesMediaExist(String id) async {
     var ref = await catDB.doc(id).get();
     return ref.exists;
   }
 
-  updateList() async {
+  updateCatListOnAddedMedia() async {
+
     var ref = catDB.doc(cat.title);
     for (Media media in cat.catMedia) {
       if (!await doesMediaExist(media.id)){
@@ -159,13 +230,14 @@ class _CategoryPageState extends State<CategoryPage>{
   void initState(){
     super.initState();
     cat = widget.category;
+    getAllCatInfo();
     loadCreatorName();
   }
 
   @override
   void dispose() {
     super.dispose();
-    updateLikes();
+    updateLikesInts();
   }
 
   @override
@@ -314,7 +386,7 @@ class _CategoryPageState extends State<CategoryPage>{
                               IconButton(
                                 icon: const Icon(Icons.add),
                                 onPressed: () {
-                                  updateList();
+                                  updateCatListOnAddedMedia();
                                   Navigator.push(context, PageRouteBuilder(
                                   pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
                                     return const SearchCreateCat();
@@ -337,7 +409,6 @@ class _CategoryPageState extends State<CategoryPage>{
                                 icon: getIcon(),
                                 onPressed: () {
                                   setState(() {
-                                    updateLikes();
                                     if (isLiked){
                                       cat.likes--;
                                     } else {
@@ -457,15 +528,21 @@ class _CategoryPageState extends State<CategoryPage>{
                                             if (!votedMedia.containsKey(cat.catMedia[index].id)) {
                                               setState(() {
                                                 votedMedia[cat.catMedia[index].id] = true;
+                                                cat.updown[cat.catMedia[index].id]![0]++;
+                                                cat.interactions++;
                                               });
                                             } else if (votedMedia[cat.catMedia[index].id]! == true) {
                                               setState(() {
                                                 votedMedia.remove(cat.catMedia[index].id);
+                                                cat.updown[cat.catMedia[index].id]![0]--;
+                                                cat.interactions--;
                                               });
                                             }
                                             else {
                                               setState(() {
                                                 votedMedia[cat.catMedia[index].id] = true;
+                                                cat.updown[cat.catMedia[index].id]![0]++;
+                                                cat.updown[cat.catMedia[index].id]![1]--;
                                               });
                                             }
                                           },
@@ -474,7 +551,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                       SizedBox(
                                           height: 20,
                                           child: Text(
-                                            "${cat.updown[index][0]}",
+                                            "${cat.updown[cat.catMedia[index].id]![0]}",
                                             style: const TextStyle(
                                               color: Colors.white,
                                             )
@@ -490,15 +567,21 @@ class _CategoryPageState extends State<CategoryPage>{
                                             if (!votedMedia.containsKey(cat.catMedia[index].id)) {
                                               setState(() {
                                                 votedMedia[cat.catMedia[index].id] = false;
+                                                cat.updown[cat.catMedia[index].id]![1]++;
+                                                cat.interactions++;
                                               });
                                             } else if (votedMedia[cat.catMedia[index].id]! == false) {
                                               setState(() {
                                                 votedMedia.remove(cat.catMedia[index].id);
+                                                cat.updown[cat.catMedia[index].id]![1]--;
+                                                cat.interactions--;
                                               });
                                             }
                                             else {
                                               setState(() {
                                                 votedMedia[cat.catMedia[index].id] = false;
+                                                cat.updown[cat.catMedia[index].id]![1]++;
+                                                cat.updown[cat.catMedia[index].id]![0]--;
                                               });
                                             }
                                           },
