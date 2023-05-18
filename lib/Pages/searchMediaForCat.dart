@@ -177,11 +177,8 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    print(allLocalMedia.length);
-    Media media = allLocalMedia['tt5420376']!;
     return Scaffold(
       appBar: AppBar(
         leadingWidth: double.infinity,

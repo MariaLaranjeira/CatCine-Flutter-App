@@ -32,8 +32,7 @@ class _CategoryPageState extends State<CategoryPage>{
   bool isLiked = false;
   Map<String, bool> votedMedia = {};
 
-  CollectionReference catDB = FirebaseFirestore.instance.collection(
-      'categories');
+  CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
 
   CollectionReference userDB = FirebaseFirestore.instance.collection('users');
 
@@ -98,6 +97,7 @@ class _CategoryPageState extends State<CategoryPage>{
     var ref = await catDB.doc(id).get();
     return ref.exists;
   }
+
   updateList() async {
     var ref = catDB.doc(cat.title);
     for (Media media in cat.catMedia) {
