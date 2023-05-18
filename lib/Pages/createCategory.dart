@@ -100,6 +100,11 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
   static CollectionReference catDB = FirebaseFirestore.instance.collection(
       'categories');
 
+  static Future<bool> doesCatExist(String id) async {
+    var ref = await catDB.doc(id).get();
+    return ref.exists;
+  }
+
   static addCat(Category cat) async {
 
     var ref = catDB.doc(cat.title);

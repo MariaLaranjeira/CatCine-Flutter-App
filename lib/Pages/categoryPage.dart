@@ -9,6 +9,7 @@ import 'package:catcine_es/my_flutter_app_icons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../Model/media.dart';
 
@@ -30,6 +31,8 @@ class _CategoryPageState extends State<CategoryPage>{
   late final bool initialLike;
   late final int initialInteractions;
 
+  TextEditingController descCat = TextEditingController();
+
   String username = '';
   bool isLiked = false;
   bool isEditMode = false;
@@ -37,8 +40,13 @@ class _CategoryPageState extends State<CategoryPage>{
   Map<String, bool> votedMedia = {};
 
   CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
-
   CollectionReference userDB = FirebaseFirestore.instance.collection('users');
+
+
+  Future<bool> doesUserCatExist(String title) async {
+    var ref = await catDB.doc(FirebaseAuth.instance.currentUser!.displayName).collection('interacted_cats').doc(title).get();
+    return ref.exists;
+  }
 
   disposeSave() async {
     var user = userDB.doc(FirebaseAuth.instance.currentUser!.displayName!);
@@ -109,25 +117,47 @@ class _CategoryPageState extends State<CategoryPage>{
       });
     }
 
-    var usercatsDB = userDB.doc(username).collection('interacted_cats');
-    //var usercats = await userDB.doc(username).collection('interacted_cats').get();
+    if (await doesUserCatExist(cat.title)){
+      var usercatsDB = userDB.doc(username).collection('interacted_cats');
 
-    var catInfoUser = usercatsDB.doc(cat.title);
-    await catInfoUser.get().then((DocumentSnapshot documentSnapshot) async {
-      if (documentSnapshot.exists) {
-        var data = documentSnapshot.data();
-        var res = data as Map<String, dynamic>;
+      var catInfoUser = usercatsDB.doc(cat.title);
+      await catInfoUser.get().then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          var data = documentSnapshot.data();
+          var res = data as Map<String, dynamic>;
 
-        initialLike = res['liked'];
+          initialLike = res['liked'];
+        }
+      });
+
+      var usercatsmediaDB = catInfoUser.collection('interacted_media');
+      var usercatsmedia = await catInfoUser.collection('interacted_media').get();
+
+      List<String> _usercatmediaId = [];
+      for (var doc in usercatsmedia.docs) {
+        _usercatmediaId.add(doc.id);
       }
-    });
 
-    usercatsDB.doc(/*id do filme*/).collection('interacted_media');
+      for (String _key in _usercatmediaId) {
+        var mediaInfoCat = usercatsmediaDB.doc(_key);
+        await mediaInfoCat.get().then((DocumentSnapshot documentSnapshot) async {
+          if (documentSnapshot.exists) {
+            var data = documentSnapshot.data();
+            var res = data as Map<String, dynamic>;
 
+            votedMedia[_key] = res['voted'];
 
+          }
+        });
+      }
+      initialInteractions = votedMedia.length;
+    } else {
+      initialInteractions = 0;
+      initialLike = false;
+    }
   }
 
-  updateLikesInts() async {
+  updateAllCatInfo() async {
     var likes = 0;
     var interactions = 0;
 
@@ -144,22 +174,69 @@ class _CategoryPageState extends State<CategoryPage>{
       }
     });
 
-
     if (isLiked != initialLike && isLiked){
       likes++;
     } else if (isLiked != initialLike && !isLiked){
       likes--;
     }
 
-
     interactions += votedMedia.length - initialInteractions;
-
 
     var ref = catDB.doc(cat.title);
     await ref.update({
       'likes':likes,
       'interactions':interactions,
     });
+
+    var catmedia = await catDB.doc(cat.title).collection('catmedia').get();
+    var catmediaDB = catDB.doc(cat.title).collection('catmedia');
+
+    var tempUp;
+    var tempDown;
+
+    List<String> _mediaId = [];
+    for (var doc in catmedia.docs) {
+      _mediaId.add(doc.id);
+    }
+
+    for (String _key in _mediaId){
+      catmediaDB
+          .doc(_key)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          var data = documentSnapshot.data();
+          var res = data as Map<String, dynamic>;
+
+          tempUp = res['upvotes'];
+          tempDown = res['downvotes'];
+
+        }
+      });
+    }
+
+
+    for (var media in cat.catMedia){
+      var reffer = ref.collection('catmedia').doc(media.id);
+      await reffer.update({
+        'upvotes': cat.updown[media.id]![0],
+        'downvotes': cat.updown[media.id]![1],
+      });
+    }
+
+
+    if (await doesUserCatExist(cat.title)){
+      await userDB.doc(username).collection('interacted_cats').doc(cat.title).delete();
+    }
+
+    var usercat = userDB.doc(username).collection('interacted_cats').doc(cat.title);
+
+    for(var elem in votedMedia.keys) {
+      usercat.set({
+        elem : votedMedia[elem],
+      });
+    }
+
   }
 
 
@@ -237,60 +314,31 @@ class _CategoryPageState extends State<CategoryPage>{
   @override
   void dispose() {
     super.dispose();
-    updateLikesInts();
+    updateAllCatInfo();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: const Color(0xff393d5a),
+    if (!isEditMode) {
+      return Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: const Color(0xff393d5a),
 
-      bottomNavigationBar: BottomAppBar(
-        color: const Color(0xCACBCBD2),
-        child: IconTheme(
-          data: const IconThemeData(color: Color(0xCB6D706B)),
-          child:Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.home),
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
-                    pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                      return const Home();
-                    },
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
-                  ),
-                        (Route<dynamic> route) => false,
-                  );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.person),
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
-                    pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                      return const Profile();
-                    },
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
-                  ),
-                        (Route<dynamic> route) => false,
-                  );
-                },
-              ),
-              SizedBox(
-                height: 60,
-                child: IconButton(
-                  iconSize: 60,
-                  icon: Image.asset('images/catIcon.png'),
+        bottomNavigationBar: BottomAppBar(
+          color: const Color(0xCACBCBD2),
+          child: IconTheme(
+            data: const IconThemeData(color: Color(0xCB6D706B)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.home),
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
-                      pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                        return const CreateCategoryScreen();
+                      pageBuilder: (BuildContext context, Animation<
+                          double> animation1, Animation<double> animation2) {
+                        return const Home();
                       },
                       transitionDuration: Duration.zero,
                       reverseTransitionDuration: Duration.zero,
@@ -299,345 +347,940 @@ class _CategoryPageState extends State<CategoryPage>{
                     );
                   },
                 ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
-                    pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                      return const ExploreMedia();
-                    },
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
-                  ),
-                        (Route<dynamic> route) => false,
-                  );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.category),
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
-                    pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                      return const ExploreCategories();
+                IconButton(
+                  icon: const Icon(Icons.person),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<
+                          double> animation1, Animation<double> animation2) {
+                        return const Profile();
                       },
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 60,
+                  child: IconButton(
+                    iconSize: 60,
+                    icon: Image.asset('images/catIcon.png'),
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                        pageBuilder: (BuildContext context, Animation<
+                            double> animation1, Animation<double> animation2) {
+                          return const CreateCategoryScreen();
+                        },
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                            (Route<dynamic> route) => false,
+                      );
+                    },
                   ),
-                        (Route<dynamic> route) => false,
-                  );
-                },
-              ),
-            ],
+                ),
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<
+                          double> animation1, Animation<double> animation2) {
+                        return const ExploreMedia();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.category),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<
+                          double> animation1, Animation<double> animation2) {
+                        return const ExploreCategories();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
-      ),
 
 
-      body: Stack(
-        children: [
-          Container (
-          constraints: const BoxConstraints.expand(),
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                alignment: Alignment.topLeft,
-                image: AssetImage('images/catBackdrop.png'),
-                fit: BoxFit.contain,
-              )
-          ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 35.0,
-                ),
+        body: Stack(
+          children: [
+            Container(
+              constraints: const BoxConstraints.expand(),
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    alignment: Alignment.topLeft,
+                    image: AssetImage('images/catBackdrop.png'),
+                    fit: BoxFit.contain,
+                  )
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 35.0,
+                    ),
 
-                SizedBox(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height/6.5,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: Container(
-                          width: 147,
-                          height: 39,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: const Color(0xB3D9D9D9),
-                          ),
-                          child: Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {  },
-                                icon: const Icon(Icons.edit),
-                                color: const Color(0xFF393D5A),
-                              ),
-                              Container(
-                                color: const Color(0xCCA7A7A7),
-                                height: 50,
-                                width: 0.5,
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.add),
-                                onPressed: () {
-                                  updateCatListOnAddedMedia();
-                                  Navigator.push(context, PageRouteBuilder(
-                                  pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                                    return const SearchCreateCat();
-                                  },
-                                  transitionDuration: Duration.zero,
-                                  reverseTransitionDuration: Duration.zero,
-                                  ),
-                                  ).whenComplete(() =>
-                                      setState(() {})
-                                  );
-                                },
-                                color: const Color(0xFF393D5A),
-                              ),
-                              Container(
-                                color: const Color(0xCCA7A7A7),
-                                height: 50,
-                                width: 0.5,
-                              ),
-                              IconButton(
-                                icon: getIcon(),
-                                onPressed: () {
-                                  setState(() {
-                                    if (isLiked){
-                                      cat.likes--;
-                                    } else {
-                                      cat.likes++;
-                                    }
-                                    isLiked = !isLiked;
-                                  });
-                                },
-                                color: const Color(0xFF393D5A),
-                              ),
-                            ]
-                          ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    SizedBox(
+                      width: double.infinity,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 6.5,
+                      child: Stack(
                         children: [
-                          Text(
-                            cat.title,
-                            style: const TextStyle(
-                              fontSize: 40,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              width: 147,
+                              height: 39,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: const Color(0xB3D9D9D9),
+                              ),
+                              child: Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isEditMode = !isEditMode;
+                                        });
+                                      },
+                                      icon: const Icon(Icons.edit),
+                                      color: const Color(0xFF393D5A),
+                                    ),
+                                    Container(
+                                      color: const Color(0xCCA7A7A7),
+                                      height: 50,
+                                      width: 0.5,
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        updateCatListOnAddedMedia();
+                                        Navigator.push(
+                                          context, PageRouteBuilder(
+                                          pageBuilder: (BuildContext context,
+                                              Animation<double> animation1,
+                                              Animation<double> animation2) {
+                                            return const SearchCreateCat();
+                                          },
+                                          transitionDuration: Duration.zero,
+                                          reverseTransitionDuration: Duration
+                                              .zero,
+                                        ),
+                                        ).whenComplete(() =>
+                                            setState(() {})
+                                        );
+                                      },
+                                      color: const Color(0xFF393D5A),
+                                    ),
+                                    Container(
+                                      color: const Color(0xCCA7A7A7),
+                                      height: 50,
+                                      width: 0.5,
+                                    ),
+                                    IconButton(
+                                      icon: getIcon(),
+                                      onPressed: () {
+                                        setState(() {
+                                          if (isLiked) {
+                                            cat.likes--;
+                                          } else {
+                                            cat.likes++;
+                                          }
+                                          isLiked = !isLiked;
+                                        });
+                                      },
+                                      color: const Color(0xFF393D5A),
+                                    ),
+                                  ]
+                              ),
                             ),
                           ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                cat.title,
+                                style: const TextStyle(
+                                  fontSize: 40,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
 
-                          Text(
-                            "by @$username",
-                            textAlign: TextAlign.start,
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.white,
-                            ),
+                              Text(
+                                "by @$username",
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
 
-                const SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  children: [
                     const SizedBox(
-                      height: 20,
-                      child: Image(
-                        image: AssetImage('images/heart.png'),
-                      ),
+                      height: 30,
+                    ),
+                    Row(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                          child: Image(
+                            image: AssetImage('images/heart.png'),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 7,
+                        ),
+                        Text(
+                            "${cat.likes}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                            )
+                        ),
+                        const SizedBox(
+                          width: 13,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                          child: Image(
+                            image: AssetImage('images/votes.png'),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 7,
+                        ),
+                        Text(
+                            "${cat.interactions}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                            )
+                        ),
+                      ],
                     ),
                     const SizedBox(
-                      width: 7,
+                      height: 13,
                     ),
                     Text(
-                      "${cat.likes}",
+                      cat.description,
                       style: const TextStyle(
+                        fontSize: 18.0,
                         color: Colors.white,
-                      )
-                    ),
-                    const SizedBox(
-                      width: 13,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                      child: Image(
-                        image: AssetImage('images/votes.png'),
                       ),
                     ),
-                    const SizedBox(
-                      width: 7,
+                    const SizedBox(height: 9.0),
+                    Container(
+                      height: 0.9,
+                      width: double.infinity,
+                      color: const Color(0xFF6B6D7B),
                     ),
-                    Text(
-                      "${cat.interactions}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                        )
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 13,
-                ),
-                Text(
-                  cat.description,
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox( height:9.0),
-                Container(
-                  height: 0.9,
-                  width: double.infinity,
-                  color: const Color(0xFF6B6D7B),
-                ),
-                Expanded(
-                  child: DraggableScrollableActuator(
-                    child: ListView.builder(
-                      itemCount: cat.catMedia.length,
-                      itemBuilder: (context, index) => ListTile(
-                        contentPadding: const EdgeInsets.all(0),
-                        title: Column(
-                          children: [
-                            Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 55,
-                                        child: IconButton(
-                                          iconSize: 40,
-                                          icon: const Icon(MyFlutterApp.upvote),
-                                          color : getColorUpvote(cat.catMedia[index].id),
-                                          onPressed: () {
-                                            if (!votedMedia.containsKey(cat.catMedia[index].id)) {
-                                              setState(() {
-                                                votedMedia[cat.catMedia[index].id] = true;
-                                                cat.updown[cat.catMedia[index].id]![0]++;
-                                                cat.interactions++;
-                                              });
-                                            } else if (votedMedia[cat.catMedia[index].id]! == true) {
-                                              setState(() {
-                                                votedMedia.remove(cat.catMedia[index].id);
-                                                cat.updown[cat.catMedia[index].id]![0]--;
-                                                cat.interactions--;
-                                              });
-                                            }
-                                            else {
-                                              setState(() {
-                                                votedMedia[cat.catMedia[index].id] = true;
-                                                cat.updown[cat.catMedia[index].id]![0]++;
-                                                cat.updown[cat.catMedia[index].id]![1]--;
-                                              });
-                                            }
-                                          },
+                    Expanded(
+                      child: DraggableScrollableActuator(
+                        child: ListView.builder(
+                          itemCount: cat.catMedia.length,
+                          itemBuilder: (context, index) =>
+                              ListTile(
+                                contentPadding: const EdgeInsets.all(0),
+                                title: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 50,
+                                              child: IconButton(
+                                                iconSize: 35,
+                                                icon: const Icon(
+                                                    MyFlutterApp.upvote),
+                                                color: getColorUpvote(
+                                                    cat.catMedia[index].id),
+                                                onPressed: () {
+                                                  if (!votedMedia.containsKey(
+                                                      cat.catMedia[index].id)) {
+                                                    setState(() {
+                                                      votedMedia[cat
+                                                          .catMedia[index].id] =
+                                                      true;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![0]++;
+                                                      cat.interactions++;
+                                                    });
+                                                  } else if (votedMedia[cat
+                                                      .catMedia[index].id]! ==
+                                                      true) {
+                                                    setState(() {
+                                                      votedMedia.remove(
+                                                          cat.catMedia[index]
+                                                              .id);
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![0]--;
+                                                      cat.interactions--;
+                                                    });
+                                                  }
+                                                  else {
+                                                    setState(() {
+                                                      votedMedia[cat
+                                                          .catMedia[index].id] =
+                                                      true;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![0]++;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![1]--;
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height: 17,
+                                                child: Text(
+                                                    "${cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![0]}",
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    )
+                                                )
+                                            ),
+                                            SizedBox(
+                                              height: 50,
+                                              child: IconButton(
+                                                iconSize: 35,
+                                                icon: const Icon(
+                                                    MyFlutterApp.downvote),
+                                                color: getColorDownVote(
+                                                    cat.catMedia[index].id),
+                                                onPressed: () {
+                                                  if (!votedMedia.containsKey(
+                                                      cat.catMedia[index].id)) {
+                                                    setState(() {
+                                                      votedMedia[cat
+                                                          .catMedia[index].id] =
+                                                      false;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![1]++;
+                                                      cat.interactions++;
+                                                    });
+                                                  } else if (votedMedia[cat
+                                                      .catMedia[index].id]! ==
+                                                      false) {
+                                                    setState(() {
+                                                      votedMedia.remove(
+                                                          cat.catMedia[index]
+                                                              .id);
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![1]--;
+                                                      cat.interactions--;
+                                                    });
+                                                  }
+                                                  else {
+                                                    setState(() {
+                                                      votedMedia[cat
+                                                          .catMedia[index].id] =
+                                                      false;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![1]++;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![0]--;
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      SizedBox(
-                                          height: 20,
-                                          child: Text(
-                                            "${cat.updown[cat.catMedia[index].id]![0]}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            )
-                                          )
-                                      ),
-                                      SizedBox(
-                                        height: 55,
-                                        child: IconButton(
-                                          iconSize: 40,
-                                          icon:  const Icon(MyFlutterApp.downvote),
-                                          color : getColorDownVote(cat.catMedia[index].id),
-                                          onPressed: () {
-                                            if (!votedMedia.containsKey(cat.catMedia[index].id)) {
-                                              setState(() {
-                                                votedMedia[cat.catMedia[index].id] = false;
-                                                cat.updown[cat.catMedia[index].id]![1]++;
-                                                cat.interactions++;
-                                              });
-                                            } else if (votedMedia[cat.catMedia[index].id]! == false) {
-                                              setState(() {
-                                                votedMedia.remove(cat.catMedia[index].id);
-                                                cat.updown[cat.catMedia[index].id]![1]--;
-                                                cat.interactions--;
-                                              });
-                                            }
-                                            else {
-                                              setState(() {
-                                                votedMedia[cat.catMedia[index].id] = false;
-                                                cat.updown[cat.catMedia[index].id]![1]++;
-                                                cat.updown[cat.catMedia[index].id]![0]--;
-                                              });
-                                            }
-                                          },
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              10.0),
+                                          child: SizedBox(
+                                            width: MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width / 5,
+                                            height: (MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width / 5) * 3 / 2,
+                                            child: Image(
+                                              fit: BoxFit.fill,
+                                              isAntiAlias: true,
+                                              image: getPosterURL(
+                                                  cat.catMedia[index]),
+                                              semanticLabel: "${cat
+                                                  .catMedia[index]
+                                                  .mediaName}...",
+                                              loadingBuilder: (context, child,
+                                                  progress) {
+                                                return progress == null
+                                                    ? child
+                                                    : const LinearProgressIndicator();
+                                              },
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width/5,
-                                      height: (MediaQuery.of(context).size.width/5) * 3/2,
-                                      child: Image(
-                                        fit: BoxFit.fill,
-                                        isAntiAlias: true,
-                                        image: getPosterURL(cat.catMedia[index]),
-                                        semanticLabel: "${cat.catMedia[index].mediaName}...",
-                                        loadingBuilder: (context, child, progress) {
-                                          return progress == null ? child : const LinearProgressIndicator();
-                                        },
+                                        const SizedBox(width: 10,),
+                                        Expanded(
+                                          child: RichText(
+                                            text: TextSpan(
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                      text: "${getTrimmedName(
+                                                          cat
+                                                              .catMedia[index])}\n",
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight
+                                                              .bold,
+                                                          fontSize: 20)),
+                                                  TextSpan(
+                                                      text: cat.catMedia[index]
+                                                          .description,
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16)),
+                                                ]
+                                            ),
+                                            maxLines: 5,
+                                            overflow: TextOverflow.fade,
+                                            softWrap: true,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10,),
-                                Expanded(
-                                  child: RichText(
-                                    text : TextSpan (
-                                        children: <TextSpan> [
-                                          TextSpan(text:"${getTrimmedName(cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                                          TextSpan(text:cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
-                                        ]
+                                    const SizedBox(height: 4),
+                                    Container(
+                                      height: 0.9,
+                                      width: double.infinity,
+                                      color: const Color(0xFF6B6D7B),
                                     ),
-                                    maxLines: 5,
-                                    overflow: TextOverflow.fade,
-                                    softWrap: true,
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Container(
-                              height: 0.9,
-                              width: double.infinity,
-                              color: const Color(0xFF6B6D7B),
-                            ),
-                          ],
+                              ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
+                )
+            ),
+          ],
+        ),
+      );
+    } else {
+      descCat.text = cat.description;
+      return Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: const Color(0xff393d5a),
+
+        appBar: AppBar(
+          leadingWidth: double.infinity,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Color(0x66D9D9D9),
+          ),
+          leading: Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            )
+            ),
           ),
-        ],
-      ),
-    );
+          toolbarHeight: MediaQuery.of(context).size.height/10,
+          backgroundColor: const Color(0x66D9D9D9),
+          elevation: 0.0,
+        ),
+
+        bottomNavigationBar: BottomAppBar(
+          color: const Color(0xCACBCBD2),
+          child: IconTheme(
+            data: const IconThemeData(color: Color(0xCB6D706B)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.home),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<
+                          double> animation1, Animation<double> animation2) {
+                        return const Home();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.person),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<
+                          double> animation1, Animation<double> animation2) {
+                        return const Profile();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 60,
+                  child: IconButton(
+                    iconSize: 60,
+                    icon: Image.asset('images/catIcon.png'),
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                        pageBuilder: (BuildContext context, Animation<
+                            double> animation1, Animation<double> animation2) {
+                          return const CreateCategoryScreen();
+                        },
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                            (Route<dynamic> route) => false,
+                      );
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<
+                          double> animation1, Animation<double> animation2) {
+                        return const ExploreMedia();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.category),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<
+                          double> animation1, Animation<double> animation2) {
+                        return const ExploreCategories();
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+
+
+        body: Stack(
+          children: [
+            Container(
+              constraints: const BoxConstraints.expand(),
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    alignment: Alignment.topLeft,
+                    image: AssetImage('images/catBackdrop.png'),
+                    fit: BoxFit.contain,
+                  )
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 35.0,
+                    ),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 6.5,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              width: 49,
+                              height: 39,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: const Color(0xB3D9D9D9),
+                              ),
+                              child: Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        updateCatListOnAddedMedia();
+                                        Navigator.push(
+                                          context, PageRouteBuilder(
+                                          pageBuilder: (BuildContext context,
+                                              Animation<double> animation1,
+                                              Animation<double> animation2) {
+                                            return const SearchCreateCat();
+                                          },
+                                          transitionDuration: Duration.zero,
+                                          reverseTransitionDuration: Duration
+                                              .zero,
+                                        ),
+                                        ).whenComplete(() =>
+                                            setState(() {})
+                                        );
+                                      },
+                                      color: const Color(0xFF393D5A),
+                                    ),
+                                  ]
+                              ),
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                cat.title,
+                                style: const TextStyle(
+                                  fontSize: 40,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+
+                              Text(
+                                "by @$username",
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                          child: Image(
+                            image: AssetImage('images/heart.png'),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 7,
+                        ),
+                        Text(
+                            "${cat.likes}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                            )
+                        ),
+                        const SizedBox(
+                          width: 13,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                          child: Image(
+                            image: AssetImage('images/votes.png'),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 7,
+                        ),
+                        Text(
+                            "${cat.interactions}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                            )
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 13,
+                    ),
+                    TextField(
+                      controller: descCat,
+                      maxLines: 3,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.white,
+                      ),
+                    ),
+
+                    const SizedBox(height: 9.0),
+                    Container(
+                      height: 0.9,
+                      width: double.infinity,
+                      color: const Color(0xFF6B6D7B),
+                    ),
+                    Expanded(
+                      child: DraggableScrollableActuator(
+                        child: ListView.builder(
+                          itemCount: cat.catMedia.length,
+                          itemBuilder: (context, index) =>
+                              ListTile(
+                                contentPadding: const EdgeInsets.all(0),
+                                title: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 50,
+                                              child: IconButton(
+                                                iconSize: 35,
+                                                icon: const Icon(
+                                                    MyFlutterApp.upvote),
+                                                color: getColorUpvote(
+                                                    cat.catMedia[index].id),
+                                                onPressed: () {
+                                                  if (!votedMedia.containsKey(
+                                                      cat.catMedia[index].id)) {
+                                                    setState(() {
+                                                      votedMedia[cat
+                                                          .catMedia[index].id] =
+                                                      true;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![0]++;
+                                                      cat.interactions++;
+                                                    });
+                                                  } else if (votedMedia[cat
+                                                      .catMedia[index].id]! ==
+                                                      true) {
+                                                    setState(() {
+                                                      votedMedia.remove(
+                                                          cat.catMedia[index]
+                                                              .id);
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![0]--;
+                                                      cat.interactions--;
+                                                    });
+                                                  }
+                                                  else {
+                                                    setState(() {
+                                                      votedMedia[cat
+                                                          .catMedia[index].id] =
+                                                      true;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![0]++;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![1]--;
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height: 17,
+                                                child: Text(
+                                                    "${cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![0]}",
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    )
+                                                )
+                                            ),
+                                            SizedBox(
+                                              height: 50,
+                                              child: IconButton(
+                                                iconSize: 35,
+                                                icon: const Icon(
+                                                    MyFlutterApp.downvote),
+                                                color: getColorDownVote(
+                                                    cat.catMedia[index].id),
+                                                onPressed: () {
+                                                  if (!votedMedia.containsKey(
+                                                      cat.catMedia[index].id)) {
+                                                    setState(() {
+                                                      votedMedia[cat
+                                                          .catMedia[index].id] =
+                                                      false;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![1]++;
+                                                      cat.interactions++;
+                                                    });
+                                                  } else if (votedMedia[cat
+                                                      .catMedia[index].id]! ==
+                                                      false) {
+                                                    setState(() {
+                                                      votedMedia.remove(
+                                                          cat.catMedia[index]
+                                                              .id);
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![1]--;
+                                                      cat.interactions--;
+                                                    });
+                                                  }
+                                                  else {
+                                                    setState(() {
+                                                      votedMedia[cat
+                                                          .catMedia[index].id] =
+                                                      false;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![1]++;
+                                                      cat.updown[cat
+                                                          .catMedia[index]
+                                                          .id]![0]--;
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              10.0),
+                                          child: SizedBox(
+                                            width: MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width / 5,
+                                            height: (MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width / 5) * 3 / 2,
+                                            child: Image(
+                                              fit: BoxFit.fill,
+                                              isAntiAlias: true,
+                                              image: getPosterURL(
+                                                  cat.catMedia[index]),
+                                              semanticLabel: "${cat
+                                                  .catMedia[index]
+                                                  .mediaName}...",
+                                              loadingBuilder: (context, child,
+                                                  progress) {
+                                                return progress == null
+                                                    ? child
+                                                    : const LinearProgressIndicator();
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10,),
+                                        Expanded(
+                                          child: RichText(
+                                            text: TextSpan(
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                      text: "${getTrimmedName(
+                                                          cat
+                                                              .catMedia[index])}\n",
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight
+                                                              .bold,
+                                                          fontSize: 20)),
+                                                  TextSpan(
+                                                      text: cat.catMedia[index]
+                                                          .description,
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16)),
+                                                ]
+                                            ),
+                                            maxLines: 5,
+                                            overflow: TextOverflow.fade,
+                                            softWrap: true,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Container(
+                                      height: 0.9,
+                                      width: double.infinity,
+                                      color: const Color(0xFF6B6D7B),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
