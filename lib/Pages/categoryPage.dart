@@ -31,18 +31,142 @@ class _CategoryPageState extends State<CategoryPage>{
   late final bool initialLike;
   late final int initialInteractions;
 
+  var maxLength = 200;
+  var textLength = 0;
   TextEditingController descCat = TextEditingController();
 
   String username = '';
   bool isLiked = false;
   bool isEditMode = false;
-  late bool isAdmin;
   Map<String, bool> votedMedia = {};
 
   CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
   CollectionReference userDB = FirebaseFirestore.instance.collection('users');
 
 
+  getButtons(){
+    if (username == cat.creator){
+      return Container(
+        width: 147,
+        height: 39,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: const Color(0xB3D9D9D9),
+        ),
+        child: Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    isEditMode = true;
+                  });
+                },
+                icon: const Icon(Icons.edit),
+                color: const Color(0xFF393D5A),
+              ),
+              Container(
+                color: const Color(0xCCA7A7A7),
+                height: 50,
+                width: 0.5,
+              ),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  updateCatListOnAddedMedia();
+                  Navigator.push(
+                    context, PageRouteBuilder(
+                    pageBuilder: (BuildContext context,
+                        Animation<double> animation1,
+                        Animation<double> animation2) {
+                      return const SearchCreateCat();
+                    },
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration
+                        .zero,
+                  ),
+                  ).whenComplete(() =>
+                      setState(() {})
+                  );
+                },
+                color: const Color(0xFF393D5A),
+              ),
+              Container(
+                color: const Color(0xCCA7A7A7),
+                height: 50,
+                width: 0.5,
+              ),
+              IconButton(
+                icon: getIcon(),
+                onPressed: () {
+                  setState(() {
+                    if (isLiked) {
+                      cat.likes--;
+                    } else {
+                      cat.likes++;
+                    }
+                    isLiked = !isLiked;
+                  });
+                },
+                color: const Color(0xFF393D5A),
+              ),
+            ]
+        ),
+      );
+    } else {
+      return Container(
+        width: 88,
+        height: 39,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: const Color(0xB3D9D9D9),
+        ),
+        child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  updateCatListOnAddedMedia();
+                  Navigator.push(
+                    context, PageRouteBuilder(
+                    pageBuilder: (BuildContext context,
+                        Animation<double> animation1,
+                        Animation<double> animation2) {
+                      return const SearchCreateCat();
+                    },
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration
+                        .zero,
+                  ),
+                  ).whenComplete(() =>
+                      setState(() {})
+                  );
+                },
+                color: const Color(0xFF393D5A),
+              ),
+              Container(
+                color: const Color(0xCCA7A7A7),
+                height: 50,
+                width: 0.5,
+              ),
+              IconButton(
+                icon: getIcon(),
+                onPressed: () {
+                  setState(() {
+                    if (isLiked) {
+                      cat.likes--;
+                    } else {
+                      cat.likes++;
+                    }
+                    isLiked = !isLiked;
+                  });
+                },
+                color: const Color(0xFF393D5A),
+              ),
+            ]
+        ),
+      );
+    }
+  }
   Future<bool> doesUserCatExist(String title) async {
     var ref = await catDB.doc(FirebaseAuth.instance.currentUser!.displayName).collection('interacted_cats').doc(title).get();
     return ref.exists;
@@ -450,72 +574,7 @@ class _CategoryPageState extends State<CategoryPage>{
                           Positioned(
                             right: 0,
                             bottom: 0,
-                            child: Container(
-                              width: 147,
-                              height: 39,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                                color: const Color(0xB3D9D9D9),
-                              ),
-                              child: Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isEditMode = !isEditMode;
-                                        });
-                                      },
-                                      icon: const Icon(Icons.edit),
-                                      color: const Color(0xFF393D5A),
-                                    ),
-                                    Container(
-                                      color: const Color(0xCCA7A7A7),
-                                      height: 50,
-                                      width: 0.5,
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.add),
-                                      onPressed: () {
-                                        updateCatListOnAddedMedia();
-                                        Navigator.push(
-                                          context, PageRouteBuilder(
-                                          pageBuilder: (BuildContext context,
-                                              Animation<double> animation1,
-                                              Animation<double> animation2) {
-                                            return const SearchCreateCat();
-                                          },
-                                          transitionDuration: Duration.zero,
-                                          reverseTransitionDuration: Duration
-                                              .zero,
-                                        ),
-                                        ).whenComplete(() =>
-                                            setState(() {})
-                                        );
-                                      },
-                                      color: const Color(0xFF393D5A),
-                                    ),
-                                    Container(
-                                      color: const Color(0xCCA7A7A7),
-                                      height: 50,
-                                      width: 0.5,
-                                    ),
-                                    IconButton(
-                                      icon: getIcon(),
-                                      onPressed: () {
-                                        setState(() {
-                                          if (isLiked) {
-                                            cat.likes--;
-                                          } else {
-                                            cat.likes++;
-                                          }
-                                          isLiked = !isLiked;
-                                        });
-                                      },
-                                      color: const Color(0xFF393D5A),
-                                    ),
-                                  ]
-                              ),
-                            ),
+                            child: getButtons(),
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -801,7 +860,8 @@ class _CategoryPageState extends State<CategoryPage>{
         ),
       );
     } else {
-      descCat.text = cat.description;
+      textLength = cat.description.length;
+      descCat.value.replaced(descCat.value.composing, cat.description);
       return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: const Color(0xff393d5a),
@@ -820,19 +880,37 @@ class _CategoryPageState extends State<CategoryPage>{
                   children: [
                     IconButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        setState(() {
+                          isEditMode = false;
+                        });
                       },
                       icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
+                        Icons.close,
+                        color: Colors.black,
+                        size:35
                       ),
                     ),
+                    SizedBox(width: MediaQuery.of(context).size.width/1.37),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isEditMode = false;
+                          cat.description = descCat.text.trim();
+                        });
+                      },
+                      icon: const Icon(
+                          Icons.check,
+                          color: Colors.black,
+                          size:35
+                      ),
+                    ),
+
                   ],
                 ),
               ],
             ),
           ),
-          toolbarHeight: MediaQuery.of(context).size.height/10,
+          toolbarHeight: MediaQuery.of(context).size.height/15,
           backgroundColor: const Color(0x66D9D9D9),
           elevation: 0.0,
         ),
@@ -963,7 +1041,7 @@ class _CategoryPageState extends State<CategoryPage>{
                             right: 0,
                             bottom: 0,
                             child: Container(
-                              width: 49,
+                              width: 48,
                               height: 39,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20.0),
@@ -1066,15 +1144,30 @@ class _CategoryPageState extends State<CategoryPage>{
                     const SizedBox(
                       height: 13,
                     ),
-                    TextField(
+                    TextFormField(
+                      key: const Key("categoryDescription"),
                       controller: descCat,
-                      maxLines: 3,
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        color: Colors.white,
+                      decoration: InputDecoration(
+                        filled:true,
+                        fillColor: const Color(0xFFD4D4DB),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: " Enter your description ...",
+                        suffixText: '${textLength.toString()}/${maxLength.toString()}',
+                        counterText: "",
                       ),
+                      cursorRadius: const Radius.circular(10),
+                      keyboardType: TextInputType.text,
+                      maxLength: maxLength,
+                      onChanged: (value) {
+                        setState(() {
+                          textLength = value.length;
+                        });
+                      },
+                      maxLines: 3,
                     ),
-
                     const SizedBox(height: 9.0),
                     Container(
                       height: 0.9,
@@ -1102,53 +1195,13 @@ class _CategoryPageState extends State<CategoryPage>{
                                                     MyFlutterApp.upvote),
                                                 color: getColorUpvote(
                                                     cat.catMedia[index].id),
-                                                onPressed: () {
-                                                  if (!votedMedia.containsKey(
-                                                      cat.catMedia[index].id)) {
-                                                    setState(() {
-                                                      votedMedia[cat
-                                                          .catMedia[index].id] =
-                                                      true;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![0]++;
-                                                      cat.interactions++;
-                                                    });
-                                                  } else if (votedMedia[cat
-                                                      .catMedia[index].id]! ==
-                                                      true) {
-                                                    setState(() {
-                                                      votedMedia.remove(
-                                                          cat.catMedia[index]
-                                                              .id);
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![0]--;
-                                                      cat.interactions--;
-                                                    });
-                                                  }
-                                                  else {
-                                                    setState(() {
-                                                      votedMedia[cat
-                                                          .catMedia[index].id] =
-                                                      true;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![0]++;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![1]--;
-                                                    });
-                                                  }
-                                                },
+                                                onPressed: () {},
                                               ),
                                             ),
                                             SizedBox(
                                                 height: 17,
                                                 child: Text(
-                                                    "${cat.updown[cat
-                                                        .catMedia[index]
-                                                        .id]![0]}",
+                                                    "${cat.updown[cat.catMedia[index].id]![0]}",
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                     )
@@ -1162,45 +1215,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                                     MyFlutterApp.downvote),
                                                 color: getColorDownVote(
                                                     cat.catMedia[index].id),
-                                                onPressed: () {
-                                                  if (!votedMedia.containsKey(
-                                                      cat.catMedia[index].id)) {
-                                                    setState(() {
-                                                      votedMedia[cat
-                                                          .catMedia[index].id] =
-                                                      false;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![1]++;
-                                                      cat.interactions++;
-                                                    });
-                                                  } else if (votedMedia[cat
-                                                      .catMedia[index].id]! ==
-                                                      false) {
-                                                    setState(() {
-                                                      votedMedia.remove(
-                                                          cat.catMedia[index]
-                                                              .id);
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![1]--;
-                                                      cat.interactions--;
-                                                    });
-                                                  }
-                                                  else {
-                                                    setState(() {
-                                                      votedMedia[cat
-                                                          .catMedia[index].id] =
-                                                      false;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![1]++;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![0]--;
-                                                    });
-                                                  }
-                                                },
+                                                onPressed: () {},
                                               ),
                                             ),
                                           ],
@@ -1240,8 +1255,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                             text: TextSpan(
                                                 children: <TextSpan>[
                                                   TextSpan(
-                                                      text: "${getTrimmedName(
-                                                          cat
+                                                      text: "${getTrimmedName(cat
                                                               .catMedia[index])}\n",
                                                       style: const TextStyle(
                                                           color: Colors.white,
