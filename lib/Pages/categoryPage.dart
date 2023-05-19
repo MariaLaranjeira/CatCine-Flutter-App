@@ -175,7 +175,7 @@ class _CategoryPageState extends State<CategoryPage>{
   }
 
   Future<bool> doesUserCatExist(String title) async {
-    var ref = await catDB.doc(FirebaseAuth.instance.currentUser!.displayName).collection('interacted_cats').doc(title).get();
+    var ref = await userDB.doc(FirebaseAuth.instance.currentUser!.displayName!).collection('interacted_cats').doc(title).get();
     return ref.exists;
   }
 
@@ -194,12 +194,6 @@ class _CategoryPageState extends State<CategoryPage>{
     setState(() {
       creatorUsername = temp;
     });
-  }
-  
-  loadUpDownMediaMap() {
-    if (cat.updown.isEmpty) {
-      
-    }
   }
 
   getAllCatInfo() async {
@@ -249,30 +243,15 @@ class _CategoryPageState extends State<CategoryPage>{
           var data = documentSnapshot.data();
           var res = data as Map<String, dynamic>;
 
-          initialLike = res['liked'];
+          for (var elem in cat.catMedia) {
+            if (res[elem.id] != null) {
+              votedMedia[elem.id] = res[elem.id];
+            }
+          }
+
+          initialLike = res['liked'] ?? false;
         }
       });
-
-      var usercatsmediaDB = catInfoUser.collection('interacted_media');
-      var usercatsmedia = await catInfoUser.collection('interacted_media').get();
-
-      List<String> _usercatmediaId = [];
-      for (var doc in usercatsmedia.docs) {
-        _usercatmediaId.add(doc.id);
-      }
-
-      for (String _key in _usercatmediaId) {
-        var mediaInfoCat = usercatsmediaDB.doc(_key);
-        await mediaInfoCat.get().then((DocumentSnapshot documentSnapshot) async {
-          if (documentSnapshot.exists) {
-            var data = documentSnapshot.data();
-            var res = data as Map<String, dynamic>;
-
-            votedMedia[_key] = res['voted'];
-
-          }
-        });
-      }
       initialInteractions = votedMedia.length;
     } else {
       initialInteractions = 0;
@@ -375,24 +354,24 @@ class _CategoryPageState extends State<CategoryPage>{
 
       await usercat.set({
         'isLiked': isLiked,
-      });
+      }, SetOptions(merge: true));
 
       for(var elem in votedMedia.keys) {
         usercat.set({
           elem : votedMedia[elem],
-        });
+        }, SetOptions(merge: true));
       }
     } else {
       var usercat = userDB.doc(username).collection('interacted_cats').doc(cat.title);
 
       await usercat.set({
         'isLiked': isLiked,
-      });
+      }, SetOptions(merge: true));
 
       for(var elem in votedMedia.keys) {
         usercat.set({
           elem : votedMedia[elem],
-        });
+        }, SetOptions(merge: true));
       }
     }
   }

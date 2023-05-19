@@ -23,55 +23,6 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
 
   List<Category> displayList = [];
 
-  CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
-
-  loadCats() async {
-
-    List<String> _userKey = [];
-    final query = await catDB.get();
-
-    for (var doc in query.docs) {
-      _userKey.add(doc.id);
-    }
-
-    for (String _key in _userKey){
-      catDB
-          .doc(_key)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) async {
-        if (documentSnapshot.exists) {
-          var data = documentSnapshot.data();
-          var res = data as Map<String, dynamic>;
-
-          Category cat = Category.fromJson(res);
-
-          List<String> _mediaKey = [];
-          final query2 = await catDB.doc(_key).collection('catmedia').get();
-          final query2DB = catDB.doc(_key).collection('catmedia');
-
-          for (var doc in query2.docs) {
-            _mediaKey.add(doc.id);
-          }
-
-          for (String _keyer in _mediaKey){
-            cat.catMedia.add(await API.loadSpecificMedia(_keyer));
-            query2DB
-                .doc(_keyer)
-                .get()
-                .then((DocumentSnapshot documentSnapshot) async {
-              if (documentSnapshot.exists) {
-                var data = documentSnapshot.data();
-                var res = data as Map<String, dynamic>;
-                cat.updown[_keyer] = [res['upvotes'], res['downvotes']];
-              }
-            });
-          }
-          allLocalCats[cat.title] = cat;
-        }
-      });
-    }
-  }
-
   void updateList(String title) async{
 
     setState(() {
@@ -182,7 +133,6 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
   @override
   void initState() {
     super.initState();
-    loadCats();
   }
 
   @override

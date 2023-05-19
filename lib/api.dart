@@ -4,6 +4,7 @@ import 'package:catcine_es/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
+import 'Model/category.dart';
 import 'Model/media.dart';
 
 
@@ -64,6 +65,8 @@ class API {
 
   static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
       'media');
+
+  static CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
 
 
   static addMedia(Media media) async {
@@ -165,9 +168,8 @@ class API {
   }
 
   static loadSpecificMedia(String id) async{
-
-    Media media = Media('','',0,0,0,'','','',0,0,true,0,'','',false);
-    mediaDB
+    late Media media;
+    await mediaDB
         .doc(id)
         .get()
         .then((DocumentSnapshot documentSnapshot) async {
@@ -249,6 +251,52 @@ class API {
     }
   }
 
+  static loadCats() async {
+
+    List<String> _userKey = [];
+    final query = await catDB.get();
+
+    for (var doc in query.docs) {
+      _userKey.add(doc.id);
+    }
+
+    for (String _key in _userKey){
+      catDB
+          .doc(_key)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          var data = documentSnapshot.data();
+          var res = data as Map<String, dynamic>;
+
+          Category cat = Category.fromJson(res);
+
+          List<String> _mediaKey = [];
+          final query2 = await catDB.doc(_key).collection('catmedia').get();
+          final query2DB = catDB.doc(_key).collection('catmedia');
+
+          for (var doc in query2.docs) {
+            _mediaKey.add(doc.id);
+          }
+
+          for (String _keyer in _mediaKey){
+            cat.catMedia.add(await API.loadSpecificMedia(_keyer));
+            query2DB
+                .doc(_keyer)
+                .get()
+                .then((DocumentSnapshot documentSnapshot) async {
+              if (documentSnapshot.exists) {
+                var data = documentSnapshot.data();
+                var res = data as Map<String, dynamic>;
+                cat.updown[_keyer] = [res['upvotes'], res['downvotes']];
+              }
+            });
+          }
+          allLocalCats[cat.title] = cat;
+        }
+      });
+    }
+  }
 
   static mediaSpecificUpdate(Media media) async {
     String mediaType;
