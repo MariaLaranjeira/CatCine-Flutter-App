@@ -2,6 +2,7 @@ import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
@@ -15,6 +16,57 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: const Color(0xff393d5a),
+
+      body: Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: Column(
+           children: [
+             const SizedBox(height: 34),
+             Row(
+               children: [
+                 Column(
+                   children: [
+                     Text(
+                       FirebaseAuth.instance.currentUser!.displayName!,
+                       textAlign: TextAlign.center,
+                       style: const TextStyle(
+                         color: Colors.white,
+                         fontWeight: FontWeight.bold,
+                         fontSize: 24,
+                       ),
+                     ),
+                     const SizedBox(height: 20),
+
+                     const Text(
+                       "Created Categories: ",
+                       style: TextStyle(
+                         color: Colors.grey,
+                         fontSize: 16,
+                       ),
+                     ),
+
+                   ],
+                 ),
+                 const SizedBox(width: 80),
+                 Container(
+                   height: 85,
+                   width: 85,
+                   decoration: const BoxDecoration(
+                     shape: BoxShape.circle,
+                   ),
+                   child: Image.asset(
+                     'images/defaultIcon.png',
+                     fit: BoxFit.cover,
+                   ),
+                 ),
+               ],
+             ),
+           ],
+        ),
+      ),
+
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xCACBCBD2),
         child: IconTheme(

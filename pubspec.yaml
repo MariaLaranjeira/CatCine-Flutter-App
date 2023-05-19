@@ -83,6 +83,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - images/defaultIcon.png
     - images/votes.png
     - images/heart.png
     - images/catBackdrop.png
