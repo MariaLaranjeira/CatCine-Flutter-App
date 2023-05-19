@@ -39,7 +39,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
   TextEditingController descCat = TextEditingController();
 
   static CollectionReference catDB = FirebaseFirestore.instance.collection(
-      'categories');
+      'categories');ImageProvider 
 
 
   getPosterURL(var i) {
@@ -356,7 +356,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                             onPressed: () {
                               Navigator.push(context, PageRouteBuilder(
                                 pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                                  return SearchCreateCat(cat: newCat,);
+                                  return SearchCreateCat(cat: newCat, comingFromCreate: true,);
                                 },
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,

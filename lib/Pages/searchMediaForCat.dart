@@ -11,8 +11,9 @@ import '../Model/media.dart';
 import '../Model/searchesBackEnd.dart';
 
 class SearchCreateCat extends StatefulWidget {
+  final bool comingFromCreate;
   final Category cat;
-  const SearchCreateCat({Key? key, required this.cat}) : super(key: key);
+  const SearchCreateCat({Key? key, required this.cat, required this.comingFromCreate}) : super(key: key);
 
   @override
   State<SearchCreateCat> createState() => _SearchCreateCatState();
@@ -25,7 +26,6 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
   String searchedTitle = '';
 
   updateList(String title) async{
-
     mediaList = await SearchesBackEnd.updateList(title);
     setState(() {
       displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase())).toList();
@@ -47,12 +47,28 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
   }
 
   getColor(Media media) {
-    if (mediaCat.contains(media)) {
-      return const Color(0xFF42A7AD);
+    if (widget.comingFromCreate) {
+      if (mediaCat.contains(media)) {
+        return const Color(0xFF42A7AD);
+      }
+      else {
+        return const Color(0xFF6E7398);
+      }
+    } else {
+      if (widget.cat.catMedia.contains(media)) {
+        return const Color(0xFF42A7AD);
+      }
+      else {
+        return const Color(0xFF6E7398);
+      }
     }
-    else {
-      return const Color(0xFF6E7398);
+  }
+
+  getItemCount() {
+    if (widget.comingFromCreate) {
+      return mediaCat.length;
     }
+    return widget.cat.catMedia.length;
   }
 
   listViewProvider() {
@@ -70,17 +86,32 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
             ),
             child: RawMaterialButton(
               onPressed: () {
-                if (mediaCat.contains(displayList[index])) {
-                  setState(() {
-                    mediaCat.remove(displayList[index]);
-                    widget.cat.updown.remove(displayList[index]);
-                  });
-                }
-                else {
-                  setState(() {
-                    mediaCat.add(displayList[index]);
-                    widget.cat.updown[displayList[index].id] = [0,0];
-                  });
+                if (widget.comingFromCreate) {
+                  if (mediaCat.contains(displayList[index])) {
+                    setState(() {
+                      mediaCat.remove(displayList[index]);
+                      widget.cat.updown.remove(displayList[index]);
+                    });
+                  }
+                  else {
+                    setState(() {
+                      mediaCat.add(displayList[index]);
+                      widget.cat.updown[displayList[index].id] = [0, 0];
+                    });
+                  }
+                } else {
+                  if (widget.cat.catMedia.contains(displayList[index])) {
+                    setState(() {
+                      widget.cat.catMedia.remove(displayList[index]);
+                      widget.cat.updown.remove(displayList[index]);
+                    });
+                  }
+                  else {
+                    setState(() {
+                      widget.cat.catMedia.add(displayList[index]);
+                      widget.cat.updown[displayList[index].id] = [0, 0];
+                    });
+                  }
                 }
               },
               child: Row(
@@ -124,7 +155,7 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
     }
     else {
       return ListView.builder(
-        itemCount: mediaCat.length,
+        itemCount: getItemCount(),
         itemBuilder: (context, index) => ListTile(
           contentPadding: const EdgeInsets.all(8.0),
           title: Container(
@@ -136,9 +167,15 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
               ),
             child: RawMaterialButton(
               onPressed: () {
-                setState(() {
-                  mediaCat.remove(mediaCat[index]);
-                });
+                if (widget.comingFromCreate) {
+                  setState(() {
+                    mediaCat.remove(mediaCat[index]);
+                  });
+                } else {
+                  setState(() {
+                    widget.cat.catMedia.remove(mediaCat[index]);
+                  });
+                }
               },
               child: Row(
                 children: [
@@ -150,8 +187,8 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                       child: Image(
                         fit: BoxFit.fill,
                         isAntiAlias: true,
-                        image: getPosterURL(mediaCat[index]),
-                        semanticLabel: "${mediaCat[index].mediaName}...",
+                        image: widget.comingFromCreate ? getPosterURL(mediaCat[index]) : getPosterURL(widget.cat.catMedia[index]),
+                        semanticLabel: "${widget.comingFromCreate ? mediaCat[index].mediaName : widget.cat.catMedia[index].mediaName}...",
                         loadingBuilder: (context, child, progress) {
                           return progress == null ? child : const LinearProgressIndicator();
                         },
@@ -163,8 +200,8 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                     child: RichText(
                       text : TextSpan (
                           children: <TextSpan> [
-                            TextSpan(text:"${getTrimmedName(mediaCat[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                            TextSpan(text:mediaCat[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                            TextSpan(text:"${widget.comingFromCreate ? getTrimmedName(mediaCat[index]) : getTrimmedName(widget.cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                            TextSpan(text:widget.comingFromCreate ? mediaCat[index].description : widget.cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
                           ]
                       ),
                       maxLines: 5,

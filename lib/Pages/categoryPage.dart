@@ -80,7 +80,7 @@ class _CategoryPageState extends State<CategoryPage>{
                     pageBuilder: (BuildContext context,
                         Animation<double> animation1,
                         Animation<double> animation2) {
-                      return SearchCreateCat(cat: cat,);
+                      return SearchCreateCat(cat: cat, comingFromCreate: false,);
                     },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration
@@ -137,7 +137,7 @@ class _CategoryPageState extends State<CategoryPage>{
                     pageBuilder: (BuildContext context,
                         Animation<double> animation1,
                         Animation<double> animation2) {
-                      return SearchCreateCat(cat: cat,);
+                      return SearchCreateCat(cat: cat, comingFromCreate: false,);
                     },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration
@@ -1077,7 +1077,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                           pageBuilder: (BuildContext context,
                                               Animation<double> animation1,
                                               Animation<double> animation2) {
-                                            return SearchCreateCat(cat: cat,);
+                                            return SearchCreateCat(cat: cat, comingFromCreate: false,);
                                           },
                                           transitionDuration: Duration.zero,
                                           reverseTransitionDuration: Duration
