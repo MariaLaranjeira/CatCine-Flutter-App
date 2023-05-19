@@ -1,3 +1,4 @@
+import 'package:catcine_es/Model/category.dart';
 import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
@@ -10,7 +11,8 @@ import '../Model/media.dart';
 import '../Model/searchesBackEnd.dart';
 
 class SearchCreateCat extends StatefulWidget {
-  const SearchCreateCat({Key? key}) : super(key: key);
+  final Category cat;
+  const SearchCreateCat({Key? key, required this.cat}) : super(key: key);
 
   @override
   State<SearchCreateCat> createState() => _SearchCreateCatState();
@@ -71,11 +73,13 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                 if (mediaCat.contains(displayList[index])) {
                   setState(() {
                     mediaCat.remove(displayList[index]);
+                    widget.cat.updown.remove(displayList[index]);
                   });
                 }
                 else {
                   setState(() {
                     mediaCat.add(displayList[index]);
+                    widget.cat.updown[displayList[index].id] = [0,0];
                   });
                 }
               },

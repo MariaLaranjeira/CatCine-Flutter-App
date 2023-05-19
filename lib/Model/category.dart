@@ -23,6 +23,16 @@ class Category {
     //this.backDrop
   );
 
+  Category.def({
+    this.catMedia = const [],
+    this.creator = '',
+    this.description = '',
+    this.title = '',
+    this.likes = 0,
+    this.interactions = 0,
+    this.updown = const {},
+  });
+
   Category.fromFirebase({
     this.title = "",
     this.creator = "",

@@ -27,7 +27,9 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
   var maxLength = 200;
   var textLength = 0;
-  late Category newCat;
+  Map<String,List<int>> upDown = {};
+
+  Category newCat = Category.def();
 
   late ImageProvider image0;
   late ImageProvider image1;
@@ -136,7 +138,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
     image0 = getPosterURL(0);
     image1 = getPosterURL(1);
     image2 = getPosterURL(2);
-
+    newCat.updown = upDown;
   }
   
   @override
@@ -353,7 +355,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                             onPressed: () {
                               Navigator.push(context, PageRouteBuilder(
                                 pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                                  return const SearchCreateCat();
+                                  return SearchCreateCat(cat: newCat,);
                                 },
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
@@ -442,12 +444,16 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         onPressed: () {
                           if (nameCat.text.trim().length >= 3 && nameCat.text.trim().length <= 50){
-                            Map<String,List<int>> updown = {};
-                            for (var elem in mediaCat){
-                              updown[elem.id] = [0,0];
-                            }
-                            newCat = Category(mediaCat, FirebaseAuth.instance.currentUser!.displayName!, descCat.text.trim(), nameCat.text.trim(), 0, 0, updown);
+
+                            newCat.description = descCat.text.trim();
+                            newCat.title = nameCat.text.trim();
+                            newCat.catMedia = mediaCat;
+                            newCat.creator = FirebaseAuth.instance.currentUser!.displayName!;
+
                             addCat(newCat);
+
+                            mediaCat.clear();
+
                             Navigator.push(context, PageRouteBuilder(
                               pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
                                 return CategoryPage(category: newCat);

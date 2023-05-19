@@ -30,6 +30,7 @@ class _CategoryPageState extends State<CategoryPage>{
   late Category cat;
   late final bool initialLike;
   late final int initialInteractions;
+  late final Map<String, bool> initialVotesUser;
 
   TextEditingController descCat = TextEditingController();
 
@@ -48,34 +49,20 @@ class _CategoryPageState extends State<CategoryPage>{
     return ref.exists;
   }
 
-  disposeSave() async {
-    var user = userDB.doc(FirebaseAuth.instance.currentUser!.displayName!);
-    var catColection = user.collection('catColections');
-    var cat_ = catColection.doc(cat.title);
-    await cat_.set({
-      'isLiked': isLiked,
-    });
-    var voted = cat_.collection('voted_media');
-    for (String element in votedMedia.keys) {
-      var media = voted.doc(element);
-      await media.set({
-        'voted': votedMedia[element]
-      });
-    }
-  }
-
   loadCreatorName() async {
-    setState(() async {
-      await catDB
-          .doc(cat.title)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) async {
-        if (documentSnapshot.exists) {
-          var data = documentSnapshot.data();
-          var res = data as Map<String, dynamic>;
-          username = res['creator'];
-        }
-      });
+    var temp = '';
+    await catDB
+        .doc(cat.title)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) async {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        var res = data as Map<String, dynamic>;
+        temp = res['creator'];
+      }
+    });
+    setState(() {
+      username = temp;
     });
   }
 
@@ -102,7 +89,7 @@ class _CategoryPageState extends State<CategoryPage>{
     }
 
     for (String _key in _mediaId){
-      catmediaDB
+      await catmediaDB
           .doc(_key)
           .get()
           .then((DocumentSnapshot documentSnapshot) async {
@@ -154,6 +141,7 @@ class _CategoryPageState extends State<CategoryPage>{
     } else {
       initialInteractions = 0;
       initialLike = false;
+      initialVotesUser = votedMedia;
     }
   }
 
@@ -191,16 +179,16 @@ class _CategoryPageState extends State<CategoryPage>{
     var catmedia = await catDB.doc(cat.title).collection('catmedia').get();
     var catmediaDB = catDB.doc(cat.title).collection('catmedia');
 
-    var tempUp;
-    var tempDown;
-
     List<String> _mediaId = [];
     for (var doc in catmedia.docs) {
       _mediaId.add(doc.id);
     }
 
     for (String _key in _mediaId){
-      catmediaDB
+      var tempUp;
+      var tempDown;
+
+      await catmediaDB
           .doc(_key)
           .get()
           .then((DocumentSnapshot documentSnapshot) async {
@@ -213,32 +201,65 @@ class _CategoryPageState extends State<CategoryPage>{
 
         }
       });
-    }
 
+      if (initialVotesUser.containsKey(_key) && !votedMedia.containsKey(_key)) {
+        if (initialVotesUser[_key]!) {
+          tempUp--;
+        } else {
+          tempDown--;
+        }
+      } else if (!initialVotesUser.containsKey(_key) && votedMedia.containsKey(_key)) {
+        if (votedMedia[_key]!) {
+          tempUp++;
+        } else {
+          tempDown++;
+        }
+      } else if (initialVotesUser.containsKey(_key) && votedMedia.containsKey(_key)) {
+        if (votedMedia[_key]! != initialVotesUser[_key]! && votedMedia[_key]!) {
+          tempUp++;
+          tempDown--;
+        } else if (votedMedia[_key]! != initialVotesUser[_key]! && !votedMedia[_key]!) {
+          tempUp--;
+          tempDown++;
+        }
+      }
 
-    for (var media in cat.catMedia){
-      var reffer = ref.collection('catmedia').doc(media.id);
+      var reffer = ref.collection('catmedia').doc(_key);
       await reffer.update({
-        'upvotes': cat.updown[media.id]![0],
-        'downvotes': cat.updown[media.id]![1],
+        'upvotes': tempUp,
+        'downvotes': tempDown,
       });
-    }
 
+    }
 
     if (await doesUserCatExist(cat.title)){
       await userDB.doc(username).collection('interacted_cats').doc(cat.title).delete();
-    }
 
-    var usercat = userDB.doc(username).collection('interacted_cats').doc(cat.title);
+      var usercat = userDB.doc(username).collection('interacted_cats').doc(cat.title);
 
-    for(var elem in votedMedia.keys) {
-      usercat.set({
-        elem : votedMedia[elem],
+      await usercat.set({
+        'isLiked': isLiked,
       });
+
+      for(var elem in votedMedia.keys) {
+        usercat.set({
+          elem : votedMedia[elem],
+        });
+      }
+    } else {
+      var usercat = userDB.doc(username).collection('interacted_cats').doc(cat.title);
+
+      await usercat.set({
+        'isLiked': isLiked,
+      });
+
+      for(var elem in votedMedia.keys) {
+        usercat.set({
+          elem : votedMedia[elem],
+        });
+      }
     }
-
   }
-
 
   Future<bool> doesMediaExist(String id) async {
     var ref = await catDB.doc(id).get();
@@ -313,8 +334,8 @@ class _CategoryPageState extends State<CategoryPage>{
 
   @override
   void dispose() {
-    super.dispose();
     updateAllCatInfo();
+    super.dispose();
   }
 
   @override
@@ -482,7 +503,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                           pageBuilder: (BuildContext context,
                                               Animation<double> animation1,
                                               Animation<double> animation2) {
-                                            return const SearchCreateCat();
+                                            return SearchCreateCat(cat: cat,);
                                           },
                                           transitionDuration: Duration.zero,
                                           reverseTransitionDuration: Duration
@@ -801,7 +822,7 @@ class _CategoryPageState extends State<CategoryPage>{
         ),
       );
     } else {
-      descCat.text = cat.description;
+      descCat.value.replaced(descCat.value.composing, cat.description);
       return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: const Color(0xff393d5a),
@@ -980,7 +1001,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                           pageBuilder: (BuildContext context,
                                               Animation<double> animation1,
                                               Animation<double> animation2) {
-                                            return const SearchCreateCat();
+                                            return SearchCreateCat(cat: cat,);
                                           },
                                           transitionDuration: Duration.zero,
                                           reverseTransitionDuration: Duration
