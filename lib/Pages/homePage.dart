@@ -17,6 +17,7 @@ class _HomeState extends State<Home> {
 
   Future<void> initList() async {
     await API.loadMedia();
+    await API.loadCats();
   }
 
   @override
