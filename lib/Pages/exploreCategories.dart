@@ -4,7 +4,9 @@ import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:catcine_es/api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
+import '../Model/media.dart';
 import '../main.dart';
 import 'createCategory.dart';
 import 'exploreMedia.dart';
@@ -97,6 +99,23 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
     return cat.title;
   }
 
+  ImageProvider getPosterURL(Category cat,var i){
+
+    if (isCatMediaEmpty(cat) || cat.catMedia.length < 3){
+      return const AssetImage('images/catIcon.png');
+    } else if (cat.catMedia[i].coverUrl != '') {
+      return NetworkImage(cat.catMedia[i].coverUrl);
+    }
+    return const AssetImage('images/catIcon.png');
+  }
+
+  bool isCatMediaEmpty(Category cat) {
+    if (cat.catMedia == []){
+      return true;
+    }
+    return false;
+  }
+
   Column drawSecondElement(int index) {
     if (index >= displayList.length) {
       return Column();
@@ -121,13 +140,35 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                   color: Color(0xFFD9D9D9),
                   width: (MediaQuery.of(context).size.width/11) * 4.30,
                   height: ((MediaQuery.of(context).size.width/11) * 4.30) * 1.3,
-                  child: Text(
-                    getTrimmedName(displayList[index]),
-                    style: const TextStyle(
-                        color: Color(0xFF393D5A),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20
-                    ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Container(
+                        height: 120,
+                        width: 125,
+                        child: Row(
+                          children: [
+                            Image(
+                              image: getPosterURL(displayList[index],0),
+                            ),
+                            Image(
+                              image: getPosterURL(displayList[index],1),
+                            ),
+                            Image(
+                              image: getPosterURL(displayList[index],2),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        getTrimmedName(displayList[index]),
+                        style: const TextStyle(
+                            color: Color(0xFF393D5A),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
