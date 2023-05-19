@@ -113,8 +113,8 @@ class _CategoryPageState extends State<CategoryPage>{
             ]
         ),
       );
-    } else {
-      return Container(
+    }
+    return Container(
         width: 88,
         height: 39,
         decoration: BoxDecoration(
@@ -166,7 +166,6 @@ class _CategoryPageState extends State<CategoryPage>{
             ]
         ),
       );
-    }
   }
   Future<bool> doesUserCatExist(String title) async {
     var ref = await catDB.doc(FirebaseAuth.instance.currentUser!.displayName).collection('interacted_cats').doc(title).get();
@@ -575,7 +574,7 @@ class _CategoryPageState extends State<CategoryPage>{
               ),
             ),
             Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(MediaQuery.of(context).size.width/25.72),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -593,7 +592,7 @@ class _CategoryPageState extends State<CategoryPage>{
                       child: Stack(
                         children: [
                           Positioned(
-                            right: 0,
+                            right: MediaQuery.of(context).size.width/48.41,
                             bottom: 0,
                             child: getButtons(),
                           ),

@@ -447,8 +447,10 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
 
                             newCat.description = descCat.text.trim();
                             newCat.title = nameCat.text.trim();
-                            newCat.catMedia = mediaCat;
+                            newCat.catMedia = [];
                             newCat.creator = FirebaseAuth.instance.currentUser!.displayName!;
+
+                            for (var element in mediaCat) {newCat.catMedia.add(element);}
 
                             addCat(newCat);
 
