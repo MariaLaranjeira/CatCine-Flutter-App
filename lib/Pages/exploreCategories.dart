@@ -1,4 +1,5 @@
 import 'package:catcine_es/Model/category.dart';
+import 'package:catcine_es/Pages/categoryPage.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:catcine_es/api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -43,14 +44,25 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
           Category cat = Category.fromJson(res);
 
           List<String> _mediaKey = [];
-          final query2 = await  catDB.doc(_key).collection('catmedia').get();
+          final query2 = await catDB.doc(_key).collection('catmedia').get();
+          final query2DB = catDB.doc(_key).collection('catmedia');
 
           for (var doc in query2.docs) {
             _mediaKey.add(doc.id);
           }
 
           for (String _keyer in _mediaKey){
-            cat.catMedia.add(API.loadSpecificMedia(_keyer));
+            cat.catMedia.add(await API.loadSpecificMedia(_keyer));
+            query2DB
+                .doc(_keyer)
+                .get()
+                .then((DocumentSnapshot documentSnapshot) async {
+              if (documentSnapshot.exists) {
+                var data = documentSnapshot.data();
+                var res = data as Map<String, dynamic>;
+                cat.updown[_keyer] = [res['upvotes'], res['downvotes']];
+              }
+            });
           }
           allLocalCats[cat.title] = cat;
         }
@@ -92,18 +104,30 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
     else {
       return Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5.0),
-              child: Container(
-                color: Color(0xFFD9D9D9),
-                width: (MediaQuery.of(context).size.width/11) * 4.30,
-                height: ((MediaQuery.of(context).size.width/11) * 4.30) * 1.3,
-                child:Text(
-                  getTrimmedName(displayList[index]),
-                  style: const TextStyle(
-                      color: Color(0xFF393D5A),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20
+            RawMaterialButton(
+              onPressed: () {
+                Navigator.push(context, PageRouteBuilder(
+                  pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                    return CategoryPage(category: displayList[index]);
+                    },
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+                );
+               },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5.0),
+                child: Container(
+                  color: Color(0xFFD9D9D9),
+                  width: (MediaQuery.of(context).size.width/11) * 4.30,
+                  height: ((MediaQuery.of(context).size.width/11) * 4.30) * 1.3,
+                  child: Text(
+                    getTrimmedName(displayList[index]),
+                    style: const TextStyle(
+                        color: Color(0xFF393D5A),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                    ),
                   ),
                 ),
               ),
@@ -191,20 +215,32 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                         children: [
                           Column(
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  child: Container(
-                                    color: Color(0xFFD9D9D9),
-                                    width: (MediaQuery.of(context).size.width/11) * 4.30,
-                                    height: ((MediaQuery.of(context).size.width/11) * 4.30) * 1.3,
-                                    child:Text(
-                                      getTrimmedName(displayList[index * 2]),
-                                      style: const TextStyle(
-                                          color: Color(0xFF393D5A),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20
-                                      ),
-                                    )
+                                RawMaterialButton(
+                                  onPressed: () {
+                                     Navigator.push(context, PageRouteBuilder(
+                                       pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                                         return CategoryPage(category: displayList[index]);
+                                       },
+                                       transitionDuration: Duration.zero,
+                                       reverseTransitionDuration: Duration.zero,
+                                     ),
+                                     );
+                                   },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    child: Container(
+                                      color: Color(0xFFD9D9D9),
+                                      width: (MediaQuery.of(context).size.width/11) * 4.30,
+                                      height: ((MediaQuery.of(context).size.width/11) * 4.30) * 1.3,
+                                      child:Text(
+                                        getTrimmedName(displayList[index * 2]),
+                                        style: const TextStyle(
+                                            color: Color(0xFF393D5A),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20
+                                        ),
+                                      )
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 10,),

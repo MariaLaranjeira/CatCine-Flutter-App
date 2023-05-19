@@ -36,7 +36,8 @@ class _CategoryPageState extends State<CategoryPage>{
   var textLength = 0;
   TextEditingController descCat = TextEditingController();
 
-  String username = '';
+  String creatorUsername = '';
+  String username = FirebaseAuth.instance.currentUser!.displayName!;
   bool isLiked = false;
   bool isEditMode = false;
   Map<String, bool> votedMedia = {};
@@ -114,8 +115,12 @@ class _CategoryPageState extends State<CategoryPage>{
         ),
       );
     }
-    return Container(
-        width: MediaQuery.of(context).size.width/4.12,
+    else {
+      return Container(
+        width: MediaQuery
+            .of(context)
+            .size
+            .width / 4.12,
         height: 39,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
@@ -166,6 +171,7 @@ class _CategoryPageState extends State<CategoryPage>{
             ]
         ),
       );
+    }
   }
 
   Future<bool> doesUserCatExist(String title) async {
@@ -186,8 +192,14 @@ class _CategoryPageState extends State<CategoryPage>{
       }
     });
     setState(() {
-      username = temp;
+      creatorUsername = temp;
     });
+  }
+  
+  loadUpDownMediaMap() {
+    if (cat.updown.isEmpty) {
+      
+    }
   }
 
   getAllCatInfo() async {
@@ -611,7 +623,7 @@ class _CategoryPageState extends State<CategoryPage>{
                               ),
 
                               Text(
-                                "by @$username",
+                                "by @$creatorUsername",
                                 textAlign: TextAlign.start,
                                 style: const TextStyle(
                                   fontSize: 16.0,
@@ -1110,7 +1122,7 @@ class _CategoryPageState extends State<CategoryPage>{
                               ),
 
                               Text(
-                                "by @$username",
+                                "by @$creatorUsername",
                                 textAlign: TextAlign.start,
                                 style: const TextStyle(
                                   fontSize: 16.0,

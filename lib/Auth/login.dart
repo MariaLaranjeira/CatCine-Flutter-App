@@ -1,3 +1,4 @@
+import 'package:catcine_es/Model/media.dart';
 import 'package:catcine_es/Pages/homePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -171,6 +172,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.width);
+    print(MediaQuery.of(context).size.height);
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
@@ -185,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
             left: 0,
             child: Image.asset(
               'images/WelcomeBack.png',
-              width: 380,
+              width: MediaQuery.of(context).size.width/1.09,
               height: 500,
               fit: BoxFit.cover,
             ),

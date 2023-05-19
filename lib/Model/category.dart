@@ -4,12 +4,12 @@ class Category {
 
   String title;
 
-  List<Media> catMedia;
+  List<Media> catMedia = [];
   String creator;
   String description;
   int likes;
   int interactions;
-  Map<String, List<int>> updown;
+  Map<String, List<int>> updown = {};
   //String backDrop;
 
   Category(
@@ -59,7 +59,9 @@ class Category {
       description: description,
       //backDrop: backDrop,
       likes: likes,
-      interactions: interactions
+      interactions: interactions,
+      catMedia: [],
+      updown: {},
     );
   }
 
