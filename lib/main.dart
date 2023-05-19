@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Auth/authinitial.dart';
 import 'Model/media.dart';
+import 'Model/category.dart';
 
 Map<String, Media> allLocalMedia = {};
+Map<String, Category> allLocalCats = {};
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

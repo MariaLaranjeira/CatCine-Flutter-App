@@ -22,7 +22,6 @@ class _ExploreMediaState extends State<ExploreMedia>{
   List<Media> displayList = [];
 
   void updateList(String title) async{
-
     mediaList = await SearchesBackEnd.updateList(title);
     setState(() {
       displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase()) ||

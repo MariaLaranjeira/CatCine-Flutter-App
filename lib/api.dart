@@ -164,6 +164,44 @@ class API {
     }
   }
 
+  static loadSpecificMedia(String id) async{
+
+    Media media = Media('','',0,0,0,'','','',0,0,true,0,'','',false);
+    mediaDB
+        .doc(id)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) async {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        var res = data as Map<String, dynamic>;
+
+        bool _movie = false;
+        if (res['type'] == 'movie') {
+          _movie = true;
+        }
+
+        media = Media.api(
+          id: res['id'],
+          mediaName: res['title'] ?? "",
+          releaseDate: res['year'] ?? 0,
+          score: res['score'] ?? 0,
+          runtime: res['runtime'] ?? 0,
+          coverUrl: res['poster'] ?? "",
+          description: res['description'] ?? "",
+          imdbId: res['imdbid'] ?? "",
+          traktId: res['traktid'] ?? 0,
+          tmdbId: res['tmdbid'] ?? 0,
+          movie: _movie,
+          ageRating: res['age_rating'] ?? 0,
+          trailerUrl: res['trailer'] ?? "",
+          backdropUrl: res['backdrop'] ?? "",
+          isInFirebase: true,
+        );
+      }
+    });
+    return media;
+  }
+
   static loadMedia() async {
 
     List<String> _userKey = [];
