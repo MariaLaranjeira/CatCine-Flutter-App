@@ -10,7 +10,12 @@ import 'Model/media.dart';
 
 class API {
 
-  static Future<String> getInfo(String title,String searchType) async {
+  static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
+      'media');
+
+  static CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
+
+  static getInfo(String title,String searchType) async {
     final client = http.Client();
 
     final request = http.Request('GET',
@@ -42,8 +47,7 @@ class API {
     return response.body;
   }
 
-
-  static Future<List<Media>> makeMedia(String title) async {
+  static makeMedia(String title) async {
     String info = await getInfo(title,'s');
     Map<String, dynamic> json = jsonDecode(info);
     List<dynamic> body = json['search'] ?? [];
@@ -52,7 +56,7 @@ class API {
     return allMedia;
   }
 
-  static Future<Map<String, dynamic>> fullInfo(bool isIMDB, String id, String searchType, String mediaType) async {
+  static fullInfo(bool isIMDB, String id, String searchType, String mediaType) async {
     String info;
     if (isIMDB) {
       info = await getInfo(id, searchType);
@@ -62,12 +66,6 @@ class API {
     Map <String, dynamic> json = jsonDecode(info);
     return json;
   }
-
-  static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
-      'media');
-
-  static CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
-
 
   static addMedia(Media media) async {
 
@@ -119,13 +117,12 @@ class API {
 
   }
 
-
-  static Future<bool> doesMediaExist(String id) async {
+  static doesMediaExist(String id) async {
     var ref = await mediaDB.doc(id).get();
     return ref.exists;
   }
 
-  static Future<bool> isMediaInfoComplete(String id) async {
+  static isMediaInfoComplete(String id) async {
 
     bool res = true;
     await mediaDB.doc(id).get()

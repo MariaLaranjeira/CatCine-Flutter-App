@@ -18,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  Future loginUsingEmailPassword() async {
+  loginUsingEmailPassword() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     try {

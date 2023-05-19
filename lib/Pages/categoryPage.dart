@@ -80,7 +80,7 @@ class _CategoryPageState extends State<CategoryPage>{
                     pageBuilder: (BuildContext context,
                         Animation<double> animation1,
                         Animation<double> animation2) {
-                      return SearchCreateCat(cat: cat,);
+                      return SearchCreateCat(cat: cat, comingFromCreate: false,);
                     },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration
@@ -137,7 +137,7 @@ class _CategoryPageState extends State<CategoryPage>{
                     pageBuilder: (BuildContext context,
                         Animation<double> animation1,
                         Animation<double> animation2) {
-                      return SearchCreateCat(cat: cat,);
+                      return SearchCreateCat(cat: cat, comingFromCreate: false,);
                     },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration
@@ -174,7 +174,7 @@ class _CategoryPageState extends State<CategoryPage>{
     }
   }
 
-  Future<bool> doesUserCatExist(String title) async {
+  doesUserCatExist(String title) async {
     var ref = await userDB.doc(FirebaseAuth.instance.currentUser!.displayName!).collection('interacted_cats').doc(title).get();
     return ref.exists;
   }
@@ -249,15 +249,21 @@ class _CategoryPageState extends State<CategoryPage>{
             }
           }
 
-          initialLike = res['liked'] ?? false;
+          isLiked = res['isLiked'] ?? false;
         }
       });
       initialInteractions = votedMedia.length;
+      initialLike = isLiked;
+      initialVotesUser = {};
+      for (var key in votedMedia.keys) {
+        initialVotesUser[key] = votedMedia[key]!;
+      }
     } else {
       initialInteractions = 0;
       initialLike = false;
-      initialVotesUser = votedMedia;
+      initialVotesUser = {};
     }
+    setState(() {});
   }
 
   updateAllCatInfo() async {
@@ -376,7 +382,7 @@ class _CategoryPageState extends State<CategoryPage>{
     }
   }
 
-  Future<bool> doesMediaExist(String id) async {
+  doesMediaExist(String id) async {
     var ref = await catDB.doc(id).get();
     return ref.exists;
   }
@@ -395,14 +401,14 @@ class _CategoryPageState extends State<CategoryPage>{
     }
   }
 
-  ImageProvider getPosterURL(Media media) {
+  getPosterURL(Media media) {
     if (media.coverUrl != '') {
       return NetworkImage(media.coverUrl);
     }
     return const AssetImage('images/catIcon.png');
   }
 
-  String getTrimmedName(Media media) {
+  getTrimmedName(Media media) {
     if (media.mediaName.length > 25) {
       return '${media.mediaName.substring(0, 25)}...';
     }
@@ -441,10 +447,10 @@ class _CategoryPageState extends State<CategoryPage>{
 
   @override
   void initState(){
-    super.initState();
     cat = widget.category;
     getAllCatInfo();
     loadCreatorName();
+    super.initState();
   }
 
   @override
@@ -1071,7 +1077,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                           pageBuilder: (BuildContext context,
                                               Animation<double> animation1,
                                               Animation<double> animation2) {
-                                            return SearchCreateCat(cat: cat,);
+                                            return SearchCreateCat(cat: cat, comingFromCreate: false,);
                                           },
                                           transitionDuration: Duration.zero,
                                           reverseTransitionDuration: Duration

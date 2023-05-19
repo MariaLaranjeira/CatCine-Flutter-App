@@ -21,7 +21,7 @@ class _ExploreMediaState extends State<ExploreMedia>{
   List<Media> mediaList = [];
   List<Media> displayList = [];
 
-  void updateList(String title) async{
+  updateList(String title) async{
     mediaList = await SearchesBackEnd.updateList(title);
     setState(() {
       displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase()) ||
@@ -29,21 +29,21 @@ class _ExploreMediaState extends State<ExploreMedia>{
     });
   }
 
-  ImageProvider getPosterURL(Media media) {
+  getPosterURL(Media media) {
     if (media.coverUrl != '') {
       return NetworkImage(media.coverUrl);
     }
     return const AssetImage('images/catIcon.png');
   }
 
-  String getTrimmedName(Media media) {
+  getTrimmedName(Media media) {
     if (media.mediaName.length > 15) {
       return '${media.mediaName.substring(0, 15)}...';
     }
     return media.mediaName;
   }
 
-  int rowCounter() {
+  rowCounter() {
     if (displayList.isEmpty) {
       return 0;
     }
@@ -55,7 +55,7 @@ class _ExploreMediaState extends State<ExploreMedia>{
     }
   }
 
-  Column drawSecondElement(int index) {
+  drawSecondElement(int index) {
     if (index >= displayList.length) {
       return Column();
     }
@@ -92,9 +92,6 @@ class _ExploreMediaState extends State<ExploreMedia>{
 
   @override
   Widget build(BuildContext context) {
-
-    print(FirebaseAuth.instance.currentUser!.uid);
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),

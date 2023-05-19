@@ -23,7 +23,7 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
 
   List<Category> displayList = [];
 
-  void updateList(String title) async{
+  updateList(String title) async{
 
     setState(() {
       displayList = allLocalCats.values.where((element) => element.title.toLowerCase().contains(title.toLowerCase()) ||
@@ -31,7 +31,7 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
     });
   }
 
-  int rowCounter() {
+  rowCounter() {
     if (displayList.isEmpty) {
       return 0;
     }
@@ -43,14 +43,14 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
     }
   }
 
-  String getTrimmedName(Category cat) {
+  getTrimmedName(Category cat) {
     if (cat.title.length > 15) {
       return '${cat.title.substring(0, 15)}...';
     }
     return cat.title;
   }
 
-  ImageProvider getPosterURL(Category cat,var i){
+  getPosterURL(Category cat,var i){
 
     if (isCatMediaEmpty(cat) || cat.catMedia.length < 3){
       return const AssetImage('images/catIcon.png');
@@ -60,14 +60,14 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
     return const AssetImage('images/catIcon.png');
   }
 
-  bool isCatMediaEmpty(Category cat) {
+  isCatMediaEmpty(Category cat) {
     if (cat.catMedia == []){
       return true;
     }
     return false;
   }
 
-  BoxDecoration boxDecorator(var i) {
+  boxDecorator(var i) {
     if (mediaCat.isEmpty){
       return const BoxDecoration();
     }
@@ -87,7 +87,7 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
     }
   }
 
-  Column drawSecondElement(int index) {
+  drawSecondElement(int index) {
     if (index >= displayList.length) {
       return Column();
     }

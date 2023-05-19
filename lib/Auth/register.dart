@@ -20,11 +20,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController catNameController = TextEditingController();
 
-  bool passwordConfirmed() {
+  passwordConfirmed() {
     return (passwordController.text.trim() == confirmPasswordController.text.trim());
   }
 
-  Future<void> signUp() async {
+  signUp() async {
     try {
       if (passwordConfirmed() && catNameController.text.trim().length > 3 && catNameController.text.trim().length <= 20) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(

@@ -38,7 +38,10 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
   TextEditingController nameCat = TextEditingController();
   TextEditingController descCat = TextEditingController();
 
-  ImageProvider getPosterURL(var i) {
+  static CollectionReference catDB = FirebaseFirestore.instance.collection(
+      'categories');
+  
+  getPosterURL(var i) {
     if (mediaCat.isEmpty){
       return MemoryImage(kTransparentImage);
     }
@@ -57,7 +60,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
     }
   }
   
-  BoxDecoration boxDecorator(var i) {
+  boxDecorator(var i) {
     if (mediaCat.isEmpty){
       return const BoxDecoration();
     }
@@ -77,7 +80,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
     }
   }
 
-  DecoratedBox displayDecoratedBox() {
+  displayDecoratedBox() {
     if (mediaCat.length > 3) {
       return DecoratedBox(
         decoration: const BoxDecoration(
@@ -99,15 +102,12 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
     return const DecoratedBox(decoration: BoxDecoration());
   }
   
-  static CollectionReference catDB = FirebaseFirestore.instance.collection(
-      'categories');
-
-  static Future<bool> doesCatExist(String id) async {
+  doesCatExist(String id) async {
     var ref = await catDB.doc(id).get();
     return ref.exists;
   }
 
-  static addCat(Category cat) async {
+  addCat(Category cat) async {
 
     var ref = catDB.doc(cat.title);
 
@@ -355,7 +355,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
                             onPressed: () {
                               Navigator.push(context, PageRouteBuilder(
                                 pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                                  return SearchCreateCat(cat: newCat,);
+                                  return SearchCreateCat(cat: newCat, comingFromCreate: true,);
                                 },
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
