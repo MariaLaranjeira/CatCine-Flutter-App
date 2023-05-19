@@ -67,6 +67,26 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
     return false;
   }
 
+  BoxDecoration boxDecorator(var i) {
+    if (mediaCat.isEmpty){
+      return const BoxDecoration();
+    }
+    if (i < mediaCat.length) {
+      return BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              blurRadius: 4,
+              offset: const Offset(0, 4), // changes position of shadow
+            ),
+          ]
+      );
+    }
+    else {
+      return const BoxDecoration();
+    }
+  }
+
   Column drawSecondElement(int index) {
     if (index >= displayList.length) {
       return Column();
@@ -94,23 +114,52 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                   child: Column(
                     children: [
                       const SizedBox(height: 20),
-                      Container(
-                        height: 120,
-                        width: 125,
-                        child: Row(
+                      SizedBox(
+                        height: (MediaQuery.of(context).size.width/5.9) * 1.8,
+                        width: MediaQuery.of(context).size.width/1.62,
+                        child: Stack(
+                          fit: StackFit.expand,
                           children: [
-                            Image(
-                              image: getPosterURL(displayList[index],0),
+                            Positioned(
+                              left: 67,
+                              bottom: 24,
+                              child: Container(
+                                decoration: boxDecorator(2),
+                                child: Image(image: getPosterURL(displayList[index], 2),
+                                  height: (MediaQuery.of(context).size.width/5.9) * 1.3,
+                                  width: MediaQuery.of(context).size.width/5.9,
+                                  colorBlendMode: BlendMode.screen,
+                                ),
+                              ),
                             ),
-                            Image(
-                              image: getPosterURL(displayList[index],1),
+                            Positioned(
+                              left: 47,
+                              bottom: 12,
+                              child: Container(
+                                decoration: boxDecorator(1),
+                                child: Image(image: getPosterURL(displayList[index], 1),
+                                  height: (MediaQuery.of(context).size.width/5.9) * 1.3,
+                                  width: MediaQuery.of(context).size.width/5.9,
+                                  colorBlendMode: BlendMode.screen,
+                                ),
+                              ),
                             ),
-                            Image(
-                              image: getPosterURL(displayList[index],2),
+                            Positioned(
+                              left: 27,
+                              bottom: 0,
+                              child: Container(
+                                decoration: boxDecorator(0),
+                                child: Image(image: getPosterURL(displayList[index], 0),
+                                  height: (MediaQuery.of(context).size.width/5.9) * 1.3,
+                                  width: MediaQuery.of(context).size.width/5.9,
+                                  colorBlendMode: BlendMode.screen,
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ),
+                      const SizedBox(height: 11),
                       Text(
                         getTrimmedName(displayList[index]),
                         style: const TextStyle(
@@ -223,14 +272,64 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                                       color: Color(0xFFD9D9D9),
                                       width: (MediaQuery.of(context).size.width/11) * 4.30,
                                       height: ((MediaQuery.of(context).size.width/11) * 4.30) * 1.3,
-                                      child:Text(
-                                        getTrimmedName(displayList[index * 2]),
-                                        style: const TextStyle(
-                                            color: Color(0xFF393D5A),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20
-                                        ),
-                                      )
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: 20),
+                                          SizedBox(
+                                            height: (MediaQuery.of(context).size.width/5.9) * 1.8,
+                                            width: MediaQuery.of(context).size.width/1.62,
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              children: [
+                                                Positioned(
+                                                  left: 67,
+                                                  bottom: 24,
+                                                  child: Container(
+                                                    decoration: boxDecorator(2),
+                                                    child: Image(image: getPosterURL(displayList[index], 2),
+                                                      height: (MediaQuery.of(context).size.width/5.9) * 1.3,
+                                                      width: MediaQuery.of(context).size.width/5.9,
+                                                      colorBlendMode: BlendMode.screen,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  left: 47,
+                                                  bottom: 12,
+                                                  child: Container(
+                                                    decoration: boxDecorator(1),
+                                                    child: Image(image: getPosterURL(displayList[index], 1),
+                                                      height: (MediaQuery.of(context).size.width/5.9) * 1.3,
+                                                      width: MediaQuery.of(context).size.width/5.9,
+                                                      colorBlendMode: BlendMode.screen,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  left: 27,
+                                                  bottom: 0,
+                                                  child: Container(
+                                                    decoration: boxDecorator(0),
+                                                    child: Image(image: getPosterURL(displayList[index], 0),
+                                                      height: (MediaQuery.of(context).size.width/5.9) * 1.3,
+                                                      width: MediaQuery.of(context).size.width/5.9,
+                                                      colorBlendMode: BlendMode.screen,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Text(
+                                            getTrimmedName(displayList[index]),
+                                            style: const TextStyle(
+                                                color: Color(0xFF393D5A),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
