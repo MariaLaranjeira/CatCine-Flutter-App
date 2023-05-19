@@ -38,8 +38,7 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
   TextEditingController nameCat = TextEditingController();
   TextEditingController descCat = TextEditingController();
 
-  static CollectionReference catDB = FirebaseFirestore.instance.collection(
-      'categories');ImageProvider 
+  static CollectionReference catDB = FirebaseFirestore.instance.collection('categories');ImageProvider 
 
 
   getPosterURL(var i) {
