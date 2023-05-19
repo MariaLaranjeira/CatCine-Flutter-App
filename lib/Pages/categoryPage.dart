@@ -115,7 +115,7 @@ class _CategoryPageState extends State<CategoryPage>{
       );
     }
     return Container(
-        width: 88,
+        width: MediaQuery.of(context).size.width/4.12,
         height: 39,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
@@ -167,6 +167,7 @@ class _CategoryPageState extends State<CategoryPage>{
         ),
       );
   }
+
   Future<bool> doesUserCatExist(String title) async {
     var ref = await catDB.doc(FirebaseAuth.instance.currentUser!.displayName).collection('interacted_cats').doc(title).get();
     return ref.exists;
@@ -881,6 +882,7 @@ class _CategoryPageState extends State<CategoryPage>{
       );
     } else {
       textLength = cat.description.length;
+      descCat.text = cat.description;
       descCat.value.replaced(descCat.value.composing, cat.description);
       return Scaffold(
         extendBodyBehindAppBar: true,
