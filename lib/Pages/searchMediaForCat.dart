@@ -24,7 +24,7 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
   List<Media> displayList = [];
   String searchedTitle = '';
 
-  void updateList(String title) async{
+  updateList(String title) async{
 
     mediaList = await SearchesBackEnd.updateList(title);
     setState(() {
@@ -32,21 +32,21 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
     });
   }
 
-  ImageProvider getPosterURL(Media media) {
+  getPosterURL(Media media) {
     if (media.coverUrl != '') {
       return NetworkImage(media.coverUrl);
     }
     return const AssetImage('images/catIcon.png');
   }
 
-  String getTrimmedName(Media media) {
+  getTrimmedName(Media media) {
     if (media.mediaName.length > 25) {
       return '${media.mediaName.substring(0, 25)}...';
     }
     return media.mediaName;
   }
 
-  Color getColor(Media media) {
+  getColor(Media media) {
     if (mediaCat.contains(media)) {
       return const Color(0xFF42A7AD);
     }
@@ -55,7 +55,7 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
     }
   }
 
-  ListView listViewProvider() {
+  listViewProvider() {
     if (searchedTitle.isNotEmpty) {
       return ListView.builder(
         itemCount: displayList.length,

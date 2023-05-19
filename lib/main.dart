@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
     return _updateConnectionStatus(result);
   }
 
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+  _updateConnectionStatus(ConnectivityResult result) async {
     setState(() {
       _connectionStatus = result;
     });

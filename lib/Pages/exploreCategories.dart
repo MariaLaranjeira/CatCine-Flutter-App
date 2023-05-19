@@ -21,7 +21,7 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
 
   List<Category> displayList = [];
 
-  void updateList(String title) async{
+  updateList(String title) async{
 
     setState(() {
       displayList = allLocalCats.values.where((element) => element.title.toLowerCase().contains(title.toLowerCase()) ||
@@ -29,7 +29,7 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
     });
   }
 
-  int rowCounter() {
+  rowCounter() {
     if (displayList.isEmpty) {
       return 0;
     }
@@ -41,14 +41,14 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
     }
   }
 
-  String getTrimmedName(Category cat) {
+  getTrimmedName(Category cat) {
     if (cat.title.length > 15) {
       return '${cat.title.substring(0, 15)}...';
     }
     return cat.title;
   }
 
-  Column drawSecondElement(int index) {
+  drawSecondElement(int index) {
     if (index >= displayList.length) {
       return Column();
     }

@@ -15,9 +15,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  Future<void> initList() async {
-    await API.loadMedia();
+  initList() async {
     await API.loadCats();
+    await API.loadMedia();
   }
 
   @override
