@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
 
           await ref.set({
             'uid': result.user!.uid,
-            'catname': catNameController.text.trim()
+            'catname': catNameController.text.trim(),
           });
 
           result.user!.updateDisplayName(catNameController.text.trim());
