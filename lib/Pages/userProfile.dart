@@ -21,6 +21,8 @@ class _ProfileState extends State<Profile> {
   
   String? profilePicUrl = FirebaseAuth.instance.currentUser!.photoURL;
 
+  String defaultProfilePic = "https://firebasestorage.googleapis.com/v0/b/catcine-thebest.appspot.com/o/defaultProfilePic.png?alt=media&token=36809212-5bda-42cb-9484-6eb2298ed0eb";
+
   void pickUploadProfilePic() async {
     final image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
@@ -35,15 +37,13 @@ class _ProfileState extends State<Profile> {
     if (image != null) {
       await ref.putFile(File(image.path));
 
-      ref.getDownloadURL().then((value) async {
+      await ref.getDownloadURL().then((value) async {
         setState(() {
           profilePicUrl = value;
         });
+        FirebaseAuth.instance.currentUser!.updatePhotoURL(profilePicUrl);
       });
     }
-
-    FirebaseAuth.instance.currentUser!.updatePhotoURL(profilePicUrl);
-
   }
 
   @override
@@ -107,16 +107,11 @@ class _ProfileState extends State<Profile> {
                  alignment: Alignment.center,
                  decoration: BoxDecoration(
                    borderRadius: BorderRadius.circular(20),
-                   color:Color(0xFFEEF44C),
-                 ),
-                 child: Center(
-                   child: profilePicUrl == " " ? const Icon(
-                     Icons.person,
-                     color: Colors.white,
-                     size: 80,
-                   ) : ClipRRect(
-                     borderRadius: BorderRadius.circular(20),
-                     child: Image.network(profilePicUrl ?? "https://firebasestorage.googleapis.com/v0/b/catcine-thebest.appspot.com/o/defaultProfilePic.png?alt=media&token=21cd9a01-7768-4ff3-a609-5ee0428301f0"),
+                   color: const Color(0xFFEEF44C),
+                   image: DecorationImage(image: NetworkImage(
+                     profilePicUrl != null ? profilePicUrl! : defaultProfilePic,
+                    ),
+                     fit: BoxFit.fill,
                    ),
                  ),
                ),

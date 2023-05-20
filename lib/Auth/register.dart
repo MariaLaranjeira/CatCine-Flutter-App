@@ -334,7 +334,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 230),
+                SizedBox(height: height/3.78),
 
                 TextField(
                   controller: catNameController,
@@ -349,7 +349,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Enter your catname",
                   ),
                 ),
-                const SizedBox(height: 26.0),
+                SizedBox(height: height/33.37),
 
                 TextField(
                   controller: emailController,
@@ -365,7 +365,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Enter your email",
                   ),
                 ),
-                const SizedBox(height: 26.0),
+                SizedBox(height: height/33.37),
 
                 TextField(
                   controller: passwordController,
@@ -381,7 +381,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Enter your password",
                   ),
                 ),
-                const SizedBox(height: 26.0),
+                SizedBox(height: height/33.37),
 
                 TextField(
                   controller: confirmPasswordController,
@@ -397,13 +397,13 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Confirm your password",
                   ),
                 ),
-                const SizedBox(height: 34.0),
+                SizedBox(height: height/25.52),
 
                 SizedBox(
                   width:double.infinity,
                   child: RawMaterialButton(
                     fillColor: const Color(0xFFEC6B76),
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    padding: EdgeInsets.symmetric(vertical: height/43.37),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -419,7 +419,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: height/43.37),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

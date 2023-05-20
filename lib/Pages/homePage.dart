@@ -2,6 +2,7 @@ import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
+import 'package:catcine_es/main.dart';
 import 'package:flutter/material.dart';
 
 import '../api.dart';
@@ -16,14 +17,17 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   initList() async {
-    await API.loadCats();
-    await API.loadMedia();
+    if (!loadedFromFirebase) {
+      await API.loadCats();
+      await API.loadMedia();
+    }
   }
 
   @override
   void initState() {
     super.initState();
     initList();
+    loadedFromFirebase = true;
   }
   
   @override

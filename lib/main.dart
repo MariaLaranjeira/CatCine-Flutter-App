@@ -11,6 +11,7 @@ Map<String, Media> allLocalMedia = {};
 Map<String, Category> allLocalCats = {};
 double width = 0;
 double height = 0;
+bool loadedFromFirebase = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
