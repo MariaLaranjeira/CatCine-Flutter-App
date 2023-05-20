@@ -9,6 +9,8 @@ import 'Model/category.dart';
 
 Map<String, Media> allLocalMedia = {};
 Map<String, Category> allLocalCats = {};
+double width = 0;
+double height = 0;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -90,6 +92,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_connectionStatus == ConnectivityResult.wifi
           || _connectionStatus == ConnectivityResult.mobile

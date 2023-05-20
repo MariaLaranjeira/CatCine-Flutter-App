@@ -17,7 +17,9 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
 
-  String profilePicLink = "";
+  String username = FirebaseAuth.instance.currentUser!.displayName!;
+  
+  String? profilePicUrl = FirebaseAuth.instance.currentUser!.photoURL;
 
   void pickUploadProfilePic() async {
     final image = await ImagePicker().pickImage(
@@ -28,15 +30,20 @@ class _ProfileState extends State<Profile> {
     );
 
     Reference ref = FirebaseStorage.instance
-        .ref().child("profilepic.jpg");
+        .ref().child("$username.jpg");
 
-    await ref.putFile(File(image!.path));
+    if (image != null) {
+      await ref.putFile(File(image.path));
 
-    ref.getDownloadURL().then((value) async {
-      setState(() {
-        profilePicLink = value;
+      ref.getDownloadURL().then((value) async {
+        setState(() {
+          profilePicUrl = value;
+        });
       });
-    });
+    }
+
+    FirebaseAuth.instance.currentUser!.updatePhotoURL(profilePicUrl);
+
   }
 
   @override
@@ -55,7 +62,7 @@ class _ProfileState extends State<Profile> {
                  Column(
                    children: [
                      Text(
-                       FirebaseAuth.instance.currentUser!.displayName!,
+                       username,
                        textAlign: TextAlign.center,
                        style: const TextStyle(
                          color: Colors.white,
@@ -103,13 +110,13 @@ class _ProfileState extends State<Profile> {
                    color:Color(0xFFEEF44C),
                  ),
                  child: Center(
-                   child: profilePicLink == " " ? const Icon(
+                   child: profilePicUrl == " " ? const Icon(
                      Icons.person,
                      color: Colors.white,
                      size: 80,
                    ) : ClipRRect(
                      borderRadius: BorderRadius.circular(20),
-                     child: Image.network(profilePicLink),
+                     child: Image.network(profilePicUrl ?? "https://firebasestorage.googleapis.com/v0/b/catcine-thebest.appspot.com/o/defaultProfilePic.png?alt=media&token=21cd9a01-7768-4ff3-a609-5ee0428301f0"),
                    ),
                  ),
                ),

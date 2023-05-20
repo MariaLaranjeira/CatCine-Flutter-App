@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../main.dart';
+
 class RegisterScreen extends StatefulWidget {
   final VoidCallback showLoginPage;
   const RegisterScreen({Key? key, required this.showLoginPage}) : super(key: key);
@@ -312,22 +314,22 @@ class _RegisterScreenState extends State<RegisterScreen>{
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
-      body: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            child: Image.asset(
-              'images/CreateAccount.png',
-              width: 380,
-              height: 480,
-              fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              child: Image.asset(
+                'images/CreateAccount.png',
+                width: width/1.08,
+                height: height/1.81,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-       Padding (
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+         Padding (
+            padding: EdgeInsets.symmetric(horizontal: width/25.72),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,11 +447,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   ],
                 )
               ],
-            ),
-          )
-      ),
+            )
+        ),
     ],
     ),
+      ),
     );
   }
 }
