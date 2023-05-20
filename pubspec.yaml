@@ -46,6 +46,8 @@ dependencies:
   mockito: ^5.4.0
   flutter_gherkin: ^2.0.0
   transparent_image: ^2.0.1
+  firebase_storage: ^11.2.1
+  image_picker: ^0.8.7+5
 
 dev_dependencies:
   flutter_test:
