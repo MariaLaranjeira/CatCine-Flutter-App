@@ -3,7 +3,7 @@ import 'package:catcine_es/Pages/userProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../api.dart';
+import '../Model/searchesBackEnd.dart';
 import '../Model/media.dart';
 import 'createCategory.dart';
 import 'exploreCategories.dart';
@@ -21,53 +21,77 @@ class _ExploreMediaState extends State<ExploreMedia>{
   List<Media> mediaList = [];
   List<Media> displayList = [];
 
-  Future<void> initList() async {
-    await API.loadMedia();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initList();
-  }
-
-  void updateList(String title) async{
-    if (title.isEmpty) {
-      setState(() {
-        displayList = [];
-      });
-      return;
-    }
-    mediaList = await Media.searchTitle(title);
-    await API.storeMedia();
-    API.updateRemoteList(mediaList);
-
-
-    displayList = mediaList;
-
-
+  updateList(String title) async{
+    mediaList = await SearchesBackEnd.updateList(title);
     setState(() {
-      displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase())).toList();
+      displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase()) ||
+          element.mediaName.toUpperCase().contains(title.toUpperCase())).toList();
     });
   }
 
-  ImageProvider getPosterURL(Media media) {
+  getPosterURL(Media media) {
     if (media.coverUrl != '') {
       return NetworkImage(media.coverUrl);
     }
     return const AssetImage('images/catIcon.png');
   }
 
-  String getTrimmedName(Media media) {
+  getTrimmedName(Media media) {
     if (media.mediaName.length > 15) {
       return '${media.mediaName.substring(0, 15)}...';
     }
     return media.mediaName;
   }
 
+  rowCounter() {
+    if (displayList.isEmpty) {
+      return 0;
+    }
+    else if (displayList.length%2==1) {
+      return (displayList.length ~/ 2) + 1;
+    }
+    else {
+      return displayList.length ~/ 2;
+    }
+  }
+
+  drawSecondElement(int index) {
+    if (index >= displayList.length) {
+      return Column();
+    }
+    else {
+      return Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: SizedBox(
+                width: (MediaQuery.of(context).size.width/11) * 4.35,
+                height: ((MediaQuery.of(context).size.width/11) * 4.35) * 3/2,
+                child: Image(
+                  isAntiAlias: true,
+                  image: getPosterURL(displayList[index]),
+                  fit: BoxFit.fill,
+                  semanticLabel: "${displayList[index].mediaName}...",
+                  loadingBuilder: (context, child, progress) {
+                    return progress == null ? child : const LinearProgressIndicator();
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 10,),
+            Text(
+              getTrimmedName(displayList[index]),
+              style: const TextStyle(
+                  color: Colors.white
+              ),
+            )
+          ]
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xff393d5a),
@@ -149,7 +173,7 @@ class _ExploreMediaState extends State<ExploreMedia>{
       ),
 
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,7 +231,7 @@ class _ExploreMediaState extends State<ExploreMedia>{
             Expanded(
               child: DraggableScrollableActuator(
                 child: ListView.builder(
-                  itemCount: displayList.length ~/ 2,
+                  itemCount: rowCounter(),
                   itemBuilder: (context, index) => ListTile(
                     contentPadding: const EdgeInsets.all(8.0),
                     title: Row(
@@ -215,10 +239,10 @@ class _ExploreMediaState extends State<ExploreMedia>{
                         Column(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(16.0),
+                              borderRadius: BorderRadius.circular(12.0),
                               child: SizedBox(
                                 width: (MediaQuery.of(context).size.width/11) * 4.35,
-                                height: 250,
+                                height: ((MediaQuery.of(context).size.width/11) * 4.35) * 3/2,
                                 child: Image(
                                   fit: BoxFit.fill,
                                   isAntiAlias: true,
@@ -240,35 +264,8 @@ class _ExploreMediaState extends State<ExploreMedia>{
                           ]
                         ),
                         SizedBox(width: MediaQuery.of(context).size.width/11,),
-                        Column(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(16.0),
-                                child: SizedBox(
-                                  width: (MediaQuery.of(context).size.width/11) * 4.35,
-                                  height: 250,
-                                  child: Image(
-                                    isAntiAlias: true,
-                                    image: getPosterURL(displayList[index * 2 + 1]),
-                                    fit: BoxFit.fill,
-                                    semanticLabel: "${displayList[index * 2 + 1].mediaName}...",
-                                    loadingBuilder: (context, child, progress) {
-                                      return progress == null ? child : const LinearProgressIndicator();
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10,),
-                              Text(
-                                getTrimmedName(displayList[index * 2 + 1]),
-                                style: const TextStyle(
-                                    color: Colors.white
-                                ),
-                              )
-                            ]
-                        ),
+                        drawSecondElement((index * 2) + 1),
                       ]
-
                     ),
                   ),
                 ),

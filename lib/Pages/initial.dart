@@ -12,14 +12,14 @@ class InitialScreen extends StatefulWidget {
 
 class _InitialScreenState extends State<InitialScreen> {
 
-  void _signIn() {
+  _signIn() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const AuthMainPage(pageSelector: true)
       ));
   }
 
-  void _register() {
+  _register() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const AuthMainPage(pageSelector: false)
@@ -47,7 +47,7 @@ class _InitialScreenState extends State<InitialScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height/1.35),
+              SizedBox(height: MediaQuery.of(context).size.height/1.4),
               SizedBox(
                 key: const Key('Sign In'),
                 width:double.infinity,
@@ -69,7 +69,7 @@ class _InitialScreenState extends State<InitialScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 25.0),
+              SizedBox(height: MediaQuery.of(context).size.height/25),
 
               SizedBox(
                 width:double.infinity,

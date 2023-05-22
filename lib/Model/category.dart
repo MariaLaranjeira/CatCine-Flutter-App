@@ -4,12 +4,13 @@ class Category {
 
   String title;
 
-  List<Media> catMedia;
+  List<Media> catMedia = [];
   String creator;
   String description;
   int likes;
   int interactions;
-  String backDrop;
+  Map<String, List<int>> updown = {};
+  //String backDrop;
 
   Category(
     this.catMedia,
@@ -18,17 +19,29 @@ class Category {
     this.title,
     this.likes,
     this.interactions,
-    this.backDrop
+    this.updown,
+    //this.backDrop
   );
+
+  Category.def({
+    this.catMedia = const [],
+    this.creator = '',
+    this.description = '',
+    this.title = '',
+    this.likes = 0,
+    this.interactions = 0,
+    this.updown = const {},
+  });
 
   Category.fromFirebase({
     this.title = "",
     this.creator = "",
     this.catMedia = const [],
     this.description = "",
-    this.backDrop = "",
+    //this.backDrop = "",
     this.interactions = 1,
-    this.likes = 1
+    this.likes = 1,
+    this.updown = const {},
   });
 
   factory Category.fromJson(Map<String,dynamic> json){
@@ -44,9 +57,11 @@ class Category {
       title: title,
       creator: creator,
       description: description,
-      backDrop: backDrop,
+      //backDrop: backDrop,
       likes: likes,
-      interactions: interactions
+      interactions: interactions,
+      catMedia: [],
+      updown: {},
     );
   }
 
@@ -55,7 +70,7 @@ class Category {
       "title": title,
       "creator": creator,
       "description": description,
-      "bakDrop": backDrop,
+      //"bakDrop": backDrop,
       "likes": likes,
       "interactions": interactions
     };
