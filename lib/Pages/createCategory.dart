@@ -11,6 +11,7 @@ import 'package:transparent_image/transparent_image.dart';
 
 import '../Model/category.dart';
 import '../Model/media.dart';
+import '../main.dart';
 
 
 List<Media> mediaCat = [];
@@ -223,299 +224,306 @@ class _CreateCategoryState extends State<CreateCategoryScreen> {
         ),
       ),
 
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            //physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-            child: Padding (
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        //physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+        child: Padding (
+            padding: EdgeInsets.symmetric(horizontal: width/25.71),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: height/23),
+
+                Row(
                   children: [
-                    const SizedBox(height: 30),
-                    Row(
-                      children: [
-                        RichText(
-                          text: const TextSpan(
-                          children: <TextSpan> [
-                            TextSpan(text: "Create Your\n", style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 32.0)),
-                            TextSpan(text: "Cat", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEC6B76),fontSize: 32.0)),
-                            TextSpan(text: "egory", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 32.0))
-                          ],
-                          ),
-                        ),
-                      ]
-                    ),
-                    const SizedBox( height:20.0),
-
-                    const Text(
-                      "Add movies, upvote and downvote them, \nand share it with your friends!",
-                       style: TextStyle(
-                         color: Color.fromARGB(215, 255, 255, 255),
-                         fontSize: 16.5,
-                         fontWeight: FontWeight.normal
-                        ),
-                    ),
-                    const SizedBox( height:9.0),
-                    Container(
-                      height: 0.9,
-                      width: double.infinity,
-                      color: Color(0xFF6B6D7B),
-                    ),
-                    const SizedBox( height: 9.0),
-                    const Text(
-                      "Name your category:",
-                      style: TextStyle(
-                          color: Color.fromARGB(215, 255, 255, 255),
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  const SizedBox( height:20.0),
-
-                  TextField(
-                    key: const Key("categoryName"),
-                    controller: nameCat,
-                    decoration: InputDecoration(
-                      filled:true,
-                      fillColor: const Color(0xFFFFFFFF),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: " Enter your category’s name",
-                    ),
-                  ),
-                    const SizedBox( height:10.0),
-                    const Text (
-                      "Write a Description:",
-                      style: TextStyle(
-                          color: Color.fromARGB(215, 255, 255, 255),
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  const SizedBox( height:20.0),
-
-                  TextFormField(
-                    key: const Key("categoryDescription"),
-                    controller: descCat,
-                    decoration: InputDecoration(
-                      filled:true,
-                      fillColor: const Color(0xFFFFFFFF),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: " Enter your description ...",
-                      suffixText: '${textLength.toString()}/${maxLength.toString()}',
-                      counterText: "",
-                    ),
-                    cursorRadius: const Radius.circular(10),
-                    keyboardType: TextInputType.text,
-                    maxLength: maxLength,
-                    onChanged: (value) {
-                      setState(() {
-                        textLength = value.length;
-                      });
-                    },
-                    maxLines: 4,
-                  ),
-                  const SizedBox( height: 20.0),
-                  const Text(
-                    "Add films:",
-                    style: TextStyle(
-                        color: Color.fromARGB(215, 255, 255, 255),
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  const SizedBox( height: 20.0),
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFCFDBDC),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12.0),
-                      ),
-                    ),
-                    alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width,
-                    height: (MediaQuery.of(context).size.width - 32)/3.1,
-                    child: Row(
-                        children: [
-                        SizedBox(width: MediaQuery.of(context).size.width/26.2),
-                        SizedBox.square(
-                          dimension: MediaQuery.of(context).size.width/4.6,
-                          child: RawMaterialButton(
-                            fillColor: const Color(0x8B84898B),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            onPressed: () {
-                              Navigator.push(context, PageRouteBuilder(
-                                pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                                  return SearchCreateCat(cat: newCat, comingFromCreate: true,);
-                                },
-                                transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero,
-                              ),
-                              ).whenComplete(() {
-                                setState(() {
-                                  image0 = getPosterURL(0);
-                                  image1 = getPosterURL(1);
-                                  image2 = getPosterURL(2);
-                                });
-                              });
-                            },
-                            child: const Text(
-                              "+",
-                              style: TextStyle(
-                                  color: Color(0xFFCFDBDC),
-                                  fontSize: 54.0,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: MediaQuery.of(context).size.width/26.2),
-                        SizedBox(
-                          height: (MediaQuery.of(context).size.width/5.9) * 3/2,
-                          width: MediaQuery.of(context).size.width/1.62,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              Positioned(
-                                left: 0,
-                                child: Container(
-                                  decoration: boxDecorator(0),
-                                  child: Image(image: image0,
-                                    height: (MediaQuery.of(context).size.width/5.9) * 3/2,
-                                    width: MediaQuery.of(context).size.width/5.9,
-                                    colorBlendMode: BlendMode.screen,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: MediaQuery.of(context).size.width/5.9/5*4,
-                                child: Container(
-                                  decoration: boxDecorator(1),
-                                  child: Image(image: image1,
-                                    height: (MediaQuery.of(context).size.width/5.9) * 3/2,
-                                    width: MediaQuery.of(context).size.width/5.9,
-                                    colorBlendMode: BlendMode.screen,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: MediaQuery.of(context).size.width/5.9/5*8,
-                                child: Container(
-                                  decoration: boxDecorator(2),
-                                  child: Image(image: image2,
-                                    height: (MediaQuery.of(context).size.width/5.9) * 3/2,
-                                    width: MediaQuery.of(context).size.width/5.9,
-                                    colorBlendMode: BlendMode.screen,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: MediaQuery.of(context).size.width/5.9/5*12,
-                                height: (MediaQuery.of(context).size.width/5.9) * 3/2,
-                                width: MediaQuery.of(context).size.width/5.9,
-                                child: displayDecoratedBox()
-                              ),
-                            ],
-                          ),
-                        ),
+                    RichText(
+                      text: const TextSpan(
+                      children: <TextSpan> [
+                        TextSpan(text: "Create Your\n", style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 32.0)),
+                        TextSpan(text: "Cat", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEC6B76),fontSize: 32.0)),
+                        TextSpan(text: "egory", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 32.0))
                       ],
+                      ),
+                    ),
+                  ]
+                ),
+
+                SizedBox(height: height/43.37),
+
+                const Text(
+                  "Add movies, upvote and downvote them, \nand share it with your friends!",
+                   style: TextStyle(
+                     color: Color.fromARGB(215, 255, 255, 255),
+                     fontSize: 16.5,
+                     fontWeight: FontWeight.normal
+                    ),
+                ),
+                SizedBox(height: height/96.38),
+                Container(
+                  height: 0.9,
+                  width: double.infinity,
+                  color: const Color(0xFF6B6D7B),
+                ),
+                SizedBox(height: height/96.38),
+                const Text(
+                  "Name your category:",
+                  style: TextStyle(
+                      color: Color.fromARGB(215, 255, 255, 255),
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+                SizedBox(height: height/43.37),
+
+                TextField(
+                key: const Key("categoryName"),
+                controller: nameCat,
+                decoration: InputDecoration(
+                  filled:true,
+                  fillColor: const Color(0xFFFFFFFF),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  hintText: " Enter your category’s name",
+                ),
+              ),
+
+                SizedBox(height: height/86.74),
+
+                const Text (
+                  "Write a Description:",
+                  style: TextStyle(
+                      color: Color.fromARGB(215, 255, 255, 255),
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+
+                SizedBox(height: height/43.37),
+
+                TextFormField(
+                  key: const Key("categoryDescription"),
+                  controller: descCat,
+                  decoration: InputDecoration(
+                    filled:true,
+                    fillColor: const Color(0xFFFFFFFF),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintText: " Enter your description ...",
+                    suffixText: '${textLength.toString()}/${maxLength.toString()}',
+                    counterText: "",
+                  ),
+                  cursorRadius: const Radius.circular(10),
+                  keyboardType: TextInputType.text,
+                  maxLength: maxLength,
+                  onChanged: (value) {
+                    setState(() {
+                      textLength = value.length;
+                    });
+                  },
+                  maxLines: 4,
+                ),
+
+                SizedBox(height: height/43.37),
+
+                const Text(
+                  "Add films:",
+                  style: TextStyle(
+                     color: Color.fromARGB(215, 255, 255, 255),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+
+                SizedBox(height: height/43.37),
+
+                Container(
+                 decoration: const BoxDecoration(
+                    color: Color(0xFFCFDBDC),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12.0),
                     ),
                   ),
-                  const SizedBox(height:30),
-                  Center(
-                    child:SizedBox(
-                      key: const Key("CreateButton"),
-                      width:200,
-                      child: RawMaterialButton(
-                        fillColor: const Color(0xFFEC6B76),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        elevation: 0.0,
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        onPressed: () {
-                          if (nameCat.text.trim().length >= 3 && nameCat.text.trim().length <= 50){
+                  alignment: Alignment.center,
+                  width: width,
+                  height: (width - 32)/3.1,
+                  child: Row(
+                      children: [
+                      SizedBox(width: width/26.2),
 
-                            newCat.description = descCat.text.trim();
-                            newCat.title = nameCat.text.trim();
-                            newCat.catMedia = [];
-                            newCat.creator = FirebaseAuth.instance.currentUser!.displayName!;
-
-                            for (var element in mediaCat) {newCat.catMedia.add(element);}
-
-                            addCat(newCat);
-
-                            mediaCat.clear();
-
+                      SizedBox.square(
+                       dimension: width/4.6,
+                        child: RawMaterialButton(
+                          fillColor: const Color(0x8B84898B),
+                          shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          onPressed: () {
                             Navigator.push(context, PageRouteBuilder(
                               pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                                return CategoryPage(category: newCat);
+                                return SearchCreateCat(cat: newCat, comingFromCreate: true, isAdminFromExplore: false,);
                               },
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),
-                            );
-                          } else {
-                            showDialog(context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                      alignment: Alignment.topCenter,
-                                      shape: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30.0),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      backgroundColor: const Color.fromARGB(255, 255, 87, 51),
-                                      content:
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: const [
-                                          Icon(
-                                            Icons.warning_amber_rounded,
-                                            color: Colors.black,
-                                            size: 20,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "Invalid Category name",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                  );
-                                }
-                            );
-                          }
-                        },
-                        child: const Text(
-                          "Create" ,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25.0,
-                              fontWeight: FontWeight.bold),
+                            ).whenComplete(() {
+                              setState(() {
+                                image0 = getPosterURL(0);
+                                image1 = getPosterURL(1);
+                                image2 = getPosterURL(2);
+                              });
+                            });
+                          },
+                          child: const Text(
+                            "+",
+                            style: TextStyle(
+                               color: Color(0xFFCFDBDC),
+                                fontSize: 54.0,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
                         ),
+                      ),
+
+                      SizedBox(width: width/26.2),
+
+                      SizedBox(
+                       height: (width/5.9) * 3/2,
+                        width: width/1.62,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Positioned(
+                              left: 0,
+                              child: Container(
+                                decoration: boxDecorator(0),
+                                child: Image(image: image0,
+                                  height: (width/5.9) * 3/2,
+                                  width: width/5.9,
+                                  colorBlendMode: BlendMode.screen,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                             left: width/5.9/5*4,
+                              child: Container(
+                                decoration: boxDecorator(1),
+                                child: Image(image: image1,
+                                 height: (width/5.9) * 3/2,
+                                  width: width/5.9,
+                                  colorBlendMode: BlendMode.screen,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              left: width/5.9/5*8,
+                              child: Container(
+                               decoration: boxDecorator(2),
+                                child: Image(image: image2,
+                                  height: (width/5.9) * 3/2,
+                                  width: width/5.9,
+                                  colorBlendMode: BlendMode.screen,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              left: width/5.9/5*12,
+                              height: (width/5.9) * 3/2,
+                              width: width/5.9,
+                              child: displayDecoratedBox()
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: height/28.92),
+
+                Center(
+                  child:SizedBox(
+                    key: const Key("CreateButton"),
+                    width: width/2.06,
+                    child: RawMaterialButton(
+                      fillColor: const Color(0xFFEC6B76),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      elevation: 0.0,
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      onPressed: () {
+                        if (nameCat.text.trim().length >= 3 && nameCat.text.trim().length <= 50){
+                          newCat.description = descCat.text.trim();
+                          newCat.title = nameCat.text.trim();
+                          newCat.catMedia = [];
+                          newCat.creator = FirebaseAuth.instance.currentUser!.displayName!;
+                          for (var element in mediaCat) {newCat.catMedia.add(element);}
+                          addCat(newCat);
+                          mediaCat.clear();
+
+                          Navigator.push(context, PageRouteBuilder(
+                            pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                              return CategoryPage(category: newCat);
+                            },
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                          );
+                        } else {
+                          showDialog(context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                    alignment: Alignment.topCenter,
+                                    shape: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                                    content:
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: const [
+                                       Icon(
+                                          Icons.warning_amber_rounded,
+                                          color: Colors.black,
+                                          size: 20,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          "Invalid Category name",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20
+                                          ),
+                                        ),
+                                      ],
+                                   )
+                                );
+                              }
+                          );
+                       }
+                      },
+                      child: const Text(
+                        "Create" ,
+                        style: TextStyle(
+                            color: Colors.white,
+                           fontSize: 25.0,
+                           fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                ],
-              ),
-              ),
+                ),
+
+                SizedBox(height: height/43.37),
+              ],
             ),
-          ],
-      ),
+          ),
+        ),
     );
   }
 }

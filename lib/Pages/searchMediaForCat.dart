@@ -12,8 +12,9 @@ import '../Model/searchesBackEnd.dart';
 
 class SearchCreateCat extends StatefulWidget {
   final bool comingFromCreate;
+  final bool isAdminFromExplore;
   final Category cat;
-  const SearchCreateCat({Key? key, required this.cat, required this.comingFromCreate}) : super(key: key);
+  const SearchCreateCat({Key? key, required this.cat, required this.comingFromCreate, required this.isAdminFromExplore}) : super(key: key);
 
   @override
   State<SearchCreateCat> createState() => _SearchCreateCatState();
@@ -23,12 +24,18 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
 
   List<Media> mediaList = [];
   List<Media> displayList = [];
+  List<Media> nonAdminAddPage = [];
   String searchedTitle = '';
 
   updateList(String title) async{
     mediaList = await SearchesBackEnd.updateList(title);
     setState(() {
-      displayList = mediaList.where((element) => element.mediaName.toLowerCase().contains(title.toLowerCase())).toList();
+      displayList = mediaList.where((element) {
+        if (!widget.isAdminFromExplore) {
+          return element.mediaName.toLowerCase().contains(title.toLowerCase()) && !widget.cat.catMedia.contains(element);
+        }
+        return element.mediaName.toLowerCase().contains(title.toLowerCase());
+      }).toList();
     });
   }
 
@@ -55,11 +62,21 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
         return const Color(0xFF6E7398);
       }
     } else {
-      if (widget.cat.catMedia.contains(media)) {
-        return const Color(0xFF42A7AD);
+      if (widget.isAdminFromExplore) {
+        if (widget.cat.catMedia.contains(media)) {
+          return const Color(0xFF42A7AD);
+        }
+        else {
+          return const Color(0xFF6E7398);
+        }
       }
       else {
-        return const Color(0xFF6E7398);
+        if (nonAdminAddPage.contains(media)) {
+          return const Color(0xFF42A7AD);
+        }
+        else {
+          return const Color(0xFF6E7398);
+        }
       }
     }
   }
@@ -67,8 +84,14 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
   getItemCount() {
     if (widget.comingFromCreate) {
       return mediaCat.length;
+    } else {
+      if (widget.isAdminFromExplore) {
+        return widget.cat.catMedia.length;
+      }
+      else {
+        return nonAdminAddPage.length;
+      }
     }
-    return widget.cat.catMedia.length;
   }
 
   listViewProvider() {
@@ -100,17 +123,35 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                     });
                   }
                 } else {
-                  if (widget.cat.catMedia.contains(displayList[index])) {
-                    setState(() {
-                      widget.cat.catMedia.remove(displayList[index]);
-                      widget.cat.updown.remove(displayList[index]);
-                    });
+                  if (widget.isAdminFromExplore) {
+                    if (widget.cat.catMedia.contains(displayList[index])) {
+                      setState(() {
+                        widget.cat.catMedia.remove(displayList[index]);
+                        widget.cat.updown.remove(displayList[index]);
+                      });
+                    }
+                    else {
+                      setState(() {
+                        widget.cat.catMedia.add(displayList[index]);
+                        widget.cat.updown[displayList[index].id] = [0, 0];
+                      });
+                    }
                   }
                   else {
-                    setState(() {
-                      widget.cat.catMedia.add(displayList[index]);
-                      widget.cat.updown[displayList[index].id] = [0, 0];
-                    });
+                    if (nonAdminAddPage.contains(displayList[index])) {
+                      setState(() {
+                        nonAdminAddPage.remove(displayList[index]);
+                        widget.cat.updown.remove(displayList[index]);
+                        widget.cat.catMedia.remove(displayList[index]);
+                      });
+                    }
+                    else {
+                      setState(() {
+                        nonAdminAddPage.add(displayList[index]);
+                        widget.cat.catMedia.add(displayList[index]);
+                        widget.cat.updown[displayList[index].id] = [0, 0];
+                      });
+                    }
                   }
                 }
               },
@@ -119,8 +160,8 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width/5,
-                      height: (MediaQuery.of(context).size.width/5) * 3/2,
+                      width: width/5,
+                      height: (width/5) * 3/2,
                       child: Image(
                         fit: BoxFit.fill,
                         isAntiAlias: true,
@@ -132,7 +173,9 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10,),
+
+                  SizedBox(width: width/41.14,),
+
                   Expanded(
                     child: RichText(
                       text : TextSpan (
@@ -172,9 +215,16 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                     mediaCat.remove(mediaCat[index]);
                   });
                 } else {
-                  setState(() {
-                    widget.cat.catMedia.remove(mediaCat[index]);
-                  });
+                  if (widget.isAdminFromExplore) {
+                    setState(() {
+                      widget.cat.catMedia.remove(widget.cat.catMedia[index]);
+                    });
+                  }
+                  else {
+                    setState(() {
+                      nonAdminAddPage.remove(nonAdminAddPage[index]);
+                    });
+                  }
                 }
               },
               child: Row(
@@ -182,26 +232,28 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width/5,
-                      height: (MediaQuery.of(context).size.width/5) * 3/2,
+                      width: width/5,
+                      height: (width/5) * 3/2,
                       child: Image(
                         fit: BoxFit.fill,
                         isAntiAlias: true,
-                        image: widget.comingFromCreate ? getPosterURL(mediaCat[index]) : getPosterURL(widget.cat.catMedia[index]),
-                        semanticLabel: "${widget.comingFromCreate ? mediaCat[index].mediaName : widget.cat.catMedia[index].mediaName}...",
+                        image: widget.comingFromCreate ? getPosterURL(mediaCat[index]) : (widget.isAdminFromExplore ? getPosterURL(widget.cat.catMedia[index]) : getPosterURL(nonAdminAddPage[index])),
+                        semanticLabel: "${widget.comingFromCreate ? mediaCat[index].mediaName : (widget.isAdminFromExplore ? widget.cat.catMedia[index].mediaName : nonAdminAddPage[index].mediaName)}...",
                         loadingBuilder: (context, child, progress) {
                           return progress == null ? child : const LinearProgressIndicator();
                         },
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10,),
+
+                  SizedBox(width: width/41.14,),
+
                   Expanded(
                     child: RichText(
                       text : TextSpan (
                           children: <TextSpan> [
-                            TextSpan(text:"${widget.comingFromCreate ? getTrimmedName(mediaCat[index]) : getTrimmedName(widget.cat.catMedia[index])}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
-                            TextSpan(text:widget.comingFromCreate ? mediaCat[index].description : widget.cat.catMedia[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                            TextSpan(text:"${widget.comingFromCreate ? getTrimmedName(mediaCat[index]) : (widget.isAdminFromExplore ? getTrimmedName(widget.cat.catMedia[index]) : getTrimmedName(nonAdminAddPage[index]))}\n",style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                            TextSpan(text:widget.comingFromCreate ? mediaCat[index].description : widget.isAdminFromExplore ? widget.cat.catMedia[index].description : nonAdminAddPage[index].description, style: const TextStyle(color: Colors.white, fontSize: 16)),
                           ]
                       ),
                       maxLines: 5,

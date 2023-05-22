@@ -1,12 +1,8 @@
 import 'package:catcine_es/Model/category.dart';
 import 'package:catcine_es/Pages/categoryPage.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
-import 'package:catcine_es/api.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:transparent_image/transparent_image.dart';
 
-import '../Model/media.dart';
 import '../main.dart';
 import 'createCategory.dart';
 import 'exploreMedia.dart';
@@ -89,7 +85,7 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
 
   drawSecondElement(int index) {
     if (index >= displayList.length) {
-      return Column();
+      return const Column();
     }
     else {
       return Column(
@@ -108,9 +104,9 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
                 child: Container(
-                  color: Color(0xFFD9D9D9),
-                  width: (MediaQuery.of(context).size.width/11) * 4.30,
-                  height: ((MediaQuery.of(context).size.width/11) * 4.30) * 1.3,
+                  color: const Color(0xFFD9D9D9),
+                  width: (width/11) * 4.30,
+                  height: ((width/11) * 4.30) * 1.3,
                   child: Column(
                     children: [
                       const SizedBox(height: 20),
@@ -126,8 +122,8 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                               child: Container(
                                 decoration: boxDecorator(2),
                                 child: Image(image: getPosterURL(displayList[index], 2),
-                                  height: (MediaQuery.of(context).size.width/5.9) * 1.3,
-                                  width: MediaQuery.of(context).size.width/5.9,
+                                  height: (width/5.9) * 1.3,
+                                  width: width/5.9,
                                   colorBlendMode: BlendMode.screen,
                                 ),
                               ),
@@ -138,8 +134,8 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                               child: Container(
                                 decoration: boxDecorator(1),
                                 child: Image(image: getPosterURL(displayList[index], 1),
-                                  height: (MediaQuery.of(context).size.width/5.9) * 1.3,
-                                  width: MediaQuery.of(context).size.width/5.9,
+                                  height: (width/5.9) * 1.3,
+                                  width: width/5.9,
                                   colorBlendMode: BlendMode.screen,
                                 ),
                               ),
@@ -150,8 +146,8 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                               child: Container(
                                 decoration: boxDecorator(0),
                                 child: Image(image: getPosterURL(displayList[index], 0),
-                                  height: (MediaQuery.of(context).size.width/5.9) * 1.3,
-                                  width: MediaQuery.of(context).size.width/5.9,
+                                  height: (width/5.9) * 1.3,
+                                  width: width/5.9,
                                   colorBlendMode: BlendMode.screen,
                                 ),
                               ),
@@ -159,7 +155,9 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 11),
+
+                      SizedBox(height: height/78.86),
+
                       Text(
                         getTrimmedName(displayList[index]),
                         style: const TextStyle(
@@ -173,7 +171,8 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                 ),
               ),
             ),
-            const SizedBox(height: 10,),
+
+            SizedBox(height: height/86.74,),
           ]
       );
     }
@@ -195,12 +194,12 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children:[
-            const SizedBox(height: 65,),
-
+            SizedBox(height: height/13.35,),
             Row(
-                children: const [
-                  SizedBox(width: 10),
-                  Text(
+              mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: width/30),
+                  const Text(
                     "Find Categories",
                     style: TextStyle(
                       color:Colors.white,
@@ -210,9 +209,9 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                   ),
                 ]
             ),
-            const SizedBox(
-              height:20.0,
-            ),
+
+            SizedBox(height: height/43.37),
+
             TextField(
               onChanged: (title) => updateList(title),
               style: const TextStyle(color: Colors.black),
@@ -227,7 +226,9 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                 prefixIcon: const Icon(Icons.search),
               ),
             ),
-            const SizedBox(height: 22,),
+
+            SizedBox(height: height/39.43,),
+
             const Text(
               "Recommended For You",
               style: TextStyle(
@@ -236,7 +237,9 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 15,),
+
+            SizedBox(height: height/57.82,),
+
             const Text(
               "Explore your recommended categories based on the ones you've liked in the past",
               style: TextStyle(
@@ -244,13 +247,14 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                 fontSize: 16.0,
               ),
             ),
-            const SizedBox(height: 15,),
+            SizedBox(height: height/57.82,),
+
             Expanded(
               child: DraggableScrollableActuator(
                 child: ListView.builder(
                   itemCount: rowCounter(),
                   itemBuilder: (context, index) => ListTile(
-                    contentPadding: const EdgeInsets.all(8.0),
+                    contentPadding: EdgeInsets.symmetric(horizontal: width/51.43),
                     title: Row(
                         children: [
                           Column(
@@ -269,15 +273,16 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5.0),
                                     child: Container(
-                                      color: Color(0xFFD9D9D9),
-                                      width: (MediaQuery.of(context).size.width/11) * 4.30,
-                                      height: ((MediaQuery.of(context).size.width/11) * 4.30) * 1.3,
+                                      color: const Color(0xFFD9D9D9),
+                                      width: (width/11) * 4.30,
+                                      height: ((width/11) * 4.30) * 1.3,
                                       child: Column(
                                         children: [
-                                          const SizedBox(height: 20),
+                                          SizedBox(height: height/43.37),
+
                                           SizedBox(
-                                            height: (MediaQuery.of(context).size.width/5.9) * 1.8,
-                                            width: MediaQuery.of(context).size.width/1.62,
+                                            height: (width/5.9) * 1.8,
+                                            width: width/1.62,
                                             child: Stack(
                                               fit: StackFit.expand,
                                               children: [
@@ -287,8 +292,8 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                                                   child: Container(
                                                     decoration: boxDecorator(2),
                                                     child: Image(image: getPosterURL(displayList[index], 2),
-                                                      height: (MediaQuery.of(context).size.width/5.9) * 1.3,
-                                                      width: MediaQuery.of(context).size.width/5.9,
+                                                      height: (width/5.9) * 1.3,
+                                                      width: width/5.9,
                                                       colorBlendMode: BlendMode.screen,
                                                     ),
                                                   ),
@@ -299,8 +304,8 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                                                   child: Container(
                                                     decoration: boxDecorator(1),
                                                     child: Image(image: getPosterURL(displayList[index], 1),
-                                                      height: (MediaQuery.of(context).size.width/5.9) * 1.3,
-                                                      width: MediaQuery.of(context).size.width/5.9,
+                                                      height: (width/5.9) * 1.3,
+                                                      width: width/5.9,
                                                       colorBlendMode: BlendMode.screen,
                                                     ),
                                                   ),
@@ -311,8 +316,8 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                                                   child: Container(
                                                     decoration: boxDecorator(0),
                                                     child: Image(image: getPosterURL(displayList[index], 0),
-                                                      height: (MediaQuery.of(context).size.width/5.9) * 1.3,
-                                                      width: MediaQuery.of(context).size.width/5.9,
+                                                      height: (width/5.9) * 1.3,
+                                                      width: width/5.9,
                                                       colorBlendMode: BlendMode.screen,
                                                     ),
                                                   ),
@@ -333,10 +338,10 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 10,),
+                                SizedBox(height: height/86.75,),
                               ]
                           ),
-                          SizedBox(width: MediaQuery.of(context).size.width/15,),
+                          SizedBox(width: width/15,),
                           drawSecondElement((index * 2) + 1),
                         ]
                     ),

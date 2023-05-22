@@ -11,7 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../Model/category.dart';
+<<<<<<< HEAD
 import '../Model/media.dart';
+=======
+import 'initial.dart';
+>>>>>>> a510216ac09e80adc285eaef6fa2d326cdfcf81f
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -82,7 +86,8 @@ class _ProfileState extends State<Profile> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 34),
+            SizedBox(height: height/25.51),
+
             Row(
               children: [
                 Column(
@@ -96,7 +101,9 @@ class _ProfileState extends State<Profile> {
                         fontSize: 24,
                       ),
                     ),
-                    const SizedBox(height: 20),
+
+                    SizedBox(height: height/43.37),
+
                     Text(
                       "Created Categories: ${getNCreatedCats()}",
                       style: const TextStyle(
@@ -107,14 +114,16 @@ class _ProfileState extends State<Profile> {
 
                   ],
                 ),
-                const SizedBox(width: 80),
+
+                SizedBox(width: width/5.14),
+
                 GestureDetector(
                   onTap: () {
                     pickUploadProfilePic();
                   },
                   child: Container(
-                    height: 85,
-                    width: 85,
+                    height: width/4.84,
+                    width: width/4.84,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -128,7 +137,9 @@ class _ProfileState extends State<Profile> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+
+            SizedBox(height: height/43.37),
+
             Container(
               height: 0.9,
               width: double.infinity,
@@ -173,6 +184,7 @@ class _ProfileState extends State<Profile> {
               ],
             ),
             const SizedBox(height: 10),
+
             Container(
               height: 0.9,
               width: double.infinity,
@@ -211,8 +223,33 @@ class _ProfileState extends State<Profile> {
                     ),
                 ),
               ],
+
             ),
+
             Row(/*colocar os watchlist*/),
+
+            const Expanded(child: Column()),
+
+            Container(
+              color: const Color(0xBDDFD4FF),
+              height: height/17.35,
+              width: double.infinity,
+              child: RawMaterialButton(
+
+                  child: const Text(
+                      "Log out",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24.0)
+                  ),
+                  onPressed: () async {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const InitialScreen())
+                    );
+                  }),
+            ),
           ],
         ),
       ),

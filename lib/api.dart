@@ -148,20 +148,24 @@ class API {
   }
 
   static updateRemoteList(List<Media> list) async {
-    for (var media in list) {
-      await mediaDB.doc(media.id).get()
-          .then((DocumentSnapshot documentSnapshot) async {
-        if (documentSnapshot.exists) {
-          var data = documentSnapshot.data();
-          var aux = data as Map<String, dynamic>;
+    Map<String, Media> temp = {};
 
-          if((aux['poster'] == '' && aux['description'] == '' && aux['backdrop'] == '')) {
-            await mediaSpecificUpdate(media);
-            updateMedia(media);
-          }
-        }
-      });
+    for (var media in list) {
+      temp[media.id] = media;
     }
+
+    await mediaDB.get().then((querySnapshot) async {
+      for (var docSnapshot in querySnapshot.docs) {
+        var data = docSnapshot.data();
+        var aux = data as Map<String, dynamic>;
+
+        if((aux['poster'] == '' && aux['description'] == '' && aux['backdrop'] == '')
+            && temp.containsKey(docSnapshot.id)) {
+          await mediaSpecificUpdate(temp[docSnapshot.id]!);
+          updateMedia(temp[docSnapshot.id]!);
+        }
+      }
+    });
   }
 
   static loadSpecificMedia(String id) async{
@@ -202,21 +206,10 @@ class API {
   }
 
   static loadMedia() async {
-
-    List<String> _userKey = [];
-    final query = await mediaDB.get();
-
-    for (var doc in query.docs) {
-      _userKey.add(doc.id);
-    }
-
-    for (String _key in _userKey){
-      mediaDB
-          .doc(_key)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) async {
-        if (documentSnapshot.exists) {
-          var data = documentSnapshot.data();
+    mediaDB.orderBy('score', descending: true).get().then(
+          (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          var data = docSnapshot.data();
           var res = data as Map<String, dynamic>;
 
           bool _movie = false;
@@ -225,74 +218,52 @@ class API {
           }
 
           Media media = Media.api(
-              id: res['id'],
-              mediaName: res['title'] ?? "",
-              releaseDate: res['year'] ?? 0,
-              score: res['score'] ?? 0,
-              runtime: res['runtime'] ?? 0,
-              coverUrl: res['poster'] ?? "",
-              description: res['description'] ?? "",
-              imdbId: res['imdbid'] ?? "",
-              traktId: res['traktid'] ?? 0,
-              tmdbId: res['tmdbid'] ?? 0,
-              movie: _movie,
-              ageRating: res['age_rating'] ?? 0,
-              trailerUrl: res['trailer'] ?? "",
-              backdropUrl: res['backdrop'] ?? "",
-              isInFirebase: true,
+            id: res['id'],
+            mediaName: res['title'] ?? "",
+            releaseDate: res['year'] ?? 0,
+            score: res['score'] ?? 0,
+            runtime: res['runtime'] ?? 0,
+            coverUrl: res['poster'] ?? "",
+            description: res['description'] ?? "",
+            imdbId: res['imdbid'] ?? "",
+            traktId: res['traktid'] ?? 0,
+            tmdbId: res['tmdbid'] ?? 0,
+            movie: _movie,
+            ageRating: res['age_rating'] ?? 0,
+            trailerUrl: res['trailer'] ?? "",
+            backdropUrl: res['backdrop'] ?? "",
+            isInFirebase: true,
           );
 
           allLocalMedia[media.id] = media;
         }
-      });
-    }
+      }
+    );
   }
 
   static loadCats() async {
-
-    List<String> _userKey = [];
-    final query = await catDB.get();
-
-    for (var doc in query.docs) {
-      _userKey.add(doc.id);
-    }
-
-    for (String _key in _userKey){
-      catDB
-          .doc(_key)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) async {
-        if (documentSnapshot.exists) {
-          var data = documentSnapshot.data();
-          var res = data as Map<String, dynamic>;
-
-          Category cat = Category.fromJson(res);
-
-          List<String> _mediaKey = [];
-          final query2 = await catDB.doc(_key).collection('catmedia').get();
-          final query2DB = catDB.doc(_key).collection('catmedia');
-
-          for (var doc in query2.docs) {
-            _mediaKey.add(doc.id);
-          }
-
-          for (String _keyer in _mediaKey){
-            cat.catMedia.add(await API.loadSpecificMedia(_keyer));
-            query2DB
-                .doc(_keyer)
-                .get()
-                .then((DocumentSnapshot documentSnapshot) async {
-              if (documentSnapshot.exists) {
-                var data = documentSnapshot.data();
-                var res = data as Map<String, dynamic>;
-                cat.updown[_keyer] = [res['upvotes'], res['downvotes']];
+    catDB.get().then(
+      (querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        var data = docSnapshot.data();
+        var res = data as Map<String, dynamic>;
+        Category cat = Category.fromJson(res);
+        catDB.doc(docSnapshot.id).collection('catmedia').orderBy('ratio', descending: true).orderBy('downvotes').get().then(
+          (querySnapshot) {
+            for (var docSnapshot_ in querySnapshot.docs) {
+              var data = docSnapshot_.data();
+              var res = data as Map<String, dynamic>;
+              if (allLocalMedia[docSnapshot_.id] != null) {
+                cat.catMedia.add(allLocalMedia[docSnapshot_.id]!);
               }
-            });
-          }
-          allLocalCats[cat.title] = cat;
-        }
-      });
-    }
+              cat.updown[docSnapshot_.id] =
+              [res['upvotes'], res['downvotes']];
+            }
+          });
+        allLocalCats[cat.title] = cat;
+      }
+      }
+    );
   }
 
   static mediaSpecificUpdate(Media media) async {

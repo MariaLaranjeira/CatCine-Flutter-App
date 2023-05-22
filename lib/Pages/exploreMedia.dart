@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../Model/searchesBackEnd.dart';
 import '../Model/media.dart';
+import '../main.dart';
 import 'createCategory.dart';
 import 'exploreCategories.dart';
 import 'initial.dart';
@@ -65,8 +66,8 @@ class _ExploreMediaState extends State<ExploreMedia>{
             ClipRRect(
               borderRadius: BorderRadius.circular(16.0),
               child: SizedBox(
-                width: (MediaQuery.of(context).size.width/11) * 4.35,
-                height: ((MediaQuery.of(context).size.width/11) * 4.35) * 3/2,
+                width: (width/11) * 4.35,
+                height: ((width/11) * 4.35) * 3/2,
                 child: Image(
                   isAntiAlias: true,
                   image: getPosterURL(displayList[index]),
@@ -78,7 +79,7 @@ class _ExploreMediaState extends State<ExploreMedia>{
                 ),
               ),
             ),
-            const SizedBox(height: 10,),
+            SizedBox(height: height/86.74,),
             Text(
               getTrimmedName(displayList[index]),
               style: const TextStyle(
@@ -178,12 +179,12 @@ class _ExploreMediaState extends State<ExploreMedia>{
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children:[
-            const SizedBox(height: 50,),
+            SizedBox(height: height/17.35,),
 
             Row(
-              children: const [
-                SizedBox(width: 18,),
-                Text(
+              children: [
+                SizedBox(width: width/22.86,),
+                const Text(
                   "Explore",
                   style: TextStyle(
                     color:Colors.white,
@@ -194,13 +195,12 @@ class _ExploreMediaState extends State<ExploreMedia>{
               ]
             ),
 
-            const SizedBox(
-              height:20.0,
-            ),
+            SizedBox(height: height/43.37),
+
             Row(
-              children: const [
-                SizedBox(width: 18),
-                Text(
+              children: [
+                SizedBox(width: width/22.86,),
+                const Text(
                   "Let's find your favourite movies, TV shows\nand more ...",
                   style: TextStyle(
                     color: Color.fromARGB(215, 255, 255, 255),
@@ -210,9 +210,8 @@ class _ExploreMediaState extends State<ExploreMedia>{
                 ),
               ]
             ),
-            const SizedBox(
-              height:30.0,
-            ),
+            SizedBox(height: height/28.91,),
+
             TextField(
               onChanged: (title) => updateList(title),
               style: const TextStyle(color: Colors.black),
@@ -227,13 +226,15 @@ class _ExploreMediaState extends State<ExploreMedia>{
                 prefixIcon: const Icon(Icons.search),
               ),
             ),
-            const SizedBox(height: 10,),
+
+            SizedBox(height: height/86.74,),
+
             Expanded(
               child: DraggableScrollableActuator(
                 child: ListView.builder(
                   itemCount: rowCounter(),
                   itemBuilder: (context, index) => ListTile(
-                    contentPadding: const EdgeInsets.all(8.0),
+                    contentPadding: EdgeInsets.symmetric(horizontal: width/51.43),
                     title: Row(
                       children: [
                         Column(
@@ -241,8 +242,8 @@ class _ExploreMediaState extends State<ExploreMedia>{
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12.0),
                               child: SizedBox(
-                                width: (MediaQuery.of(context).size.width/11) * 4.35,
-                                height: ((MediaQuery.of(context).size.width/11) * 4.35) * 3/2,
+                                width: (width/11) * 4.35,
+                                height: ((width/11) * 4.35) * 3/2,
                                 child: Image(
                                   fit: BoxFit.fill,
                                   isAntiAlias: true,
@@ -254,7 +255,9 @@ class _ExploreMediaState extends State<ExploreMedia>{
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 10,),
+
+                            SizedBox(height: height/86.74,),
+
                             Text(
                               getTrimmedName(displayList[index * 2]),
                               style: const TextStyle(
@@ -263,33 +266,13 @@ class _ExploreMediaState extends State<ExploreMedia>{
                             )
                           ]
                         ),
-                        SizedBox(width: MediaQuery.of(context).size.width/11,),
+                        SizedBox(width: width/11,),
                         drawSecondElement((index * 2) + 1),
                       ]
                     ),
                   ),
                 ),
               ),
-            ),
-
-            SizedBox(
-              height: 50,
-              width: double.infinity,
-              child: RawMaterialButton(
-
-                  child: const Text(
-                      "Log out temporary",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24.0)
-                  ),
-                  onPressed: () async {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const InitialScreen())
-                    );
-                  }),
             ),
           ],
         ),

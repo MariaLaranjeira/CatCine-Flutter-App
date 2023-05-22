@@ -5,6 +5,7 @@ import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
 import 'package:catcine_es/Pages/searchMediaForCat.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
+import 'package:catcine_es/main.dart';
 import 'package:catcine_es/my_flutter_app_icons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -58,10 +59,11 @@ class _CategoryPageState extends State<CategoryPage>{
     return 40.0;
   }
   getButtons(){
-    if (username == cat.creator){
+    if (username == creatorUsername){
       return Container(
-        width: 147,
-        height: 39,
+        width: width/2.8,
+        height: height/19,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
           color: const Color(0xB3D9D9D9),
@@ -72,6 +74,8 @@ class _CategoryPageState extends State<CategoryPage>{
                 onPressed: () {
                   setState(() {
                     isEditMode = true;
+                    descCat.text = cat.description;
+                    textLength = cat.description.length;
                   });
                 },
                 icon: const Icon(Icons.edit),
@@ -79,19 +83,18 @@ class _CategoryPageState extends State<CategoryPage>{
               ),
               Container(
                 color: const Color(0xCCA7A7A7),
-                height: 50,
+                height: height/17.35,
                 width: 0.5,
               ),
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  updateCatListOnAddedMedia();
                   Navigator.push(
                     context, PageRouteBuilder(
                     pageBuilder: (BuildContext context,
                         Animation<double> animation1,
                         Animation<double> animation2) {
-                      return SearchCreateCat(cat: cat, comingFromCreate: false,);
+                      return SearchCreateCat(cat: cat, comingFromCreate: false, isAdminFromExplore: true,);
                     },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration
@@ -100,12 +103,13 @@ class _CategoryPageState extends State<CategoryPage>{
                   ).whenComplete(() =>
                       setState(() {})
                   );
+                  updateCatListOnAddedMedia();
                 },
                 color: const Color(0xFF393D5A),
               ),
               Container(
                 color: const Color(0xCCA7A7A7),
-                height: 50,
+                height: height/17.35,
                 width: 0.5,
               ),
               IconButton(
@@ -128,11 +132,9 @@ class _CategoryPageState extends State<CategoryPage>{
     }
     else {
       return Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width / 4.12,
-        height: 39,
+        width: width/4.1,
+        height: height/19,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
           color: const Color(0xB3D9D9D9),
@@ -142,13 +144,12 @@ class _CategoryPageState extends State<CategoryPage>{
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  updateCatListOnAddedMedia();
                   Navigator.push(
                     context, PageRouteBuilder(
                     pageBuilder: (BuildContext context,
                         Animation<double> animation1,
                         Animation<double> animation2) {
-                      return SearchCreateCat(cat: cat, comingFromCreate: false,);
+                      return SearchCreateCat(cat: cat, comingFromCreate: false, isAdminFromExplore: false,);
                     },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration
@@ -157,12 +158,13 @@ class _CategoryPageState extends State<CategoryPage>{
                   ).whenComplete(() =>
                       setState(() {})
                   );
+                  updateCatListOnAddedMedia();
                 },
                 color: const Color(0xFF393D5A),
               ),
               Container(
                 color: const Color(0xCCA7A7A7),
-                height: 50,
+                height: height/17.35,
                 width: 0.5,
               ),
               IconButton(
@@ -190,23 +192,6 @@ class _CategoryPageState extends State<CategoryPage>{
     return ref.exists;
   }
 
-  loadCreatorName() async {
-    var temp = '';
-    await catDB
-        .doc(cat.title)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) async {
-      if (documentSnapshot.exists) {
-        var data = documentSnapshot.data();
-        var res = data as Map<String, dynamic>;
-        temp = res['creator'];
-      }
-    });
-    setState(() {
-      creatorUsername = temp;
-    });
-  }
-
   getAllCatInfo() async {
     await catDB
         .doc(cat.title)
@@ -215,35 +200,25 @@ class _CategoryPageState extends State<CategoryPage>{
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data();
         var res = data as Map<String, dynamic>;
-
+        creatorUsername = res['creator'];
         cat.likes = res['likes'];
         cat.interactions = res['interactions'];
       }
     });
 
-    var catmedia = await catDB.doc(cat.title).collection('catmedia').get();
     var catmediaDB = catDB.doc(cat.title).collection('catmedia');
 
-    List<String> _mediaId = [];
-    for (var doc in catmedia.docs) {
-      _mediaId.add(doc.id);
-    }
-
-    for (String _key in _mediaId){
-      await catmediaDB
-          .doc(_key)
+    await catmediaDB
           .get()
-          .then((DocumentSnapshot documentSnapshot) async {
-        if (documentSnapshot.exists) {
-          var data = documentSnapshot.data();
+          .then((querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs){
+          var data = docSnapshot.data();
           var res = data as Map<String, dynamic>;
 
-          cat.updown[_key]![0] = res['upvotes'];
-          cat.updown[_key]![1] = res['downvotes'];
-
+          cat.updown[docSnapshot.id]![0] = res['upvotes'];
+          cat.updown[docSnapshot.id]![1] = res['downvotes'];
         }
       });
-    }
 
     if (await doesUserCatExist(cat.title)){
       var usercatsDB = userDB.doc(username).collection('interacted_cats');
@@ -253,13 +228,11 @@ class _CategoryPageState extends State<CategoryPage>{
         if (documentSnapshot.exists) {
           var data = documentSnapshot.data();
           var res = data as Map<String, dynamic>;
-
           for (var elem in cat.catMedia) {
             if (res[elem.id] != null) {
               votedMedia[elem.id] = res[elem.id];
             }
           }
-
           isLiked = res['isLiked'] ?? false;
         }
       });
@@ -290,7 +263,6 @@ class _CategoryPageState extends State<CategoryPage>{
         var res = data as Map<String, dynamic>;
 
         likes = res['likes'];
-        interactions = res['interactions'];
       }
     });
 
@@ -300,25 +272,29 @@ class _CategoryPageState extends State<CategoryPage>{
       likes--;
     }
 
-    interactions += votedMedia.length - initialInteractions;
-
     var ref = catDB.doc(cat.title);
-    await ref.update({
-      'likes':likes,
-      'interactions':interactions,
-    });
 
     var catmedia = await catDB.doc(cat.title).collection('catmedia').get();
     var catmediaDB = catDB.doc(cat.title).collection('catmedia');
 
     List<String> _mediaId = [];
     for (var doc in catmedia.docs) {
-      _mediaId.add(doc.id);
+      bool found = false;
+      for (var media in cat.catMedia) {
+        if (media.id == doc.id) {
+          _mediaId.add(doc.id);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        await catmediaDB.doc(doc.id).delete();
+      }
     }
 
     for (String _key in _mediaId){
-      var tempUp;
-      var tempDown;
+      var tempUp = 0;
+      var tempDown = 0;
 
       await catmediaDB
           .doc(_key)
@@ -330,7 +306,6 @@ class _CategoryPageState extends State<CategoryPage>{
 
           tempUp = res['upvotes'];
           tempDown = res['downvotes'];
-
         }
       });
 
@@ -356,15 +331,22 @@ class _CategoryPageState extends State<CategoryPage>{
         }
       }
 
+      interactions += (tempDown + tempUp);
+
       var reffer = ref.collection('catmedia').doc(_key);
-      await reffer.update({
+      await reffer.set({
         'upvotes': tempUp,
         'downvotes': tempDown,
-      });
-
+        'ratio': tempDown == 0 ? tempUp : tempUp/tempDown,
+      }, SetOptions(merge: true));
     }
 
-    if (await doesUserCatExist(cat.title)){
+    await ref.update({
+      'likes':likes,
+      'interactions': interactions,
+    });
+
+    if (await doesUserCatExist(cat.title)) {
       await userDB.doc(username).collection('interacted_cats').doc(cat.title).delete();
 
       var usercat = userDB.doc(username).collection('interacted_cats').doc(cat.title);
@@ -393,8 +375,8 @@ class _CategoryPageState extends State<CategoryPage>{
     }
   }
 
-  doesMediaExist(String id) async {
-    var ref = await catDB.doc(id).get();
+  doesMediaExistInCat(String id) async {
+    var ref = await catDB.doc(cat.title).collection('catmedia').doc(id).get();
     return ref.exists;
   }
 
@@ -402,11 +384,12 @@ class _CategoryPageState extends State<CategoryPage>{
 
     var ref = catDB.doc(cat.title);
     for (Media media in cat.catMedia) {
-      if (!await doesMediaExist(media.id)){
+      if (!await doesMediaExistInCat(media.id)){
         var list = ref.collection('catmedia').doc(media.id);
         list.set({
           'upvotes': 0,
-          'downvotes': 0
+          'downvotes': 0,
+          'ratio': 0,
         }, SetOptions(merge: true));
       }
     }
@@ -460,7 +443,6 @@ class _CategoryPageState extends State<CategoryPage>{
   void initState(){
     cat = widget.category;
     getAllCatInfo();
-    loadCreatorName();
     super.initState();
   }
 
@@ -573,35 +555,33 @@ class _CategoryPageState extends State<CategoryPage>{
         body: Stack(
           children: [
             Container(
-              constraints: const BoxConstraints.expand(),
+              height: height/4.8,
               decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    alignment: Alignment.topLeft,
-                    image: AssetImage('images/catBackdrop.png'),
-                    fit: BoxFit.contain,
-                  )
+                color: Colors.red,
+                image: DecorationImage(
+                  alignment: Alignment.topLeft,
+                  image: AssetImage('images/catBackdrop.png'),
+                  fit: BoxFit.cover,
+                )
               ),
             ),
             Padding(
-                padding: EdgeInsets.all(MediaQuery.of(context).size.width/25.72),
+                padding: EdgeInsets.symmetric(horizontal: width/25.72),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 35.0,
+                    SizedBox(
+                      height: height/24.79,
                     ),
 
                     SizedBox(
                       width: double.infinity,
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height / 6.5,
+                      height: height/6.5,
                       child: Stack(
                         children: [
                           Positioned(
-                            right: MediaQuery.of(context).size.width/48.41,
+                            right: width/48.41,
                             bottom: 0,
                             child: getButtons(),
                           ),
@@ -632,19 +612,20 @@ class _CategoryPageState extends State<CategoryPage>{
                       ),
                     ),
 
-                    const SizedBox(
-                      height: 30,
+                    SizedBox(
+                      height: height/32,
                     ),
+
                     Row(
                       children: [
-                        const SizedBox(
-                          height: 20,
-                          child: Image(
+                        SizedBox(
+                          height: height/43.37,
+                          child: const Image(
                             image: AssetImage('images/heart.png'),
                           ),
                         ),
-                        const SizedBox(
-                          width: 7,
+                        SizedBox(
+                          width: width/58.78,
                         ),
                         Text(
                             "${cat.likes}",
@@ -652,17 +633,17 @@ class _CategoryPageState extends State<CategoryPage>{
                               color: Colors.white,
                             )
                         ),
-                        const SizedBox(
-                          width: 13,
+                        SizedBox(
+                          width: width/31.65,
                         ),
-                        const SizedBox(
-                          height: 20,
-                          child: Image(
+                        SizedBox(
+                          height: height/43.37,
+                          child: const Image(
                             image: AssetImage('images/votes.png'),
                           ),
                         ),
-                        const SizedBox(
-                          width: 7,
+                        SizedBox(
+                          width: width/58.78,
                         ),
                         Text(
                             "${cat.interactions}",
@@ -672,9 +653,9 @@ class _CategoryPageState extends State<CategoryPage>{
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 13,
-                    ),
+
+                    SizedBox(height: height/66.7,),
+
                     Text(
                       cat.description,
                       style: const TextStyle(
@@ -682,12 +663,15 @@ class _CategoryPageState extends State<CategoryPage>{
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 9.0),
+
+                    SizedBox(height: height/96.35),
+
                     Container(
                       height: 0.9,
                       width: double.infinity,
                       color: const Color(0xFF6B6D7B),
                     ),
+
                     Expanded(
                       child: DraggableScrollableActuator(
                         child: ListView.builder(
@@ -701,57 +685,54 @@ class _CategoryPageState extends State<CategoryPage>{
                                       children: [
                                         Column(
                                           children: [
-                                            SizedBox(
-                                              height: 50,
-                                              child: IconButton(
-                                                iconSize: 35,
-                                                icon: const Icon(
-                                                    MyFlutterApp.upvote),
-                                                color: getColorUpvote(
-                                                    cat.catMedia[index].id),
-                                                onPressed: () {
-                                                  if (!votedMedia.containsKey(
-                                                      cat.catMedia[index].id)) {
-                                                    setState(() {
-                                                      votedMedia[cat
-                                                          .catMedia[index].id] =
-                                                      true;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![0]++;
-                                                      cat.interactions++;
-                                                    });
-                                                  } else if (votedMedia[cat
-                                                      .catMedia[index].id]! ==
-                                                      true) {
-                                                    setState(() {
-                                                      votedMedia.remove(
-                                                          cat.catMedia[index]
-                                                              .id);
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![0]--;
-                                                      cat.interactions--;
-                                                    });
-                                                  }
-                                                  else {
-                                                    setState(() {
-                                                      votedMedia[cat
-                                                          .catMedia[index].id] =
-                                                      true;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![0]++;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![1]--;
-                                                    });
-                                                  }
-                                                },
-                                              ),
+                                            IconButton(
+                                              iconSize: width/11.76,
+                                              icon: const Icon(
+                                                  MyFlutterApp.upvote),
+                                              color: getColorUpvote(
+                                                  cat.catMedia[index].id),
+                                              onPressed: () {
+                                                if (!votedMedia.containsKey(
+                                                    cat.catMedia[index].id)) {
+                                                  setState(() {
+                                                    votedMedia[cat
+                                                        .catMedia[index].id] =
+                                                    true;
+                                                    cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![0]++;
+                                                    cat.interactions++;
+                                                  });
+                                                } else if (votedMedia[cat
+                                                    .catMedia[index].id]! ==
+                                                    true) {
+                                                  setState(() {
+                                                    votedMedia.remove(
+                                                        cat.catMedia[index]
+                                                            .id);
+                                                    cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![0]--;
+                                                    cat.interactions--;
+                                                  });
+                                                }
+                                                else {
+                                                  setState(() {
+                                                    votedMedia[cat
+                                                        .catMedia[index].id] =
+                                                    true;
+                                                    cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![0]++;
+                                                    cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![1]--;
+                                                  });
+                                                }
+                                              },
                                             ),
                                             SizedBox(
-                                                height: 17,
+                                                height: height/45,
                                                 child: Text(
                                                     "${cat.updown[cat
                                                         .catMedia[index]
@@ -761,54 +742,51 @@ class _CategoryPageState extends State<CategoryPage>{
                                                     )
                                                 )
                                             ),
-                                            SizedBox(
-                                              height: 50,
-                                              child: IconButton(
-                                                iconSize: 35,
-                                                icon: const Icon(
-                                                    MyFlutterApp.downvote),
-                                                color: getColorDownVote(
-                                                    cat.catMedia[index].id),
-                                                onPressed: () {
-                                                  if (!votedMedia.containsKey(
-                                                      cat.catMedia[index].id)) {
-                                                    setState(() {
-                                                      votedMedia[cat
-                                                          .catMedia[index].id] =
-                                                      false;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![1]++;
-                                                      cat.interactions++;
-                                                    });
-                                                  } else if (votedMedia[cat
-                                                      .catMedia[index].id]! ==
-                                                      false) {
-                                                    setState(() {
-                                                      votedMedia.remove(
-                                                          cat.catMedia[index]
-                                                              .id);
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![1]--;
-                                                      cat.interactions--;
-                                                    });
-                                                  }
-                                                  else {
-                                                    setState(() {
-                                                      votedMedia[cat
-                                                          .catMedia[index].id] =
-                                                      false;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![1]++;
-                                                      cat.updown[cat
-                                                          .catMedia[index]
-                                                          .id]![0]--;
-                                                    });
-                                                  }
-                                                },
-                                              ),
+                                            IconButton(
+                                              iconSize: width/11.76,
+                                              icon: const Icon(
+                                                  MyFlutterApp.downvote),
+                                              color: getColorDownVote(
+                                                  cat.catMedia[index].id),
+                                              onPressed: () {
+                                                if (!votedMedia.containsKey(
+                                                    cat.catMedia[index].id)) {
+                                                  setState(() {
+                                                    votedMedia[cat
+                                                        .catMedia[index].id] =
+                                                    false;
+                                                    cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![1]++;
+                                                    cat.interactions++;
+                                                  });
+                                                } else if (votedMedia[cat
+                                                    .catMedia[index].id]! ==
+                                                    false) {
+                                                  setState(() {
+                                                    votedMedia.remove(
+                                                        cat.catMedia[index]
+                                                            .id);
+                                                    cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![1]--;
+                                                    cat.interactions--;
+                                                  });
+                                                }
+                                                else {
+                                                  setState(() {
+                                                    votedMedia[cat
+                                                        .catMedia[index].id] =
+                                                    false;
+                                                    cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![1]++;
+                                                    cat.updown[cat
+                                                        .catMedia[index]
+                                                        .id]![0]--;
+                                                  });
+                                                }
+                                              },
                                             ),
                                           ],
                                         ),
@@ -816,14 +794,8 @@ class _CategoryPageState extends State<CategoryPage>{
                                           borderRadius: BorderRadius.circular(
                                               10.0),
                                           child: SizedBox(
-                                            width: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width / 5,
-                                            height: (MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width / 5) * 3 / 2,
+                                            width: width / 5,
+                                            height: width / 5 * 3 / 2,
                                             child: Image(
                                               fit: BoxFit.fill,
                                               isAntiAlias: true,
@@ -841,7 +813,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 10,),
+                                        SizedBox(width: width/41.14,),
                                         Expanded(
                                           child: RichText(
                                             text: TextSpan(
@@ -870,7 +842,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 4),
+                                    SizedBox(height: height/216.86),
                                     Container(
                                       height: 0.9,
                                       width: double.infinity,
@@ -888,11 +860,15 @@ class _CategoryPageState extends State<CategoryPage>{
           ],
         ),
       );
+<<<<<<< HEAD
     }
     else {
       textLength = cat.description.length;
       descCat.text = cat.description;
       descCat.value.replaced(descCat.value.composing, cat.description);
+=======
+    } else {
+>>>>>>> a510216ac09e80adc285eaef6fa2d326cdfcf81f
       return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: const Color(0xff393d5a),
@@ -915,13 +891,13 @@ class _CategoryPageState extends State<CategoryPage>{
                           isEditMode = false;
                         });
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
                         color: Colors.black,
-                        size:35
+                        size: width/11.76,
                       ),
                     ),
-                    SizedBox(width: MediaQuery.of(context).size.width/1.37),
+                    SizedBox(width: width/1.37),
                     IconButton(
                       onPressed: () {
                         setState(() {
@@ -929,10 +905,10 @@ class _CategoryPageState extends State<CategoryPage>{
                           cat.description = descCat.text.trim();
                         });
                       },
-                      icon: const Icon(
+                      icon: Icon(
                           Icons.check,
                           color: Colors.black,
-                          size:35
+                          size: width/11.76,
                       ),
                     ),
 
@@ -941,7 +917,7 @@ class _CategoryPageState extends State<CategoryPage>{
               ],
             ),
           ),
-          toolbarHeight: MediaQuery.of(context).size.height/15,
+          toolbarHeight: height/14.5,
           backgroundColor: const Color(0x66D9D9D9),
           elevation: 0.0,
         ),
@@ -1041,39 +1017,38 @@ class _CategoryPageState extends State<CategoryPage>{
         body: Stack(
           children: [
             Container(
-              constraints: const BoxConstraints.expand(),
+              height: height/4.8,
               decoration: const BoxDecoration(
+                  color: Colors.red,
                   image: DecorationImage(
                     alignment: Alignment.topLeft,
                     image: AssetImage('images/catBackdrop.png'),
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   )
               ),
             ),
             Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.symmetric(horizontal: width/25.71),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 35.0,
+                    SizedBox(
+                      height: height/24.78,
                     ),
 
                     SizedBox(
                       width: double.infinity,
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height / 6.5,
+                      height: height / 6.5,
                       child: Stack(
                         children: [
                           Positioned(
                             right: 0,
                             bottom: 0,
                             child: Container(
-                              width: 48,
-                              height: 39,
+                              width: width/8.57,
+                              height: height/19,
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20.0),
                                 color: const Color(0xB3D9D9D9),
@@ -1083,13 +1058,12 @@ class _CategoryPageState extends State<CategoryPage>{
                                     IconButton(
                                       icon: const Icon(Icons.add),
                                       onPressed: () {
-                                        updateCatListOnAddedMedia();
                                         Navigator.push(
                                           context, PageRouteBuilder(
                                           pageBuilder: (BuildContext context,
                                               Animation<double> animation1,
                                               Animation<double> animation2) {
-                                            return SearchCreateCat(cat: cat, comingFromCreate: false,);
+                                            return SearchCreateCat(cat: cat, comingFromCreate: false, isAdminFromExplore: username == creatorUsername,);
                                           },
                                           transitionDuration: Duration.zero,
                                           reverseTransitionDuration: Duration
@@ -1098,6 +1072,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                         ).whenComplete(() =>
                                             setState(() {})
                                         );
+                                        updateCatListOnAddedMedia();
                                       },
                                       color: const Color(0xFF393D5A),
                                     ),
@@ -1132,19 +1107,19 @@ class _CategoryPageState extends State<CategoryPage>{
                       ),
                     ),
 
-                    const SizedBox(
-                      height: 30,
+                    SizedBox(
+                      height: height/28.92,
                     ),
                     Row(
                       children: [
-                        const SizedBox(
-                          height: 20,
-                          child: Image(
+                        SizedBox(
+                          height: height/43.37,
+                          child: const Image(
                             image: AssetImage('images/heart.png'),
                           ),
                         ),
-                        const SizedBox(
-                          width: 7,
+                        SizedBox(
+                          width: width/58.78,
                         ),
                         Text(
                             "${cat.likes}",
@@ -1152,17 +1127,17 @@ class _CategoryPageState extends State<CategoryPage>{
                               color: Colors.white,
                             )
                         ),
-                        const SizedBox(
-                          width: 13,
+                        SizedBox(
+                          width: width/31.65,
                         ),
-                        const SizedBox(
-                          height: 20,
-                          child: Image(
+                        SizedBox(
+                          height: height/43.37,
+                          child: const Image(
                             image: AssetImage('images/votes.png'),
                           ),
                         ),
-                        const SizedBox(
-                          width: 7,
+                        SizedBox(
+                          width: width/58.78,
                         ),
                         Text(
                             "${cat.interactions}",
@@ -1172,8 +1147,8 @@ class _CategoryPageState extends State<CategoryPage>{
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 13,
+                    SizedBox(
+                      height: height/66.73,
                     ),
                     TextFormField(
                       key: const Key("categoryDescription"),
@@ -1199,7 +1174,7 @@ class _CategoryPageState extends State<CategoryPage>{
                       },
                       maxLines: 3,
                     ),
-                    const SizedBox(height: 9.0),
+                    SizedBox(height: height/96.38),
                     Container(
                       height: 0.9,
                       width: double.infinity,
@@ -1219,9 +1194,9 @@ class _CategoryPageState extends State<CategoryPage>{
                                         Column(
                                           children: [
                                             SizedBox(
-                                              height: 50,
+                                              height: height/17.35,
                                               child: IconButton(
-                                                iconSize: 35,
+                                                iconSize: width/11.76,
                                                 icon: const Icon(
                                                     MyFlutterApp.upvote),
                                                 color: getColorUpvote(
@@ -1230,7 +1205,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                               ),
                                             ),
                                             SizedBox(
-                                                height: 17,
+                                                height: height/51.03,
                                                 child: Text(
                                                     "${cat.updown[cat.catMedia[index].id]![0]}",
                                                     style: const TextStyle(
@@ -1239,9 +1214,9 @@ class _CategoryPageState extends State<CategoryPage>{
                                                 )
                                             ),
                                             SizedBox(
-                                              height: 50,
+                                              height: height/17.35,
                                               child: IconButton(
-                                                iconSize: 35,
+                                                iconSize: width/11.76,
                                                 icon: const Icon(
                                                     MyFlutterApp.downvote),
                                                 color: getColorDownVote(
@@ -1255,14 +1230,8 @@ class _CategoryPageState extends State<CategoryPage>{
                                           borderRadius: BorderRadius.circular(
                                               10.0),
                                           child: SizedBox(
-                                            width: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width / 5,
-                                            height: (MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width / 5) * 3 / 2,
+                                            width: width / 5,
+                                            height: width / 5 * 3 / 2,
                                             child: Image(
                                               fit: BoxFit.fill,
                                               isAntiAlias: true,
@@ -1280,7 +1249,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 10,),
+                                        SizedBox(width: width/41.14,),
                                         Expanded(
                                           child: RichText(
                                             text: TextSpan(
@@ -1308,7 +1277,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 4),
+                                    SizedBox(height: height/216.86),
                                     Container(
                                       height: 0.9,
                                       width: double.infinity,
