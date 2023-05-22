@@ -224,7 +224,6 @@ class _ProfileState extends State<Profile> {
             ),
 
             const Expanded(child: Column()),
-
             Container(
               color: const Color(0xBDDFD4FF),
               height: height/17.35,
