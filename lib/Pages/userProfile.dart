@@ -3,6 +3,7 @@ import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
+import 'package:catcine_es/Pages/searchMediaForProfile.dart';
 import 'package:catcine_es/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../Model/category.dart';
+import '../Model/media.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -19,6 +21,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+  List<Media> profileLists=[];
 
   String username = FirebaseAuth.instance.currentUser!.displayName!;
   
@@ -34,6 +38,13 @@ class _ProfileState extends State<Profile> {
       }
     }
     return nCreatedCats;
+  }
+
+  getPosterURL(Media media) {
+    if (media.coverUrl != '') {
+      return NetworkImage(media.coverUrl);
+    }
+    return const AssetImage('images/catIcon.png');
   }
 
   void pickUploadProfilePic() async {
@@ -123,30 +134,83 @@ class _ProfileState extends State<Profile> {
               width: double.infinity,
               color: const Color(0xFF6B6D7B),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              "Watched Movies",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+            Row(
+              children: [
+                const Text(
+                  "Watched Movies",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+
+                SizedBox(width: 142),
+                RawMaterialButton(
+                  onPressed: () {
+                    Navigator.push(context, PageRouteBuilder(
+                      pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                        return SearchMediaProfile(profileLists: profileLists);
+                      },
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                    ).whenComplete(() =>
+                        setState(() {
+                          profileLists;
+                        }),
+                    );
+                  },
+                  child: const Text(
+                    "Add media",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Row(/*colocar os watched movies*/),
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
             Container(
               height: 0.9,
               width: double.infinity,
               color: const Color(0xFF6B6D7B),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              "Watchlist",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+
+            Row(
+              children: [
+                const Text(
+                  "Watchlist",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 199),
+                RawMaterialButton(
+                    onPressed: () {
+                      Navigator.push(context, PageRouteBuilder(
+                        pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                          return SearchMediaProfile(profileLists: profileLists);
+                        },
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                      );
+                    },
+                    child: const Text(
+                      "Add media",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                ),
+              ],
             ),
             Row(/*colocar os watchlist*/),
           ],

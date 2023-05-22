@@ -45,7 +45,18 @@ class _CategoryPageState extends State<CategoryPage>{
   CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
   CollectionReference userDB = FirebaseFirestore.instance.collection('users');
 
-
+  getFontSize(){
+    if (cat.title.length > 30){
+      return 24.0;
+    }
+    if(cat.title.length > 20 && cat.title.length <= 30){
+      return 32.0;
+    }
+    if(cat.title.length > 10 && cat.title.length <= 20){
+      return 36.0;
+    }
+    return 40.0;
+  }
   getButtons(){
     if (username == cat.creator){
       return Container(
@@ -600,8 +611,8 @@ class _CategoryPageState extends State<CategoryPage>{
                             children: [
                               Text(
                                 cat.title,
-                                style: const TextStyle(
-                                  fontSize: 40,
+                                style: TextStyle(
+                                  fontSize: getFontSize(),
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -877,7 +888,8 @@ class _CategoryPageState extends State<CategoryPage>{
           ],
         ),
       );
-    } else {
+    }
+    else {
       textLength = cat.description.length;
       descCat.text = cat.description;
       descCat.value.replaced(descCat.value.composing, cat.description);
