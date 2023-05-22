@@ -1,6 +1,6 @@
 import 'package:catcine_es/Pages/homePage.dart';
+import 'package:catcine_es/Pages/mediaPage.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/searchesBackEnd.dart';
@@ -8,7 +8,6 @@ import '../Model/media.dart';
 import '../main.dart';
 import 'createCategory.dart';
 import 'exploreCategories.dart';
-import 'initial.dart';
 
 class ExploreMedia extends StatefulWidget{
   const ExploreMedia({Key? key}) : super(key: key);
@@ -63,19 +62,30 @@ class _ExploreMediaState extends State<ExploreMedia>{
     else {
       return Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: SizedBox(
-                width: (width/11) * 4.35,
-                height: ((width/11) * 4.35) * 3/2,
-                child: Image(
-                  isAntiAlias: true,
-                  image: getPosterURL(displayList[index]),
-                  fit: BoxFit.fill,
-                  semanticLabel: "${displayList[index].mediaName}...",
-                  loadingBuilder: (context, child, progress) {
-                    return progress == null ? child : const LinearProgressIndicator();
+            RawMaterialButton(
+              onPressed: () {
+                Navigator.push(context, PageRouteBuilder(
+                  pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                    return MediaPage(media: displayList[index]);
                   },
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ));
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.0),
+                child: SizedBox(
+                  width: (width/11) * 4.35,
+                  height: ((width/11) * 4.35) * 3/2,
+                  child: Image(
+                    isAntiAlias: true,
+                    image: getPosterURL(displayList[index]),
+                    fit: BoxFit.fill,
+                    semanticLabel: "${displayList[index].mediaName}...",
+                    loadingBuilder: (context, child, progress) {
+                      return progress == null ? child : const LinearProgressIndicator();
+                    },
+                  ),
                 ),
               ),
             ),
@@ -239,19 +249,31 @@ class _ExploreMediaState extends State<ExploreMedia>{
                       children: [
                         Column(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12.0),
-                              child: SizedBox(
-                                width: (width/11) * 4.35,
-                                height: ((width/11) * 4.35) * 3/2,
-                                child: Image(
-                                  fit: BoxFit.fill,
-                                  isAntiAlias: true,
-                                  image: getPosterURL(displayList[index * 2]),
-                                  semanticLabel: "${displayList[index * 2].mediaName}...",
-                                  loadingBuilder: (context, child, progress) {
-                                    return progress == null ? child : const LinearProgressIndicator();
-                                  },
+                            RawMaterialButton(
+                              onPressed: () {
+                                print(displayList[index*2].backdropUrl);
+                                Navigator.push(context, PageRouteBuilder(
+                                pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                                  return MediaPage(media: displayList[index * 2]);
+                                },
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                                ));
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12.0),
+                                child: SizedBox(
+                                  width: (width/11) * 4.35,
+                                  height: ((width/11) * 4.35) * 3/2,
+                                  child: Image(
+                                    fit: BoxFit.fill,
+                                    isAntiAlias: true,
+                                    image: getPosterURL(displayList[index * 2]),
+                                    semanticLabel: "${displayList[index * 2].mediaName}...",
+                                    loadingBuilder: (context, child, progress) {
+                                      return progress == null ? child : const LinearProgressIndicator();
+                                    },
+                                  ),
                                 ),
                               ),
                             ),

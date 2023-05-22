@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../Model/media.dart';
+import 'mediaPage.dart';
 
 
 class CategoryPage extends StatefulWidget{
@@ -790,26 +791,37 @@ class _CategoryPageState extends State<CategoryPage>{
                                             ),
                                           ],
                                         ),
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                              10.0),
-                                          child: SizedBox(
-                                            width: width / 5,
-                                            height: width / 5 * 3 / 2,
-                                            child: Image(
-                                              fit: BoxFit.fill,
-                                              isAntiAlias: true,
-                                              image: getPosterURL(
-                                                  cat.catMedia[index]),
-                                              semanticLabel: "${cat
-                                                  .catMedia[index]
-                                                  .mediaName}...",
-                                              loadingBuilder: (context, child,
-                                                  progress) {
-                                                return progress == null
-                                                    ? child
-                                                    : const LinearProgressIndicator();
+                                        RawMaterialButton(
+                                          onPressed: () {
+                                            Navigator.push(context, PageRouteBuilder(
+                                              pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                                                return MediaPage(media: cat.catMedia[index]);
                                               },
+                                              transitionDuration: Duration.zero,
+                                              reverseTransitionDuration: Duration.zero,
+                                            ));
+                                          },
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                10.0),
+                                            child: SizedBox(
+                                              width: width / 5,
+                                              height: width / 5 * 3 / 2,
+                                              child: Image(
+                                                fit: BoxFit.fill,
+                                                isAntiAlias: true,
+                                                image: getPosterURL(
+                                                    cat.catMedia[index]),
+                                                semanticLabel: "${cat
+                                                    .catMedia[index]
+                                                    .mediaName}...",
+                                                loadingBuilder: (context, child,
+                                                    progress) {
+                                                  return progress == null
+                                                      ? child
+                                                      : const LinearProgressIndicator();
+                                                },
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -860,15 +872,7 @@ class _CategoryPageState extends State<CategoryPage>{
           ],
         ),
       );
-<<<<<<< HEAD
-    }
-    else {
-      textLength = cat.description.length;
-      descCat.text = cat.description;
-      descCat.value.replaced(descCat.value.composing, cat.description);
-=======
     } else {
->>>>>>> a510216ac09e80adc285eaef6fa2d326cdfcf81f
       return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: const Color(0xff393d5a),
