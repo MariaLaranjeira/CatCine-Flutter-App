@@ -1,7 +1,7 @@
 import 'package:catcine_es/Auth/authmain.dart';
 import 'package:catcine_es/main.dart';
 import 'package:flutter/material.dart';
-import 'package:catcine_es/api.dart';
+
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({Key? key}) : super(key: key);
@@ -48,26 +48,38 @@ class _InitialScreenState extends State<InitialScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: height/1.4),
-              SizedBox(
-                key: const Key('Sign In'),
-                width:double.infinity,
-                child: RawMaterialButton(
-                  key: const Key("signInButton"),
-                  fillColor: const Color(0xFFEC6B76),
-                  elevation: 0.0,
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+              Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.topCenter,
+                children:[
+                  SizedBox(
+                    key: const Key('Sign In'),
+                    width:double.infinity,
+                    child: RawMaterialButton(
+                      key: const Key("signInButton"),
+                      fillColor: const Color(0xFFEC6B76),
+                      elevation: 0.0,
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      onPressed: _signIn,
+                      child: const Text(
+                        "Sign In" ,
+                        style: TextStyle(
+                           color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
-                  onPressed: _signIn,
-                  child: const Text(
-                    "Sign In" ,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
+                  Positioned(
+                    top: -43,
+                    child: Image(
+                      image: const AssetImage("images/Small_cat.png"),
+                      width: width/5,),
                   ),
-                ),
+                ]
               ),
               SizedBox(height: height/25),
 

@@ -78,7 +78,6 @@ class _CategoryPageState extends State<CategoryPage>{
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  updateCatListOnAddedMedia();
                   Navigator.push(
                     context, PageRouteBuilder(
                     pageBuilder: (BuildContext context,
@@ -93,6 +92,7 @@ class _CategoryPageState extends State<CategoryPage>{
                   ).whenComplete(() =>
                       setState(() {})
                   );
+                  updateCatListOnAddedMedia();
                 },
                 color: const Color(0xFF393D5A),
               ),
@@ -121,7 +121,7 @@ class _CategoryPageState extends State<CategoryPage>{
     }
     else {
       return Container(
-        width: width/2.8,
+        width: width/4.1,
         height: height/19,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -133,13 +133,12 @@ class _CategoryPageState extends State<CategoryPage>{
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  updateCatListOnAddedMedia();
                   Navigator.push(
                     context, PageRouteBuilder(
                     pageBuilder: (BuildContext context,
                         Animation<double> animation1,
                         Animation<double> animation2) {
-                      return SearchCreateCat(cat: cat, comingFromCreate: false, isAdminFromExplore: true,);
+                      return SearchCreateCat(cat: cat, comingFromCreate: false, isAdminFromExplore: false,);
                     },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration
@@ -148,6 +147,7 @@ class _CategoryPageState extends State<CategoryPage>{
                   ).whenComplete(() =>
                       setState(() {})
                   );
+                  updateCatListOnAddedMedia();
                 },
                 color: const Color(0xFF393D5A),
               ),
@@ -252,7 +252,6 @@ class _CategoryPageState extends State<CategoryPage>{
         var res = data as Map<String, dynamic>;
 
         likes = res['likes'];
-        interactions = res['interactions'];
       }
     });
 
@@ -262,25 +261,29 @@ class _CategoryPageState extends State<CategoryPage>{
       likes--;
     }
 
-    interactions += votedMedia.length - initialInteractions;
-
     var ref = catDB.doc(cat.title);
-    await ref.update({
-      'likes':likes,
-      'interactions':interactions,
-    });
 
     var catmedia = await catDB.doc(cat.title).collection('catmedia').get();
     var catmediaDB = catDB.doc(cat.title).collection('catmedia');
 
     List<String> _mediaId = [];
     for (var doc in catmedia.docs) {
-      _mediaId.add(doc.id);
+      bool found = false;
+      for (var media in cat.catMedia) {
+        if (media.id == doc.id) {
+          _mediaId.add(doc.id);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        await catmediaDB.doc(doc.id).delete();
+      }
     }
 
     for (String _key in _mediaId){
-      var tempUp;
-      var tempDown;
+      var tempUp = 0;
+      var tempDown = 0;
 
       await catmediaDB
           .doc(_key)
@@ -317,16 +320,22 @@ class _CategoryPageState extends State<CategoryPage>{
         }
       }
 
+      interactions += (tempDown + tempUp);
+
       var reffer = ref.collection('catmedia').doc(_key);
       await reffer.set({
         'upvotes': tempUp,
         'downvotes': tempDown,
         'ratio': tempDown == 0 ? tempUp : tempUp/tempDown,
       }, SetOptions(merge: true));
-
     }
 
-    if (await doesUserCatExist(cat.title)){
+    await ref.update({
+      'likes':likes,
+      'interactions': interactions,
+    });
+
+    if (await doesUserCatExist(cat.title)) {
       await userDB.doc(username).collection('interacted_cats').doc(cat.title).delete();
 
       var usercat = userDB.doc(username).collection('interacted_cats').doc(cat.title);
@@ -355,8 +364,8 @@ class _CategoryPageState extends State<CategoryPage>{
     }
   }
 
-  doesMediaExist(String id) async {
-    var ref = await catDB.doc(id).get();
+  doesMediaExistInCat(String id) async {
+    var ref = await catDB.doc(cat.title).collection('catmedia').doc(id).get();
     return ref.exists;
   }
 
@@ -364,7 +373,7 @@ class _CategoryPageState extends State<CategoryPage>{
 
     var ref = catDB.doc(cat.title);
     for (Media media in cat.catMedia) {
-      if (!await doesMediaExist(media.id)){
+      if (!await doesMediaExistInCat(media.id)){
         var list = ref.collection('catmedia').doc(media.id);
         list.set({
           'upvotes': 0,
@@ -712,7 +721,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                               },
                                             ),
                                             SizedBox(
-                                                height: height/51.02,
+                                                height: height/45,
                                                 child: Text(
                                                     "${cat.updown[cat
                                                         .catMedia[index]
@@ -1030,7 +1039,6 @@ class _CategoryPageState extends State<CategoryPage>{
                                     IconButton(
                                       icon: const Icon(Icons.add),
                                       onPressed: () {
-                                        updateCatListOnAddedMedia();
                                         Navigator.push(
                                           context, PageRouteBuilder(
                                           pageBuilder: (BuildContext context,
@@ -1045,6 +1053,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                         ).whenComplete(() =>
                                             setState(() {})
                                         );
+                                        updateCatListOnAddedMedia();
                                       },
                                       color: const Color(0xFF393D5A),
                                     ),
