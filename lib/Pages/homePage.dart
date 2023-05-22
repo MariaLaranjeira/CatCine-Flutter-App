@@ -18,8 +18,8 @@ class _HomeState extends State<Home> {
 
   initList() async {
     if (!loadedFromFirebase) {
-      await API.loadCats();
       await API.loadMedia();
+      await API.loadCats();
     }
   }
 
