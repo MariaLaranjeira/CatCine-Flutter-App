@@ -71,7 +71,8 @@ class _ProfileState extends State<Profile> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 34),
+            SizedBox(height: height/25.51),
+
             Row(
               children: [
                 Column(
@@ -85,7 +86,9 @@ class _ProfileState extends State<Profile> {
                         fontSize: 24,
                       ),
                     ),
-                    const SizedBox(height: 20),
+
+                    SizedBox(height: height/43.37),
+
                     Text(
                       "Created Categories: ${getNCreatedCats()}",
                       style: const TextStyle(
@@ -96,14 +99,16 @@ class _ProfileState extends State<Profile> {
 
                   ],
                 ),
-                const SizedBox(width: 80),
+
+                SizedBox(width: width/5.14),
+
                 GestureDetector(
                   onTap: () {
                     pickUploadProfilePic();
                   },
                   child: Container(
-                    height: 85,
-                    width: 85,
+                    height: width/4.84,
+                    width: width/4.84,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -117,13 +122,17 @@ class _ProfileState extends State<Profile> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+
+            SizedBox(height: height/43.37),
+
             Container(
               height: 0.9,
               width: double.infinity,
               color: const Color(0xFF6B6D7B),
             ),
-            const SizedBox(height: 20),
+
+            SizedBox(height: height/43.37),
+
             const Text(
               "Watched Movies",
               style: TextStyle(
@@ -132,14 +141,19 @@ class _ProfileState extends State<Profile> {
                 color: Colors.white,
               ),
             ),
+
             Row(/*colocar os watched movies*/),
-            const SizedBox(height: 40),
+
+            SizedBox(height: height/21.69),
+
             Container(
               height: 0.9,
               width: double.infinity,
               color: const Color(0xFF6B6D7B),
             ),
-            const SizedBox(height: 20),
+
+            SizedBox(height: height/43.37),
+
             const Text(
               "Watchlist",
               style: TextStyle(
@@ -148,6 +162,7 @@ class _ProfileState extends State<Profile> {
                 color: Colors.white,
               ),
             ),
+
             Row(/*colocar os watchlist*/),
           ],
         ),

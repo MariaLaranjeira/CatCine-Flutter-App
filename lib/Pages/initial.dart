@@ -42,12 +42,12 @@ class _InitialScreenState extends State<InitialScreen> {
             )
         ),
         child: Padding (
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.symmetric(horizontal: width/25.71),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height/1.4),
+              SizedBox(height: height/1.4),
               SizedBox(
                 key: const Key('Sign In'),
                 width:double.infinity,
@@ -69,7 +69,7 @@ class _InitialScreenState extends State<InitialScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height/25),
+              SizedBox(height: height/25),
 
               SizedBox(
                 width:double.infinity,

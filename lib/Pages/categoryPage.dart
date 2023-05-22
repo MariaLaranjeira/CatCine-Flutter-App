@@ -48,7 +48,7 @@ class _CategoryPageState extends State<CategoryPage>{
 
 
   getButtons(){
-    if (username == cat.creator){
+    if (username == creatorUsername){
       return Container(
         width: width/2.8,
         height: height/19,
@@ -63,6 +63,8 @@ class _CategoryPageState extends State<CategoryPage>{
                 onPressed: () {
                   setState(() {
                     isEditMode = true;
+                    descCat.text = cat.description;
+                    textLength = cat.description.length;
                   });
                 },
                 icon: const Icon(Icons.edit),
@@ -82,7 +84,7 @@ class _CategoryPageState extends State<CategoryPage>{
                     pageBuilder: (BuildContext context,
                         Animation<double> animation1,
                         Animation<double> animation2) {
-                      return SearchCreateCat(cat: cat, comingFromCreate: false,);
+                      return SearchCreateCat(cat: cat, comingFromCreate: false, isAdminFromExplore: true,);
                     },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration
@@ -119,8 +121,8 @@ class _CategoryPageState extends State<CategoryPage>{
     }
     else {
       return Container(
-        width: width/4.12,
-        height: height/20,
+        width: width/2.8,
+        height: height/19,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
@@ -137,7 +139,7 @@ class _CategoryPageState extends State<CategoryPage>{
                     pageBuilder: (BuildContext context,
                         Animation<double> animation1,
                         Animation<double> animation2) {
-                      return SearchCreateCat(cat: cat, comingFromCreate: false,);
+                      return SearchCreateCat(cat: cat, comingFromCreate: false, isAdminFromExplore: true,);
                     },
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration
@@ -290,7 +292,6 @@ class _CategoryPageState extends State<CategoryPage>{
 
           tempUp = res['upvotes'];
           tempDown = res['downvotes'];
-
         }
       });
 
@@ -317,10 +318,11 @@ class _CategoryPageState extends State<CategoryPage>{
       }
 
       var reffer = ref.collection('catmedia').doc(_key);
-      await reffer.update({
+      await reffer.set({
         'upvotes': tempUp,
         'downvotes': tempDown,
-      });
+        'ratio': tempDown == 0 ? tempUp : tempUp/tempDown,
+      }, SetOptions(merge: true));
 
     }
 
@@ -366,7 +368,8 @@ class _CategoryPageState extends State<CategoryPage>{
         var list = ref.collection('catmedia').doc(media.id);
         list.set({
           'upvotes': 0,
-          'downvotes': 0
+          'downvotes': 0,
+          'ratio': 0,
         }, SetOptions(merge: true));
       }
     }
@@ -543,7 +546,7 @@ class _CategoryPageState extends State<CategoryPage>{
               ),
             ),
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/25.72),
+                padding: EdgeInsets.symmetric(horizontal: width/25.72),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -592,6 +595,7 @@ class _CategoryPageState extends State<CategoryPage>{
                     SizedBox(
                       height: height/32,
                     ),
+
                     Row(
                       children: [
                         SizedBox(
@@ -629,9 +633,9 @@ class _CategoryPageState extends State<CategoryPage>{
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: height/66.7,
-                    ),
+
+                    SizedBox(height: height/66.7,),
+
                     Text(
                       cat.description,
                       style: const TextStyle(
@@ -639,12 +643,15 @@ class _CategoryPageState extends State<CategoryPage>{
                         color: Colors.white,
                       ),
                     ),
+
                     SizedBox(height: height/96.35),
+
                     Container(
                       height: 0.9,
                       width: double.infinity,
                       color: const Color(0xFF6B6D7B),
                     ),
+
                     Expanded(
                       child: DraggableScrollableActuator(
                         child: ListView.builder(
@@ -834,9 +841,6 @@ class _CategoryPageState extends State<CategoryPage>{
         ),
       );
     } else {
-      textLength = cat.description.length;
-      descCat.text = cat.description;
-      descCat.value.replaced(descCat.value.composing, cat.description);
       return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: const Color(0xff393d5a),
@@ -885,7 +889,7 @@ class _CategoryPageState extends State<CategoryPage>{
               ],
             ),
           ),
-          toolbarHeight: height/15,
+          toolbarHeight: height/14.5,
           backgroundColor: const Color(0x66D9D9D9),
           elevation: 0.0,
         ),
@@ -985,12 +989,13 @@ class _CategoryPageState extends State<CategoryPage>{
         body: Stack(
           children: [
             Container(
-              constraints: const BoxConstraints.expand(),
+              height: height/4.8,
               decoration: const BoxDecoration(
+                  color: Colors.red,
                   image: DecorationImage(
                     alignment: Alignment.topLeft,
                     image: AssetImage('images/catBackdrop.png'),
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   )
               ),
             ),
@@ -1014,7 +1019,8 @@ class _CategoryPageState extends State<CategoryPage>{
                             bottom: 0,
                             child: Container(
                               width: width/8.57,
-                              height: height/22.24,
+                              height: height/19,
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20.0),
                                 color: const Color(0xB3D9D9D9),
@@ -1030,7 +1036,7 @@ class _CategoryPageState extends State<CategoryPage>{
                                           pageBuilder: (BuildContext context,
                                               Animation<double> animation1,
                                               Animation<double> animation2) {
-                                            return SearchCreateCat(cat: cat, comingFromCreate: false,);
+                                            return SearchCreateCat(cat: cat, comingFromCreate: false, isAdminFromExplore: username == creatorUsername,);
                                           },
                                           transitionDuration: Duration.zero,
                                           reverseTransitionDuration: Duration

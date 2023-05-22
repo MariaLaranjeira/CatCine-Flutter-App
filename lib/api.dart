@@ -208,7 +208,6 @@ class API {
   static loadMedia() async {
     mediaDB.orderBy('score', descending: true).get().then(
           (querySnapshot) {
-        print("Successfully completed");
         for (var docSnapshot in querySnapshot.docs) {
           var data = docSnapshot.data();
           var res = data as Map<String, dynamic>;
@@ -238,20 +237,18 @@ class API {
 
           allLocalMedia[media.id] = media;
         }
-      },
-      onError: (e) => print("Error completing: $e"),
+      }
     );
   }
 
   static loadCats() async {
     catDB.get().then(
       (querySnapshot) {
-      print("Successfully completed");
       for (var docSnapshot in querySnapshot.docs) {
         var data = docSnapshot.data();
         var res = data as Map<String, dynamic>;
         Category cat = Category.fromJson(res);
-        catDB.doc(docSnapshot.id).collection('catmedia').get().then(
+        catDB.doc(docSnapshot.id).collection('catmedia').orderBy('ratio', descending: true).orderBy('downvotes').get().then(
           (querySnapshot) {
             for (var docSnapshot_ in querySnapshot.docs) {
               var data = docSnapshot_.data();
@@ -265,8 +262,7 @@ class API {
           });
         allLocalCats[cat.title] = cat;
       }
-      },
-      onError: (e) => print("Error completing: $e"),
+      }
     );
   }
 

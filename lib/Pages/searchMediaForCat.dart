@@ -12,8 +12,9 @@ import '../Model/searchesBackEnd.dart';
 
 class SearchCreateCat extends StatefulWidget {
   final bool comingFromCreate;
+  final bool isAdminFromExplore;
   final Category cat;
-  const SearchCreateCat({Key? key, required this.cat, required this.comingFromCreate}) : super(key: key);
+  const SearchCreateCat({Key? key, required this.cat, required this.comingFromCreate, required this.isAdminFromExplore}) : super(key: key);
 
   @override
   State<SearchCreateCat> createState() => _SearchCreateCatState();
@@ -119,8 +120,8 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width/5,
-                      height: (MediaQuery.of(context).size.width/5) * 3/2,
+                      width: width/5,
+                      height: (width/5) * 3/2,
                       child: Image(
                         fit: BoxFit.fill,
                         isAntiAlias: true,
@@ -132,7 +133,9 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10,),
+
+                  SizedBox(width: width/41.14,),
+
                   Expanded(
                     child: RichText(
                       text : TextSpan (
@@ -182,8 +185,8 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width/5,
-                      height: (MediaQuery.of(context).size.width/5) * 3/2,
+                      width: width/5,
+                      height: (width/5) * 3/2,
                       child: Image(
                         fit: BoxFit.fill,
                         isAntiAlias: true,
@@ -195,7 +198,9 @@ class _SearchCreateCatState extends State<SearchCreateCat> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10,),
+
+                  SizedBox(width: width/41.14,),
+
                   Expanded(
                     child: RichText(
                       text : TextSpan (
