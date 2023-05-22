@@ -274,26 +274,6 @@ class _ExploreMediaState extends State<ExploreMedia>{
                 ),
               ),
             ),
-
-            SizedBox(
-              height: height/17.35,
-              width: double.infinity,
-              child: RawMaterialButton(
-
-                  child: const Text(
-                      "Log out temporary",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24.0)
-                  ),
-                  onPressed: () async {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const InitialScreen())
-                    );
-                  }),
-            ),
           ],
         ),
       ),

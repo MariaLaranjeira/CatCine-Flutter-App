@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../Model/category.dart';
+import 'initial.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -164,6 +165,29 @@ class _ProfileState extends State<Profile> {
             ),
 
             Row(/*colocar os watchlist*/),
+
+            const Expanded(child: Column()),
+
+            Container(
+              color: const Color(0xBDDFD4FF),
+              height: height/17.35,
+              width: double.infinity,
+              child: RawMaterialButton(
+
+                  child: const Text(
+                      "Log out",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24.0)
+                  ),
+                  onPressed: () async {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const InitialScreen())
+                    );
+                  }),
+            ),
           ],
         ),
       ),
