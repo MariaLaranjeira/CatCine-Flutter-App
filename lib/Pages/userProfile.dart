@@ -11,11 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../Model/category.dart';
-<<<<<<< HEAD
+
 import '../Model/media.dart';
-=======
 import 'initial.dart';
->>>>>>> a510216ac09e80adc285eaef6fa2d326cdfcf81f
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);

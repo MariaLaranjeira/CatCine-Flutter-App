@@ -85,7 +85,7 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
 
   drawSecondElement(int index) {
     if (index >= displayList.length) {
-      return const Column();
+      return Column();
     }
     else {
       return Column(

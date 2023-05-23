@@ -860,15 +860,8 @@ class _CategoryPageState extends State<CategoryPage>{
           ],
         ),
       );
-<<<<<<< HEAD
-    }
-    else {
-      textLength = cat.description.length;
-      descCat.text = cat.description;
-      descCat.value.replaced(descCat.value.composing, cat.description);
-=======
+
     } else {
->>>>>>> a510216ac09e80adc285eaef6fa2d326cdfcf81f
       return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: const Color(0xff393d5a),
