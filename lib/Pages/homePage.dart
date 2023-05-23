@@ -33,6 +33,31 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: const Color(0xff393d5a),
+
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: SizedBox(
+                child: const Text(
+                  "Welcome to Catcine!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            child:Image.asset('images/kitty.png'),
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xCACBCBD2),
         child: IconTheme(
