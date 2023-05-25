@@ -196,6 +196,8 @@ class _ProfileState extends State<Profile> {
             ),
             const SizedBox(height: 20),
 
+            const Expanded(child: SizedBox()),
+
             Container(
               color: const Color(0xBDDFD4FF),
               height: height/17.35,
