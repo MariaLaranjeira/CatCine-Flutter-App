@@ -1092,8 +1092,8 @@ class _CategoryPageState extends State<CategoryPage>{
                             children: [
                               Text(
                                 cat.title,
-                                style: const TextStyle(
-                                  fontSize: 40,
+                                style: TextStyle(
+                                  fontSize: getFontSize(),
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),

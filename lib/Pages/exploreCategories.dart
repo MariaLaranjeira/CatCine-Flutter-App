@@ -325,6 +325,7 @@ class _ExploreCategoriesState extends State<ExploreCategories> {
                                               ],
                                             ),
                                           ),
+                                          SizedBox(height: height/78.86),
                                           Text(
                                             getTrimmedName(displayList[index]),
                                             style: const TextStyle(
