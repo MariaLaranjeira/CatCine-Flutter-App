@@ -3,7 +3,6 @@ import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/homePage.dart';
-import 'package:catcine_es/Pages/searchMediaForProfile.dart';
 import 'package:catcine_es/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -25,12 +24,45 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
 
   List<Media> profileLists=[];
+  List<Category> myCats = [];
 
   String username = FirebaseAuth.instance.currentUser!.displayName!;
   
   String? profilePicUrl = FirebaseAuth.instance.currentUser!.photoURL;
 
   String defaultProfilePic = "https://firebasestorage.googleapis.com/v0/b/catcine-thebest.appspot.com/o/defaultProfilePic.png?alt=media&token=36809212-5bda-42cb-9484-6eb2298ed0eb";
+
+  isCatMediaEmpty(Category cat) {
+    if (cat.catMedia == []){
+      return true;
+    }
+    return false;
+  }
+
+  getPosterURL(Category cat,var i){
+
+    if (isCatMediaEmpty(cat) || cat.catMedia.length < 3){
+      return const AssetImage('images/catIcon.png');
+    } else if (cat.catMedia[i].coverUrl != '') {
+      return NetworkImage(cat.catMedia[i].coverUrl);
+    }
+    return const AssetImage('images/catIcon.png');
+  }
+
+
+  getTrimmedName(Category cat) {
+    if (cat.title.length > 25) {
+      return '${cat.title.substring(0, 25)}...';
+    }
+    return cat.title;
+  }
+  getMyCats(){
+    for (var cat in allLocalCats.values){
+      if (cat.creator == FirebaseAuth.instance.currentUser!.displayName!){
+        myCats.add(cat);
+      }
+    }
+  }
 
   getNCreatedCats(){
     var nCreatedCats = 0;
@@ -42,11 +74,24 @@ class _ProfileState extends State<Profile> {
     return nCreatedCats;
   }
 
-  getPosterURL(Media media) {
-    if (media.coverUrl != '') {
-      return NetworkImage(media.coverUrl);
+  boxDecorator(var i) {
+    if (mediaCat.isEmpty){
+      return const BoxDecoration();
     }
-    return const AssetImage('images/catIcon.png');
+    if (i < mediaCat.length) {
+      return BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              blurRadius: 4,
+              offset: const Offset(0, 4), // changes position of shadow
+            ),
+          ]
+      );
+    }
+    else {
+      return const BoxDecoration();
+    }
   }
 
   void pickUploadProfilePic() async {
@@ -70,6 +115,12 @@ class _ProfileState extends State<Profile> {
         FirebaseAuth.instance.currentUser!.updatePhotoURL(profilePicUrl);
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getMyCats();
   }
 
   @override
@@ -143,86 +194,8 @@ class _ProfileState extends State<Profile> {
               width: double.infinity,
               color: const Color(0xFF6B6D7B),
             ),
-            Row(
-              children: [
-                const Text(
-                  "Watched Movies",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
+            const SizedBox(height: 20),
 
-                SizedBox(width: 142),
-                RawMaterialButton(
-                  onPressed: () {
-                    Navigator.push(context, PageRouteBuilder(
-                      pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                        return SearchMediaProfile(profileLists: profileLists);
-                      },
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                    ).whenComplete(() =>
-                        setState(() {
-                          profileLists;
-                        }),
-                    );
-                  },
-                  child: const Text(
-                    "Add media",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            Container(
-              height: 0.9,
-              width: double.infinity,
-              color: const Color(0xFF6B6D7B),
-            ),
-
-            Row(
-              children: [
-                const Text(
-                  "Watchlist",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(width: 199),
-                RawMaterialButton(
-                    onPressed: () {
-                      Navigator.push(context, PageRouteBuilder(
-                        pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                          return SearchMediaProfile(profileLists: profileLists);
-                        },
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                      );
-                    },
-                    child: const Text(
-                      "Add media",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                      ),
-                    ),
-                ),
-              ],
-
-            ),
             Container(
               color: const Color(0xBDDFD4FF),
               height: height/17.35,
@@ -233,7 +206,9 @@ class _ProfileState extends State<Profile> {
                       "Log out",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 24.0)
+                          fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                      )
                   ),
                   onPressed: () async {
                     FirebaseAuth.instance.signOut();

@@ -27,7 +27,6 @@ Thank you!
 *Manuel Silva*\
 *Maria Laranjeira*\
 *Pedro Fonseca*\
-*Gabriela Neto*
 
 ---
 

@@ -4,7 +4,7 @@
 ## Domain model:
 
  <p align="center" justify="center">
-  <img src="https://user-images.githubusercontent.com/92693155/224860308-f52eeb1a-e21e-439b-8f7d-f167da0bb6c0.jpeg">
+  <img src="https://github.com/FEUP-LEIC-ES-2022-23/2LEIC09T5/assets/92693155/475a3631-90c9-480b-b1a7-5b43e98e22da">
 </p>
 
 
@@ -31,10 +31,3 @@
 - catname: User's CatCine username
 - email: User's email used for login
 - password: User's account password
-
-## Association Classes:
-**Association class between User and Category**: An user can leave a like on a category
-
-<p></p>
-
-**Association class between User, Category and Media**: An user can leave an upvote or downvote in a Film/Show inside a category

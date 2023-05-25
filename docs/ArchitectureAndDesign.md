@@ -7,8 +7,9 @@ To ensure reliability, we used the Client-Server pattern, which separates the cl
 ## Logical architecture
 
 <p align="center">
-    <img src = "https://user-images.githubusercontent.com/114760605/224853948-28e7497b-acd7-452c-8d59-943257c4ffea.png" width = 90% height = 90%>
+    <img src = "https://github.com/FEUP-LEIC-ES-2022-23/2LEIC09T5/assets/92693155/1988d206-9c3b-4bac-9286-10e318d9e42a" width = 90% height = 90%>
 </p>
+
 
 - ### CatCine GUI
     This package contains the code that defines the graphical user interface (GUI) of the CatCine app, which enables users to interact with the application visually.
@@ -25,7 +26,7 @@ To ensure reliability, we used the Client-Server pattern, which separates the cl
 ## Physical architecture
     
 <p align="center">
-    <img src = "https://user-images.githubusercontent.com/114760605/224854041-1d8e17e8-61a1-4e3a-af3c-aab2d8088ff9.png" width = 90% height = 90%>
+    <img src = "https://github.com/FEUP-LEIC-ES-2022-23/2LEIC09T5/assets/92693155/e32f31af-a012-4aad-b530-f4a60dd51dcb" width = 90% height = 90%>
 </p>
 
 - ### User mobile Phone
