@@ -54,9 +54,10 @@ class _MediaPageState extends State<MediaPage> {
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data();
         var res = data as Map<String, dynamic>;
-        _ratingValue = res['rating_given'];
+        _ratingValue = res['rating_given'] ?? 0;
       }
     });
+    setState(() {});
   }
 
   storeUserRating() async {
@@ -66,6 +67,17 @@ class _MediaPageState extends State<MediaPage> {
     }, SetOptions(merge: true));
   }
 
+  @override
+  void initState() {
+    super.initState();
+    loadUserRating();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    storeUserRating();
+  }
 
 
   @override
@@ -113,7 +125,7 @@ class _MediaPageState extends State<MediaPage> {
                 ),
               ],
             ),
-            SizedBox(height: 25),
+            SizedBox(height: height/34.7),
             
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width/21),
@@ -125,7 +137,7 @@ class _MediaPageState extends State<MediaPage> {
                 ),
               ),
             ),
-            SizedBox(height:10),
+            SizedBox(height: height/86.742,),
             
             Text(
               "${widget.media.releaseDate} . ${widget.media.runtime}m",
@@ -135,20 +147,21 @@ class _MediaPageState extends State<MediaPage> {
               ),
             ),
 
-            SizedBox(height:20),
+            SizedBox(height: height/43.37,),
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width/21),
-              child: Text(
-                widget.media.description,
+              child: Text("   ${widget.media.description}",
                 textAlign: TextAlign.justify,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 19,
+                  fontSize: 15,
                 ),
               ),
             ),
-            SizedBox(height:20),
+
+            SizedBox(height: height/43.37,),
+
             Text(
               "Age Rating: ${widget.media.ageRating == 1 ? 'All Audiences' : widget.media.ageRating}",
               style: const TextStyle(
@@ -156,8 +169,19 @@ class _MediaPageState extends State<MediaPage> {
                 fontSize: 18,
               ),
             ),
+
+            SizedBox(height: height/43.37,),
+
+            Container(
+              height: 0.9,
+              width: double.infinity,
+              color: const Color(0xFF6B6D7B),
+            ),
+
+            SizedBox(height: height/43.37,),
+
             RatingBar(
-                initialRating: 0,
+                initialRating: _ratingValue,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,

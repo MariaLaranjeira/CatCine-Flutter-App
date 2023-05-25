@@ -245,52 +245,57 @@ class _ExploreMediaState extends State<ExploreMedia>{
                   itemCount: rowCounter(),
                   itemBuilder: (context, index) => ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: width/51.43),
-                    title: Row(
+                    title: Column(
                       children: [
-                        Column(
+                        Row(
                           children: [
-                            RawMaterialButton(
-                              onPressed: () {
-                                print(displayList[index*2].backdropUrl);
-                                Navigator.push(context, PageRouteBuilder(
-                                pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
-                                  return MediaPage(media: displayList[index * 2]);
-                                },
-                                transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero,
-                                ));
-                              },
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12.0),
-                                child: SizedBox(
-                                  width: (width/11) * 4.35,
-                                  height: ((width/11) * 4.35) * 3/2,
-                                  child: Image(
-                                    fit: BoxFit.fill,
-                                    isAntiAlias: true,
-                                    image: getPosterURL(displayList[index * 2]),
-                                    semanticLabel: "${displayList[index * 2].mediaName}...",
-                                    loadingBuilder: (context, child, progress) {
-                                      return progress == null ? child : const LinearProgressIndicator();
+                            Column(
+                              children: [
+                                RawMaterialButton(
+                                  onPressed: () {
+                                    print(displayList[index*2].backdropUrl);
+                                    Navigator.push(context, PageRouteBuilder(
+                                    pageBuilder: (BuildContext context, Animation<double> animation1, Animation<double> animation2) {
+                                      return MediaPage(media: displayList[index * 2]);
                                     },
+                                    transitionDuration: Duration.zero,
+                                    reverseTransitionDuration: Duration.zero,
+                                    ));
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    child: SizedBox(
+                                      width: (width/11) * 4.35,
+                                      height: ((width/11) * 4.35) * 3/2,
+                                      child: Image(
+                                        fit: BoxFit.fill,
+                                        isAntiAlias: true,
+                                        image: getPosterURL(displayList[index * 2]),
+                                        semanticLabel: "${displayList[index * 2].mediaName}...",
+                                        loadingBuilder: (context, child, progress) {
+                                          return progress == null ? child : const LinearProgressIndicator();
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+
+                                SizedBox(height: height/86.74,),
+
+                                Text(
+                                  getTrimmedName(displayList[index * 2]),
+                                  style: const TextStyle(
+                                    color: Colors.white
+                                  ),
+                                )
+                              ]
                             ),
-
-                            SizedBox(height: height/86.74,),
-
-                            Text(
-                              getTrimmedName(displayList[index * 2]),
-                              style: const TextStyle(
-                                color: Colors.white
-                              ),
-                            )
+                            SizedBox(width: width/11,),
+                            drawSecondElement((index * 2) + 1),
                           ]
                         ),
-                        SizedBox(width: width/11,),
-                        drawSecondElement((index * 2) + 1),
-                      ]
+                        SizedBox(height: height/43.37,),
+                      ],
                     ),
                   ),
                 ),
