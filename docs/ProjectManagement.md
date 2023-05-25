@@ -56,11 +56,27 @@
 >
 >   > ### Development Board
 >   >
->   >![board2](https://user-images.githubusercontent.com/92693155/236057000-e32073a3-6fb8-4efb-a2b7-e42bc5589057.png)
+>   >![board3](https://user-images.githubusercontent.com/92693155/236057000-e32073a3-6fb8-4efb-a2b7-e42bc5589057.png)
 >
 > ### * Retrospectives: 
 >
 >  > We finally completed all things related to API media searches and firebase management regarding the explore page, which is now complete and fully optimized. This was a major step forward because we consider this was one of our most challenging user stories. We also have a fully functioning main app bar and made the front-end for the page that handles category creation.  <br>
+>
+
+<br>
+
+
+> ## Iteration 4
+>
+> ### * Plans:
+>
+>   > ### Development Board
+>   >
+>   >![board4](https://github.com/FEUP-LEIC-ES-2022-23/2LEIC09T5/assets/92693155/20f61f2c-480b-4afd-ba52-058ce3f92162)
+
+> ### * Retrospectives: 
+>
+>  > In this iteration we gave it all. Even though we didn't accomplish everything we hoped for, we believe we did a pretty good job in making sure everything we have is solid and works for all devices. All our must-haves were completed and we even afforded to complete some should-haves. We all (the 3 remaining elements) worked perfectly together, equaly and complemented each other in what we could.<br>
 >
 
 <br>
