@@ -15,7 +15,7 @@ class AuthMainPage extends StatefulWidget {
 class _AuthMainPageState extends State<AuthMainPage> {
   late bool showLoginPage = widget.pageSelector;
 
-  void toggleScreens() {
+  toggleScreens() {
     setState(() {
       showLoginPage = !showLoginPage;
     });

@@ -1,6 +1,9 @@
+import 'package:catcine_es/Model/media.dart';
 import 'package:catcine_es/Pages/homePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../main.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -17,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  Future loginUsingEmailPassword() async {
+  loginUsingEmailPassword() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     try {
@@ -178,28 +181,28 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
-      body: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            child: Image.asset(
-              'images/WelcomeBack.png',
-              width: 380,
-              height: 500,
-              fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Image.asset(
+                'images/WelcomeBack.png',
+                width: width/1.09,
+                height: height/1.74,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          SingleChildScrollView(
-            physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Padding (
-                padding: const EdgeInsets.all(16.0),
+            Padding (
+                padding: EdgeInsets.symmetric(horizontal: width/25.72),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 250),
+                    SizedBox(height: height/3.47),
 
                     TextField(
                       key: const Key("emailKey"),
@@ -216,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         hintText: " Enter your email",
                       ),
                     ),
-                    const SizedBox( height: 26.0),
+                    SizedBox(height: height/33.37),
 
                     TextField(
                       key: const Key("passwordKey"),
@@ -233,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         hintText: " Enter your password",
                       ),
                     ),
-                    const SizedBox( height: 26.0),
+                    SizedBox( height: height/33.37),
 
                     SizedBox(
                       key: const Key("loginButton"),
@@ -244,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         elevation: 0.0,
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        padding: EdgeInsets.symmetric(vertical: height/43.38),
                         onPressed: () async {
                           loginUsingEmailPassword();
                         },
@@ -257,8 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-
+                    SizedBox(height: height/43.38),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -286,8 +288,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 )
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

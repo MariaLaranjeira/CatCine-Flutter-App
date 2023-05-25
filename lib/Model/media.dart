@@ -14,7 +14,6 @@ class Media {
   int traktId;
   int tmdbId;
   bool movie;
-  List<String> watchProviders = [];
   int ageRating;
   String trailerUrl;
   String backdropUrl;
@@ -34,7 +33,6 @@ class Media {
       this.traktId,
       this.tmdbId,
       this.movie,
-      this.watchProviders,
       this.ageRating,
       this.trailerUrl,
       this.backdropUrl,
@@ -53,7 +51,6 @@ class Media {
     this.traktId = 1,
     this.tmdbId = 1,
     this.movie = false,
-    this.watchProviders = const [],
     this.ageRating = 1,
     this.trailerUrl = '',
     this.backdropUrl = '',
@@ -135,17 +132,28 @@ class Media {
         tempMedia.add(media);
       }
     }
-    if (tempMedia.length < 10){
+    if (tempMedia.isEmpty){
       tempMedia = await API.makeMedia(title);
       updateLocalList(tempMedia);
+    }
+    else if (tempMedia.length < 10) {
+      List<Media> temp = await API.makeMedia(title);
+      updateLocalList(temp);
+      for (var elem in temp) {
+        if (tempMedia.any((element) => elem.id == element.id)) {
+          continue;
+        }
+        else {
+          tempMedia.add(elem);
+        }
+      }
     }
     return tempMedia;
   }
 
   static updateLocalList(List<Media> mediaList){
-
     for (var media in mediaList){
-      if (!allLocalMedia.values.any((it)=> it.id == media.id)){
+      if (!allLocalMedia.keys.any((element) => element == media.id)){
         allLocalMedia[media.id] = media;
       }
     }

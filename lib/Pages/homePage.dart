@@ -2,7 +2,10 @@ import 'package:catcine_es/Pages/createCategory.dart';
 import 'package:catcine_es/Pages/exploreCategories.dart';
 import 'package:catcine_es/Pages/exploreMedia.dart';
 import 'package:catcine_es/Pages/userProfile.dart';
+import 'package:catcine_es/main.dart';
 import 'package:flutter/material.dart';
+
+import '../api.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,9 +15,49 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  initList() async {
+    if (!loadedFromFirebase) {
+      await API.loadMedia();
+      await API.loadCats();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initList();
+    loadedFromFirebase = true;
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: const Color(0xff393d5a),
+
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: SizedBox(
+                child: const Text(
+                  "Welcome to Catcine!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            child:Image.asset('images/kitty.png'),
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xCACBCBD2),
         child: IconTheme(

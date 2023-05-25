@@ -5,13 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Auth/authinitial.dart';
 import 'Model/media.dart';
+import 'Model/category.dart';
 
 Map<String, Media> allLocalMedia = {};
+Map<String, Category> allLocalCats = {};
+double width = 0;
+double height = 0;
+bool loadedFromFirebase = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   runApp(const MyApp());
 }
 
@@ -38,6 +42,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  var isDialogOpen = false;
 
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
@@ -79,7 +85,7 @@ class _HomePageState extends State<HomePage> {
     return _updateConnectionStatus(result);
   }
 
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+  _updateConnectionStatus(ConnectivityResult result) async {
     setState(() {
       _connectionStatus = result;
     });
@@ -87,13 +93,63 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_connectionStatus != ConnectivityResult.none
-        && _connectionStatus != ConnectivityResult.bluetooth
-        && _connectionStatus != ConnectivityResult.other) {
-      return const MainPage();
-    } else {
-      return const CircularProgressIndicator();
-    }
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_connectionStatus == ConnectivityResult.wifi
+          || _connectionStatus == ConnectivityResult.mobile
+          || _connectionStatus == ConnectivityResult.ethernet
+          || _connectionStatus == ConnectivityResult.vpn) {
+        print('Has Connection');
+        if (isDialogOpen) {
+          Navigator.of(context, rootNavigator: true).pop();
+          isDialogOpen = false;
+        }
+      } else {
+        Navigator.of(context).push(PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+              isDialogOpen = true;
+              return Column(
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height/15,),
+                  AlertDialog(
+                      alignment: Alignment.topCenter,
+                      shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                      content:
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(
+                            Icons.warning_amber_rounded,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            "No Internet Connection!",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20
+                            ),
+                          ),
+                        ],
+                      )
+                  ),
+                ],
+              );
+            }
+          )
+        );
+      }
+    });
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    return const MainPage();
   }
 }
 

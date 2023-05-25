@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:catcine_es/Auth/authinitial.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../main.dart';
 
 class RegisterScreen extends StatefulWidget {
   final VoidCallback showLoginPage;
@@ -17,18 +20,33 @@ class _RegisterScreenState extends State<RegisterScreen>{
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController catNameController = TextEditingController();
 
-  bool passwordConfirmed() {
+  passwordConfirmed() {
     return (passwordController.text.trim() == confirmPasswordController.text.trim());
   }
 
-  Future<void> signUp() async {
+  signUp() async {
     try {
-      if (passwordConfirmed()) {
+      if (passwordConfirmed() && catNameController.text.trim().length > 3 && catNameController.text.trim().length <= 20) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text.trim(),
             password: passwordController.text.trim()
-        );
+        ).then((result) async {
+
+          var usersDB = FirebaseFirestore.instance.collection('users');
+
+          var ref = usersDB.doc(catNameController.text.trim());
+
+          await ref.set({
+            'uid': result.user!.uid,
+            'catname': catNameController.text.trim(),
+          });
+
+          result.user!.updateDisplayName(catNameController.text.trim());
+
+        });
+
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) => const MainPage()
@@ -66,9 +84,16 @@ class _RegisterScreenState extends State<RegisterScreen>{
               );
             }
         );
+
+      }
+      else if (!passwordConfirmed()) {
+        throw const FormatException("passwords-not-matching");
+      }
+      else if  (!(catNameController.text.trim().length > 3)){
+        throw const FormatException("catname-too-small");
       }
       else {
-        throw const FormatException("passwords-not-matching");
+        throw const FormatException("catname-too-big");
       }
     } on FirebaseAuthException catch (exception) {
       if (exception.code == "email-already-in-use") {
@@ -208,6 +233,74 @@ class _RegisterScreenState extends State<RegisterScreen>{
             }
         );
       }
+      else if(exception.message == "catname-too-small") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "CatName too small!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
+      else if(exception.message == "catname-too-big") {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  alignment: Alignment.topCenter,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 87, 51),
+                  content:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "CatName too big!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ),
+                      ),
+                    ],
+                  )
+              );
+            }
+        );
+      }
     }
   }
 
@@ -221,29 +314,31 @@ class _RegisterScreenState extends State<RegisterScreen>{
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
-      body: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            child: Image.asset(
-              'images/CreateAccount.png',
-              width: 380,
-              height: 480,
-              fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              child: Image.asset(
+                'images/CreateAccount.png',
+                width: width/1.08,
+                height: height/1.81,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-       Padding (
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+         Padding (
+            padding: EdgeInsets.symmetric(horizontal: width/25.72),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 230),
+                SizedBox(height: height/3.78),
 
                 TextField(
+                  controller: catNameController,
+                  autocorrect: false,
                   decoration: InputDecoration(
                     filled:true,
                     fillColor: const Color(0xFFFFFFFF),
@@ -254,7 +349,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Enter your catname",
                   ),
                 ),
-                const SizedBox(height: 26.0),
+                SizedBox(height: height/33.37),
 
                 TextField(
                   controller: emailController,
@@ -270,7 +365,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Enter your email",
                   ),
                 ),
-                const SizedBox(height: 26.0),
+                SizedBox(height: height/33.37),
 
                 TextField(
                   controller: passwordController,
@@ -286,7 +381,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Enter your password",
                   ),
                 ),
-                const SizedBox(height: 26.0),
+                SizedBox(height: height/33.37),
 
                 TextField(
                   controller: confirmPasswordController,
@@ -302,13 +397,13 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     hintText: " Confirm your password",
                   ),
                 ),
-                const SizedBox(height: 34.0),
+                SizedBox(height: height/25.52),
 
                 SizedBox(
                   width:double.infinity,
                   child: RawMaterialButton(
                     fillColor: const Color(0xFFEC6B76),
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    padding: EdgeInsets.symmetric(vertical: height/43.37),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
@@ -324,7 +419,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: height/43.37),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -352,11 +447,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   ],
                 )
               ],
-            ),
-          )
-      ),
+            )
+        ),
     ],
     ),
+      ),
     );
   }
 }

@@ -4,12 +4,18 @@ import 'package:catcine_es/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
+import 'Model/category.dart';
 import 'Model/media.dart';
 
 
 class API {
 
-  static Future<String> getInfo(String title,String searchType) async {
+  static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
+      'media');
+
+  static CollectionReference catDB = FirebaseFirestore.instance.collection('categories');
+
+  static getInfo(String title,String searchType) async {
     final client = http.Client();
 
     final request = http.Request('GET',
@@ -41,8 +47,7 @@ class API {
     return response.body;
   }
 
-
-  static Future<List<Media>> makeMedia(String title) async {
+  static makeMedia(String title) async {
     String info = await getInfo(title,'s');
     Map<String, dynamic> json = jsonDecode(info);
     List<dynamic> body = json['search'] ?? [];
@@ -51,7 +56,7 @@ class API {
     return allMedia;
   }
 
-  static Future<Map<String, dynamic>> fullInfo(bool isIMDB, String id, String searchType, String mediaType) async {
+  static fullInfo(bool isIMDB, String id, String searchType, String mediaType) async {
     String info;
     if (isIMDB) {
       info = await getInfo(id, searchType);
@@ -61,10 +66,6 @@ class API {
     Map <String, dynamic> json = jsonDecode(info);
     return json;
   }
-
-  static CollectionReference mediaDB = FirebaseFirestore.instance.collection(
-      'media');
-
 
   static addMedia(Media media) async {
 
@@ -116,15 +117,12 @@ class API {
 
   }
 
-
-  static Future<bool> doesMediaExist(String id) async {
+  static doesMediaExist(String id) async {
     var ref = await mediaDB.doc(id).get();
     return ref.exists;
-
-
   }
 
-  static Future<bool> isMediaInfoComplete(String id) async {
+  static isMediaInfoComplete(String id) async {
 
     bool res = true;
     await mediaDB.doc(id).get()
@@ -150,38 +148,68 @@ class API {
   }
 
   static updateRemoteList(List<Media> list) async {
-    for (var media in list) {
-      await mediaDB.doc(media.id).get()
-          .then((DocumentSnapshot documentSnapshot) async {
-        if (documentSnapshot.exists) {
-          var data = documentSnapshot.data();
-          var aux = data as Map<String, dynamic>;
+    Map<String, Media> temp = {};
 
-          if((aux['poster'] == '' && aux['description'] == '' && aux['backdrop'] == '')) {
-            await mediaSpecificUpdate(media);
-            updateMedia(media);
-          }
-        }
-      });
+    for (var media in list) {
+      temp[media.id] = media;
     }
+
+    await mediaDB.get().then((querySnapshot) async {
+      for (var docSnapshot in querySnapshot.docs) {
+        var data = docSnapshot.data();
+        var aux = data as Map<String, dynamic>;
+
+        if((aux['poster'] == '' && aux['description'] == '' && aux['backdrop'] == '')
+            && temp.containsKey(docSnapshot.id)) {
+          await mediaSpecificUpdate(temp[docSnapshot.id]!);
+          updateMedia(temp[docSnapshot.id]!);
+        }
+      }
+    });
+  }
+
+  static loadSpecificMedia(String id) async{
+    late Media media;
+    await mediaDB
+        .doc(id)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) async {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        var res = data as Map<String, dynamic>;
+
+        bool _movie = false;
+        if (res['type'] == 'movie') {
+          _movie = true;
+        }
+
+        media = Media.api(
+          id: res['id'],
+          mediaName: res['title'] ?? "",
+          releaseDate: res['year'] ?? 0,
+          score: res['score'] ?? 0,
+          runtime: res['runtime'] ?? 0,
+          coverUrl: res['poster'] ?? "",
+          description: res['description'] ?? "",
+          imdbId: res['imdbid'] ?? "",
+          traktId: res['traktid'] ?? 0,
+          tmdbId: res['tmdbid'] ?? 0,
+          movie: _movie,
+          ageRating: res['age_rating'] ?? 0,
+          trailerUrl: res['trailer'] ?? "",
+          backdropUrl: res['backdrop'] ?? "",
+          isInFirebase: true,
+        );
+      }
+    });
+    return media;
   }
 
   static loadMedia() async {
-
-    List<String> _userKey = [];
-    final query = await mediaDB.get();
-
-    for (var doc in query.docs) {
-      _userKey.add(doc.id);
-    }
-
-    for (String _key in _userKey){
-      mediaDB
-          .doc(_key)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) async {
-        if (documentSnapshot.exists) {
-          var data = documentSnapshot.data();
+    mediaDB.orderBy('score', descending: true).get().then(
+          (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          var data = docSnapshot.data();
           var res = data as Map<String, dynamic>;
 
           bool _movie = false;
@@ -190,29 +218,53 @@ class API {
           }
 
           Media media = Media.api(
-              id: res['id'],
-              mediaName: res['title'] ?? "",
-              releaseDate: res['year'] ?? 0,
-              score: res['score'] ?? 0,
-              runtime: res['runtime'] ?? 0,
-              coverUrl: res['poster'] ?? "",
-              description: res['description'] ?? "",
-              imdbId: res['imdbid'] ?? "",
-              traktId: res['traktid'] ?? 0,
-              tmdbId: res['tmdbid'] ?? 0,
-              movie: _movie,
-              ageRating: res['age_rating'] ?? 0,
-              trailerUrl: res['trailer'] ?? "",
-              backdropUrl: res['backdrop'] ?? "",
-              isInFirebase: true,
+            id: res['id'],
+            mediaName: res['title'] ?? "",
+            releaseDate: res['year'] ?? 0,
+            score: res['score'] ?? 0,
+            runtime: res['runtime'] ?? 0,
+            coverUrl: res['poster'] ?? "",
+            description: res['description'] ?? "",
+            imdbId: res['imdbid'] ?? "",
+            traktId: res['traktid'] ?? 0,
+            tmdbId: res['tmdbid'] ?? 0,
+            movie: _movie,
+            ageRating: res['age_rating'] ?? 0,
+            trailerUrl: res['trailer'] ?? "",
+            backdropUrl: res['backdrop'] ?? "",
+            isInFirebase: true,
           );
 
           allLocalMedia[media.id] = media;
         }
-      });
-    }
+      }
+    );
   }
 
+  static loadCats() async {
+    catDB.get().then(
+      (querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        var data = docSnapshot.data();
+        var res = data as Map<String, dynamic>;
+        Category cat = Category.fromJson(res);
+        catDB.doc(docSnapshot.id).collection('catmedia').orderBy('ratio', descending: true).orderBy('downvotes').get().then(
+          (querySnapshot) {
+            for (var docSnapshot_ in querySnapshot.docs) {
+              var data = docSnapshot_.data();
+              var res = data as Map<String, dynamic>;
+              if (allLocalMedia[docSnapshot_.id] != null) {
+                cat.catMedia.add(allLocalMedia[docSnapshot_.id]!);
+              }
+              cat.updown[docSnapshot_.id] =
+              [res['upvotes'], res['downvotes']];
+            }
+          });
+        allLocalCats[cat.title] = cat;
+      }
+      }
+    );
+  }
 
   static mediaSpecificUpdate(Media media) async {
     String mediaType;
